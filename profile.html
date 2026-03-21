@@ -3,310 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KV LEARNING PORTAL</title>
+    <title>Profile Settings | KV MCQ</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; min-height: 100vh; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .input-style { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: rgb(58, 134, 42); transition: all 0.2s; }
+        .input-style:focus { border-color: #393cf4; outline: none; background: rgba(255, 255, 255, 0.08); }
+        .kv-only { display: none; }
+        .kv-only.show { display: block; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none; }
         
-        :root {
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --bg-ultra-dark: #010409; 
-            --card-dark: #0d1117;
-        }
-
-        body { 
-            background-color: var(--bg-ultra-dark); 
-            color: #e6edf3; 
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            scroll-behavior: smooth;
-        }
-
-        .glass-nav {
-            background: rgba(1, 4, 9, 0.85);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
-
-        /* Mobile specific bottom glass nav */
-        .mobile-bottom-nav {
-            background: rgba(1, 4, 9, 0.9);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .hero-gradient {
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 40%),
-                linear-gradient(to bottom, #010409, #020617);
-        }
-
-        .btn-shiny {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            color: white;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-shiny::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: rgba(255,255,255,0.15);
-            transform: rotate(45deg);
-            transition: 0.5s;
-        }
-
-        .btn-shiny:hover::after { left: 120%; }
-        .btn-shiny:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5); 
-        }
-
-        .ai-floating-ball {
-            position: fixed;
-            bottom: 100px; /* Higher to clear bottom nav on mobile */
-            right: 20px;
-            width: 55px;
-            height: 55px;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        @media (min-width: 768px) {
-            .ai-floating-ball { bottom: 30px; right: 30px; width: 60px; height: 60px; }
-        }
-
-        .ai-ping {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: inherit;
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: ai-pulse 2s infinite;
-            z-index: -1;
-        }
-
-        @keyframes ai-pulse {
-            0% { transform: scale(1); opacity: 0.6; }
-            100% { transform: scale(1.6); opacity: 0; }
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(8px);
-            transition: all 0.4s ease;
-        }
-
-        .feature-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--primary);
-            transform: translateY(-8px) scale(1.02);
-        }
-
-        #canvas-container {
-            width: 100%;
-            height: 400px;
-            cursor: grab;
-            filter: drop-shadow(0 0 50px rgba(99, 102, 241, 0.2));
-        }
-        
-        @media (min-width: 768px) { #canvas-container { height: 500px; } }
-
-        .glow-text {
-            text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-        }
+        /* Force uppercase visuals while typing */
+        .uppercase-input { text-transform: uppercase; }
     </style>
 </head>
-<body class="hero-gradient overflow-x-hidden pb-24 md:pb-0">
+<body class="flex items-center justify-center p-6">
 
-    <a href="https://learnmeai.vercel.app" target="_blank" class="ai-floating-ball" title="Open AI Learning">
-        <div class="ai-ping"></div>
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-        </svg>
-    </a>
+    <div id="loader" class="fixed inset-0 bg-[#020617] z-[100] flex flex-col items-center justify-center font-bold text-indigo-500 uppercase tracking-widest">
+        <div class="mb-4">Loading Profile...</div>
+        <div id="db-status" class="text-[10px] text-slate-500">Checking Database Sync...</div>
+    </div>
 
-    <nav class="fixed top-0 w-full z-50 glass-nav py-3 md:py-4 px-4 md:px-8">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="text-xl md:text-2xl font-black tracking-tighter flex items-center gap-2 md:gap-3">
-                <img src="logo.png" alt="Logo" class="w-10 h-10 md:w-16 md:h-16 object-cover rounded-full">
-                <div class="flex flex-col md:block">
-                    <span class="text-white text-xs md:text-2xl leading-none">KV LEARNING</span>
-                    <span class="text-indigo-500 text-[10px] md:text-2xl block md:inline leading-none">PORTAL</span>
+    <div class="glass w-full max-w-xl rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-extrabold italic">ACCOUNT <span class="text-indigo-500">SETTINGS</span></h1>
+            <p class="text-slate-400 text-sm mt-2">Personalize your learning experience.</p>
+        </header>
+
+        <form id="profile-form" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-1">Full Name</label>
+                    <input type="text" id="name" class="input-style w-full p-4 rounded-2xl font-semibold uppercase-input" placeholder="YOUR NAME" required>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-1">Current Class</label>
+                    <select id="class" class="input-style w-full p-4 rounded-2xl font-bold cursor-pointer" required>
+                        <option value="6">Class 6</option>
+                        <option value="7">Class 7</option>
+                        <option value="8">Class 8</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                        <option value="11">Class 11</option>
+                        <option value="12">Class 12</option>
+                    </select>
                 </div>
             </div>
-            
-            <div class="hidden md:flex gap-8 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
-                <a href="index.html" class="hover:text-white transition">Home</a>
-                <a href="#features" class="hover:text-white transition">Features</a>
-                <a href="about.html" class="hover:text-white transition">About </a>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-1">School Affiliation</label>
+                <select id="type" class="input-style w-full p-4 rounded-2xl font-bold cursor-pointer" required>
+                    <option value="non-kv">Non-KV / Guest Student</option>
+                    <option value="kv">KV Student (PM Shri Kendriya Vidyalaya)</option>
+                </select>
             </div>
 
-            <button onclick="loginWithGoogle()" class="btn-shiny px-4 py-2 md:px-6 md:py-2.5 rounded-full font-bold text-[10px] md:text-sm">Get Started</button>
-        </div>
-    </nav>
-
-    <nav class="md:hidden fixed bottom-0 w-full z-50 mobile-bottom-nav py-3 px-6 flex justify-around items-center">
-        <a href="index.html" class="flex flex-col items-center gap-1">
-            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Home</span>
-        </a>
-        <a href="#features" class="flex flex-col items-center gap-1">
-            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Features</span>
-        </a>
-        <a href="about.html" class="flex flex-col items-center gap-1">
-            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Team</span>
-        </a>
-    </nav>
-
-    <section class="min-h-screen pt-24 md:pt-40 flex flex-col md:flex-row items-center max-w-7xl mx-auto px-8 gap-12">
-        <div class="flex-1 text-center md:text-left">
-            <span class="bg-indigo-500/10 text-indigo-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-8 inline-block border border-indigo-500/20">
-                Academic Excellence 2.0
-            </span>
-            <h1 class="text-5xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-tight glow-text">
-                Welcome to <br> <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">Smart MCQ practicing portal</span>
-            </h1>
-            <p class="text-slate-400 text-base md:text-xl mb-10 max-w-lg leading-relaxed mx-auto md:mx-0">
-                Unlock comprehensive NCERT practice from Class 6 to 12. AI-driven tracking for Kendriya Vidyalaya scholars.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <button onclick="loginWithGoogle()" class="btn-shiny px-8 py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3">
-                    Start Now 🚀
-                </button>
-                <a href="faq.html" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition backdrop-blur-sm text-center flex items-center justify-center">View FAQ</a>
-            </div>
-        </div>
-        
-        <div class="flex-1 w-full relative">
-            <div id="canvas-container"></div>
-            <div class="absolute top-5 md:top-10 right-0 bg-indigo-600/90 backdrop-blur-lg text-white p-4 md:p-5 rounded-3xl rounded-bl-none text-[10px] md:text-xs font-black shadow-2xl animate-bounce border border-indigo-400/30">
-                Practice! 🚀
-            </div>
-        </div>
-    </section>
-
-    <section id="features" class="py-20 md:py-32 px-8 max-w-7xl mx-auto">
-        <div class="text-center mb-20">
-            <h2 class="text-4xl md:text-5xl font-black mb-4 tracking-tighter text-white">Advanced Learning</h2>
-            <p class="text-indigo-500 uppercase tracking-[0.5em] text-[10px] font-black">Powered by PM SHRI KV New Bongaigaon</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="feature-card p-10 rounded-[2.5rem]">
-                <div class="text-4xl mb-6">🛡️</div>
-                <h3 class="text-xl font-bold mb-3 text-white">curated</h3>
-                <p class="text-slate-500 text-sm leading-relaxed">100% verified content strictly following NCERT standards.</p>
-            </div>
-            <div class="feature-card p-10 rounded-[2.5rem]">
-                <div class="text-4xl mb-6">🛰️</div>
-                <h3 class="text-xl font-bold mb-3 text-white">synced</h3>
-                <p class="text-slate-500 text-sm leading-relaxed">Real-time progress syncing across all your devices.</p>
-            </div>
-            <div class="feature-card p-10 rounded-[2.5rem]">
-                <div class="text-4xl mb-6">🏆</div>
-                <h3 class="text-xl font-bold mb-3 text-white">rewarded</h3>
-                <p class="text-slate-500 text-sm leading-relaxed">Earn badges and track your rank on the school leaderboard.</p>
-            </div>
-            <div class="feature-card p-10 rounded-[2.5rem]">
-                <div class="text-4xl mb-6">⚡</div>
-                <h3 class="text-xl font-bold mb-3 text-white">free</h3>
-                <p class="text-slate-500 text-sm leading-relaxed">Open access for all Kendriya Vidyalaya students nationwide.</p>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-20 border-t border-white/5 px-8 text-center bg-black/40">
-        <div class="max-w-7xl mx-auto">
-            <div class="pt-8">
-                <p class="text-[9px] text-slate-500 uppercase tracking-[0.3em] leading-relaxed">
-                    © 2026 PM SHRI KV NEW BONGAIGAON. All rights reserved with care.
-                </p>
-                <div class="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[9px] text-slate-600 uppercase tracking-widest font-bold">
-                    <span class="text-slate-700">Educational purposes only. Please respect the effort and avoid unauthorized use.</span>
+            <div id="kv-section" class="kv-only space-y-4 pt-6 border-t border-white/10">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Full School Name</label>
+                    <input type="text" id="school_name" class="input-style w-full p-4 rounded-2xl uppercase-input" placeholder="e.g. KV NO.1 AFS">
                 </div>
-                <p class="mt-4 text-[8px] text-slate-700 max-w-2xl mx-auto italic">
-                    Disclaimer: This platform is an independent academic initiative. NCERT materials belong to the National Council of Educational Research and Training.
-                </p>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">State / UT</label>
+                        <select id="state" class="input-style w-full p-4 rounded-2xl font-bold cursor-pointer">
+                             <option value="" disabled selected>Select State</option>
+                             <option value="Andhra Pradesh">Andhra Pradesh</option>
+                             <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                             <option value="Assam">Assam</option>
+                             <option value="Bihar">Bihar</option>
+                             <option value="Chhattisgarh">Chhattisgarh</option>
+                             <option value="Goa">Goa</option>
+                             <option value="Gujarat">Gujarat</option>
+                             <option value="Haryana">Haryana</option>
+                             <option value="Himachal Pradesh">Himachal Pradesh</option>
+                             <option value="Jharkhand">Jharkhand</option>
+                             <option value="Karnataka">Karnataka</option>
+                             <option value="Kerala">Kerala</option>
+                             <option value="Madhya Pradesh">Madhya Pradesh</option>
+                             <option value="Maharashtra">Maharashtra</option>
+                             <option value="Manipur">Manipur</option>
+                             <option value="Meghalaya">Meghalaya</option>
+                             <option value="Mizoram">Mizoram</option>
+                             <option value="Nagaland">Nagaland</option>
+                             <option value="Odisha">Odisha</option>
+                             <option value="Punjab">Punjab</option>
+                             <option value="Rajasthan">Rajasthan</option>
+                             <option value="Sikkim">Sikkim</option>
+                             <option value="Tamil Nadu">Tamil Nadu</option>
+                             <option value="Telangana">Telangana</option>
+                             <option value="Tripura">Tripura</option>
+                             <option value="Uttar Pradesh">Uttar Pradesh</option>
+                             <option value="Uttarakhand">Uttarakhand</option>
+                             <option value="West Bengal">West Bengal</option>
+                             <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                             <option value="Chandigarh">Chandigarh</option>
+                             <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                             <option value="Delhi">Delhi</option>
+                             <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                             <option value="Ladakh">Ladakh</option>
+                             <option value="Lakshadweep">Lakshadweep</option>
+                             <option value="Puducherry">Puducherry</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">KV Region</label>
+                        <input type="text" id="region" placeholder="e.g. GUWAHATI" class="input-style w-full p-4 rounded-2xl uppercase-input">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">City</label>
+                    <input type="text" id="city" placeholder="CITY" class="input-style w-full p-4 rounded-2xl uppercase-input">
+                </div>
             </div>
-        </div>
-    </footer>
+
+            <button type="submit" id="save-btn" class="w-full bg-indigo-600 py-5 rounded-2xl font-black text-lg hover:bg-indigo-500 transition shadow-xl uppercase tracking-widest">
+                Save & Continue
+            </button>
+        </form>
+    </div>
 
     <script type="module">
         import { supabase } from './js/supabase.js';
-        window.loginWithGoogle = async () => {
+
+        const form = document.getElementById('profile-form');
+        const typeSelect = document.getElementById('type');
+        const kvSection = document.getElementById('kv-section');
+        const btn = document.getElementById('save-btn');
+        let currentUser = null;
+
+        typeSelect.onchange = () => {
+            const isKV = typeSelect.value === 'kv';
+            kvSection.classList.toggle('show', isKV);
+            document.querySelectorAll('#kv-section input, #kv-section select').forEach(el => el.required = isKV);
+        };
+
+        async function loadProfile() {
             try {
-                const currentFolder = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-                const redirectUrl = window.location.origin + currentFolder + '/role.html';
-                const { error } = await supabase.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: { redirectTo: redirectUrl, queryParams: { access_type: 'offline', prompt: 'select_account' } }
-                });
-                if (error) throw error;
-            } catch (error) {
-                console.error("Auth Error:", error.message);
-                alert("Login failed: " + error.message);
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    window.location.replace('index.html');
+                    return;
+                }
+                currentUser = user;
+
+                const { data: dbData, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', user.id)
+                    .maybeSingle();
+
+                if (dbData) {
+                    document.getElementById('name').value = dbData.full_name || '';
+                    document.getElementById('class').value = dbData.class || '10';
+                    typeSelect.value = dbData.school_type || 'non-kv';
+                    
+                    if (typeSelect.value === 'kv') {
+                        kvSection.classList.add('show');
+                        document.getElementById('school_name').value = dbData.school_name || '';
+                        document.getElementById('region').value = dbData.region || '';
+                        document.getElementById('city').value = dbData.city || '';
+                        document.getElementById('state').value = dbData.state || '';
+                    }
+                }
+                document.getElementById('loader').classList.add('hidden');
+            } catch (err) {
+                console.error("Load error:", err);
+                document.getElementById('db-status').innerText = "Database error. Please reload.";
+            }
+        }
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            btn.innerText = "SYNCING DATA...";
+            btn.disabled = true;
+            
+            const isKV = typeSelect.value === 'kv';
+            
+            // Logic to convert everything to Uppercase (Block Letters) except State
+            const updateData = {
+                id: currentUser.id,
+                full_name: document.getElementById('name').value.trim().toUpperCase(),
+                class: document.getElementById('class').value,
+                school_type: typeSelect.value,
+                profile_completed: true,
+                updated_at: new Date().toISOString()
+            };
+
+            if (isKV) {
+                updateData.school_name = document.getElementById('school_name').value.trim().toUpperCase();
+                updateData.region = document.getElementById('region').value.trim().toUpperCase();
+                updateData.city = document.getElementById('city').value.trim().toUpperCase();
+                updateData.state = document.getElementById('state').value; // Keep original (Normal case)
+            }
+
+            const { error } = await supabase.from('users').upsert(updateData);
+
+            if (error) {
+                console.error("Upsert error:", error);
+                alert("Update Failed: " + error.message);
+                btn.innerText = "RETRY UPDATE";
+                btn.disabled = false;
+            } else {
+                window.location.href = 'dashboard.html';
             }
         };
-    </script>
 
-    <script>
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        container.appendChild(renderer.domElement);
-        const group = new THREE.Group();
-        const headGeo = new THREE.IcosahedronGeometry(1.2, 1);
-        const headMat = new THREE.MeshPhongMaterial({ color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.8, emissive: 0x6366f1, emissiveIntensity: 0.5 });
-        const robotHead = new THREE.Mesh(headGeo, headMat);
-        group.add(robotHead);
-        const ringGeo = new THREE.TorusGeometry(1.8, 0.015, 16, 100);
-        const ringMat = new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.6 });
-        const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.rotation.x = Math.PI / 2.5;
-        group.add(ring);
-        const partGeo = new THREE.BufferGeometry();
-        const posArray = new Float32Array(500 * 3);
-        for(let i=0; i < 500 * 3; i++) posArray[i] = (Math.random() - 0.5) * 10;
-        partGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particles = new THREE.Points(partGeo, new THREE.PointsMaterial({ size: 0.005, color: 0xffffff }));
-        scene.add(particles, group);
-        const light = new THREE.PointLight(0xffffff, 1.5);
-        light.position.set(5, 5, 5);
-        scene.add(light, new THREE.AmbientLight(0x202020));
-        camera.position.z = 4.5;
-        function animate() {
-            requestAnimationFrame(animate);
-            group.rotation.y += 0.005;
-            group.position.y = Math.sin(Date.now() * 0.001) * 0.15;
-            renderer.render(scene, camera);
-        }
-        animate();
-        window.addEventListener('resize', () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
+        loadProfile();
     </script>
 </body>
 </html>
