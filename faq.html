@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ | PM SHRI KV New Bongaigaon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        :root {
+            --primary: #6366f1;
+            --bg-dark: #010409; 
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: #e6edf3; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%), #010409;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 200px;
+        }
+
+        .accordion-item.active .icon-plus {
+            transform: rotate(45deg);
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+
+    <nav class="p-6">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-sm font-black uppercase tracking-widest text-indigo-400 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to Portal
+            </a>
+            <div class="text-xs font-bold text-slate-500 uppercase tracking-tighter">Support Center</div>
+        </div>
+    </nav>
+
+    <header class="max-w-4xl mx-auto text-center py-12 px-6">
+        <h1 class="text-5xl md:text-6xl font-black tracking-tighter mb-4">
+            How can we <span class="text-gradient">help?</span>
+        </h1>
+        <p class="text-slate-400 text-lg">Everything you need to know about the PM SHRI KVNBQ Learning Portal.</p>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 space-y-4">
+        
+        <div class="accordion-item glass-card rounded-2xl overflow-hidden">
+            <button class="w-full p-6 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                <span class="font-bold text-slate-200">What is the PM SHRI KVNBQ Digital Portal?</span>
+                <svg class="icon-plus w-6 h-6 text-indigo-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </button>
+            <div class="accordion-content">
+                <div class="p-6 pt-0 text-slate-400 leading-relaxed text-sm">
+                    It is an advanced academic platform developed by the Digital Innovation Wing. It provides unlimited NCERT-based MCQ practice, AI-driven progress tracking, and exam preparation tools specifically for KV students.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item glass-card rounded-2xl overflow-hidden">
+            <button class="w-full p-6 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                <span class="font-bold text-slate-200">Do I need to pay for access?</span>
+                <svg class="icon-plus w-6 h-6 text-indigo-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </button>
+            <div class="accordion-content">
+                <div class="p-6 pt-0 text-slate-400 leading-relaxed text-sm">
+                    No. This is a <strong>100% free</strong> educational initiative created for student welfare. There are no hidden charges, advertisements, or premium subscriptions.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item glass-card rounded-2xl overflow-hidden">
+            <button class="w-full p-6 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                <span class="font-bold text-slate-200">Why is a Google Login required?</span>
+                <svg class="icon-plus w-6 h-6 text-indigo-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </button>
+            <div class="accordion-content">
+                <div class="p-6 pt-0 text-slate-400 leading-relaxed text-sm">
+                    Login is required to save your quiz scores, track your learning history, and provide personalized recommendations. We recommend using your official KV student email ID.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item glass-card rounded-2xl overflow-hidden">
+            <button class="w-full p-6 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                <span class="font-bold text-slate-200">Is the content based on the latest NCERT syllabus?</span>
+                <svg class="icon-plus w-6 h-6 text-indigo-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </button>
+            <div class="accordion-content">
+                <div class="p-6 pt-0 text-slate-400 leading-relaxed text-sm">
+                    Yes. All MCQs are strictly curated based on the latest NCERT textbooks and follow the current CBSE examination patterns for Classes 6 to 12.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item glass-card rounded-2xl overflow-hidden">
+            <button class="w-full p-6 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                <span class="font-bold text-slate-200">The 3D animations are slow on my device.</span>
+                <svg class="icon-plus w-6 h-6 text-indigo-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </button>
+            <div class="accordion-content">
+                <div class="p-6 pt-0 text-slate-400 leading-relaxed text-sm">
+                    The 3D visuals require hardware acceleration. Try closing unnecessary browser tabs or ensure "Hardware Acceleration" is enabled in your browser settings.
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-16 p-8 glass-card rounded-[2rem] text-center contact-card">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-500/10 mb-4 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <h2 class="text-xl font-extrabold text-white mb-2 tracking-tight">Still have doubts?</h2>
+            <p class="text-slate-400 text-sm mb-6 max-w-sm mx-auto">If you couldn't find your answer here, feel free to reach out to our technical team directly.</p>
+            <a href="mailto:justoneshot330@gmail.com" class="text-indigo-400 font-bold hover:text-indigo-300 transition-all text-sm underline decoration-indigo-500/30 underline-offset-4">
+                justoneshot330@gmail.com
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="mt-20 text-center">
+        <p class="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">
+            &copy; 2026 PM SHRI KVNBQ DIGITAL INNOVATION WING
+        </p>
+    </footer>
+
+    <script>
+        function toggleAccordion(element) {
+            const item = element.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // Close all other items
+            document.querySelectorAll('.accordion-item').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // If it wasn't active, open it
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

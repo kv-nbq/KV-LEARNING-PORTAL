@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | PM SHRI KV New Bongaigaon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #fdf2f8 100%);
+            color: #0f172a;
+            min-height: 100vh;
+            margin: 0;
+            border: 8px solid #10b981; /* Neon Green Frame */
+            box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .hindi-font { font-family: 'Noto Sans Devanagari', sans-serif; }
+        
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, #10b981, #0ea5e9, #db2777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-btn {
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: translateX(-5px);
+            background: white;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        /* Bottom Bar Styling */
+        .official-link-bar {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+    <button onclick="window.history.back()" class="nav-btn fixed top-6 left-6 z-50 flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-md rounded-full border border-emerald-200 text-emerald-700 font-black text-[10px] uppercase tracking-widest">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Home
+    </button>
+
+    <div class="max-w-6xl mx-auto space-y-16 py-12">
+        
+        <div class="text-center space-y-4 pt-8">
+            <h1 class="text-4xl md:text-7xl font-black tracking-tighter leading-tight uppercase">
+                <span class="text-gradient">PM SHRI</span> <br>
+                KV NEW BONGAIGAON
+            </h1>
+            <p class="text-emerald-600 font-bold uppercase tracking-[0.4em] text-[10px]">Official Digital Innovation Wing</p>
+        </div>
+
+        <div class="glass-card rounded-[3rem] overflow-hidden">
+            <div class="grid md:grid-cols-3">
+                <div class="bg-emerald-500/5 p-10 flex flex-col items-center justify-center border-r border-emerald-100 text-center">
+                    <img src="principal.png" alt="Principal" class="w-44 h-44 rounded-full border-8 border-white shadow-xl object-cover mb-6">
+                    <h3 class="hindi-font text-2xl font-black text-slate-800 tracking-tight">श्री विशाल खरे</h3>
+                    <p class="hindi-font text-emerald-600 font-bold">स्कूल प्राचार्य</p>
+                </div>
+                <div class="md:col-span-2 p-10 space-y-4">
+                    <h4 class="hindi-font text-xl font-bold text-slate-700 border-b-2 border-emerald-500 inline-block pb-1">स्कूल प्राचार्य का सन्देश</h4>
+                    <div class="hindi-font text-[14px] md:text-[15px] text-slate-600 leading-relaxed space-y-4 italic">
+                        <p>"किसी देश का भविष्य दूसरों के हाथों में नहीं, बल्कि आज के छात्रों और विद्वानों में है।"</p>
+                        <p class="not-italic text-justify">हमारे अथक प्रयास निश्चित रूप से पीएम श्री केवी न्यू बोंगईगांव छात्रों के बीच उच्च नैतिक मूल्यों को पैदा करने और बच्चों को गुणवत्तापूर्ण शिक्षा प्रदान करने में सक्षम होंगे। जैसा कि विलियम वर्ड्सवर्थ कहते हैं, "जैसा कि एक टहनी मुड़ी हुई है, इसलिए पेड़ बढ़ेगा" - यह नाजुक छात्रों के मामले में बहुत सच है।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 items-center">
+            <div class="md:col-span-1 text-center md:text-right space-y-2">
+                <h3 class="text-xs font-black text-emerald-500 uppercase tracking-widest">Guided By</h3>
+                <h4 class="hindi-font text-2xl font-black text-slate-800 tracking-tight">श्री अमित कुमार पाण्डेय</h4>
+                <p class="text-[11px] font-bold text-slate-500 uppercase italic">PGT-CS | PM SHRI KV NBQ</p>
+            </div>
+            <div class="md:col-span-2 glass-card rounded-[2.5rem] p-8 border-l-8 border-emerald-400">
+                <p class="hindi-font text-sm text-slate-600 leading-loose">
+                    श्री अमित कुमार पाण्डेय, पीजीटी-सीएस, को केवीएस क्षेत्रीय कार्लयालय लखनऊ संभाग द्वारा **प्रोत्साहन पुरस्कार-2019** से सम्मानित किया गया | उनके तकनीकी मार्गदर्शन और प्रेरणा ने इस डिजिटल प्लेटफॉर्म को छात्रों के लिए संभव बनाया है।
+                </p>
+            </div>
+        </div>
+
+        <div class="relative">
+            <div class="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-sky-400 rounded-[4rem] blur opacity-20"></div>
+            <div class="relative glass-card rounded-[4rem] p-8 md:p-14">
+                <div class="flex flex-col md:flex-row gap-12 items-center">
+                    <img src="mohit.png" class="w-64 h-64 rounded-[3rem] object-cover shadow-2xl border-4 border-white">
+                    <div class="space-y-6 flex-1 text-center md:text-left">
+                        <div class="space-y-1">
+                            <span class="px-4 py-1 bg-emerald-500 text-white text-[9px] font-black rounded-full uppercase tracking-widest">Lead Developer</span>
+                            <h2 class="text-4xl md:text-5xl font-black text-slate-900 italic tracking-tight">Mohit Mandal</h2>
+                            <p class="text-sky-500 font-bold text-xs uppercase tracking-widest">Science Student | Full-Stack & AI Specialist</p>
+                        </div>
+                        <p class="text-slate-600 font-medium leading-relaxed">
+   At age 16+, Mohit has developed 10+AI tools and chatbot systems. He built MCQ-based learning websites for Kendriya Vidyalaya students across India and is the creator of <a href="https://learnmeai.vercel.app/" target="_blank" class="text-emerald-600 underline font-bold">LearnMe AI</a>. He has learned and worked with technologies like HTML, CSS, JavaScript, and Python, and is actively growing as an AI engineer.
+</p>
+                        <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+                            <span class="px-4 py-1.5 bg-white rounded-lg border border-emerald-100 text-[10px] font-black text-emerald-600">FRONTEND / BACKEND</span>
+                            <span class="px-4 py-1.5 bg-white rounded-lg border border-emerald-100 text-[10px] font-black text-emerald-600">AI AGENTS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-8">
+            <h3 class="text-center text-xs font-black uppercase tracking-[0.5em] text-slate-400">Implementation Team</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="glass-card rounded-[3rem] p-8 flex items-center gap-6 border-b-4 border-emerald-200">
+                    <img src="ayush.png" class="w-24 h-24 rounded-2xl object-cover shadow-lg border-2 border-white">
+                    <div>
+                        <h4 class="text-xl font-black text-slate-800 italic uppercase">Ayush</h4>
+                        <p class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-2">Team Mate</p>
+                        <p class="text-[11px] text-slate-400 font-bold">Age 16+ | Technical Support</p>
+                    </div>
+                </div>
+                <div class="glass-card rounded-[3rem] p-8 flex items-center gap-6 border-b-4 border-emerald-200">
+                    <img src="dhrubo.png" class="w-24 h-24 rounded-2xl object-cover shadow-lg border-2 border-white">
+                    <div>
+                        <h4 class="text-xl font-black text-slate-800 italic uppercase tracking-tight">Dhrubajyoti Roy</h4>
+                        <p class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-2">Team Mate</p>
+                        <p class="text-[11px] text-slate-400 font-bold">Age 18+ | Technical Support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center pt-8">
+            <a href="https://newbongaigaon.kvs.ac.in/" target="_blank" class="official-link-bar flex items-center justify-center gap-2 py-3 px-8 rounded-full backdrop-blur-md hover:bg-emerald-50 transition-all group shadow-sm">
+                <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Visit Official Website:</span>
+                <span class="text-[10px] font-bold text-slate-600 group-hover:text-emerald-700 underline decoration-emerald-300">newbongaigaon.kvs.ac.in</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="text-center pt-4 pb-6">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.5em]">
+                &copy; 2026 PM SHRI KVS NEW BONGAIGAON DIGITAL PORTAL
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>

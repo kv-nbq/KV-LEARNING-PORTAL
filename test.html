@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Test | KV MCQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; min-height: 100vh; overflow-x: hidden; }
+        .cyber-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; }
+        .btn-neon { background: white; color: black; font-weight: 900; padding: 0.8rem 2rem; border-radius: 0.5rem; transition: 0.3s; text-transform: uppercase; cursor: pointer; }
+        .btn-neon:hover:not(.pointer-events-none) { background: #6366f1; color: white; box-shadow: 0 0 20px #6366f1; }
+        .option-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 1.2rem; border-radius: 1rem; text-align: left; transition: all 0.2s; font-weight: 600; width: 100%; display: flex; align-items: center; gap: 1rem; }
+        .option-btn:hover { background: rgba(99, 102, 241, 0.1); border-color: #6366f1; }
+        .option-btn.selected { background: #6366f1 !important; color: white; border-color: #6366f1; transform: translateX(5px); }
+        .selection-chip { background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); padding: 1.25rem; border-radius: 1rem; cursor: pointer; transition: 0.3s; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+        .selection-chip:hover { background: #6366f1; color: white; transform: translateY(-3px); box-shadow: 0 10px 20px -10px #6366f1; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="bg-[#020617] text-white flex items-center justify-center p-4 md:p-6">
+
+    <div id="progress-container" class="fixed top-0 left-0 w-full h-1.5 bg-white/5 z-50 hidden">
+        <div id="progress-bar" class="h-full bg-indigo-500 transition-all duration-500 shadow-[0_0_15px_#6366f1]" style="width: 0%"></div>
+    </div>
+
+    <div class="w-full max-w-4xl">
+        
+        <div id="test-header" class="flex justify-between items-center mb-6 font-mono text-[10px] tracking-[0.2em] text-slate-500 hidden">
+            <div class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span id="question-count">PHASE_00</span>
+            </div>
+            <div id="timer" class="text-indigo-400 font-bold bg-indigo-500/10 px-4 py-1.5 rounded-full border border-indigo-500/20">
+                LIVE_SESSION
+            </div>
+        </div>
+
+        <div class="cyber-card p-6 md:p-12 min-h-[500px] flex flex-col justify-between shadow-2xl relative overflow-hidden">
+            
+            <div id="selection-view" class="space-y-10">
+                <div class="text-center">
+                    <h1 id="selection-title" class="text-4xl font-black italic uppercase tracking-tighter mb-3">
+                        Select <span class="text-indigo-500">Subject</span>
+                    </h1>
+                    <div class="h-1 w-20 bg-indigo-500 mx-auto rounded-full mb-4"></div>
+                    <p class="text-slate-400 text-sm">Pick a topic to begin your assessment.</p>
+                </div>
+                <div id="selection-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    </div>
+            </div>
+
+            <div id="test-view" class="hidden animate-in fade-in duration-700">
+                <div id="test-content">
+                    <h2 id="question-text" class="text-2xl md:text-3xl font-black leading-tight mb-10 tracking-tight italic">
+                        LOADING_QUESTION...
+                    </h2>
+                    <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mt-12 pt-8 border-t border-white/5">
+                <button onclick="quitTest()" class="text-slate-500 hover:text-rose-500 transition-all font-black text-[10px] tracking-widest uppercase py-2 px-4">
+                    Abort_Mission
+                </button>
+                <button id="next-btn" class="btn-neon opacity-50 pointer-events-none hidden">
+                    Next_Phase
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase } from './js/supabase.js';
+
+        let allQuestions = [];
+        let filteredQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = {};
+        let selectedSubject = "";
+        let selectedChapter = "";
+
+        window.quitTest = () => {
+            if(confirm("Discard progress and return to dashboard?")) window.location.href = 'dashboard.html';
+        };
+
+        async function init() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return window.location.href = 'index.html';
+
+                // Fetch student class info
+                const { data: profile } = await supabase.from('users').select('class').eq('id', user.id).single();
+                if (!profile?.class) return window.location.href = 'profile.html';
+
+                // Fetch only questions for this specific class
+                const { data: fetched, error } = await supabase.from('questions')
+                    .select('*')
+                    .eq('class', profile.class);
+                
+                if (error || !fetched || fetched.length === 0) {
+                    document.getElementById('selection-title').innerText = "SYSTEM_OFFLINE";
+                    document.getElementById('selection-grid').innerHTML = '<p class="text-center col-span-full text-rose-400 font-bold">No questions found for Class ' + profile.class + '</p>';
+                    return;
+                }
+
+                allQuestions = fetched;
+                showSubjectSelection();
+            } catch (err) {
+                console.error("Init Error:", err);
+            }
+        }
+
+        function showSubjectSelection() {
+            const grid = document.getElementById('selection-grid');
+            grid.innerHTML = '';
+            const subjects = [...new Set(allQuestions.map(q => q.subject))].filter(Boolean);
+            
+            subjects.forEach(sub => {
+                const btn = document.createElement('div');
+                btn.className = 'selection-chip';
+                btn.innerHTML = `<span>${sub}</span>`;
+                btn.onclick = () => showChapterSelection(sub);
+                grid.appendChild(btn);
+            });
+        }
+
+        function showChapterSelection(subject) {
+            selectedSubject = subject;
+            document.getElementById('selection-title').innerHTML = `Select <span class="text-indigo-500">Chapter</span>`;
+            const grid = document.getElementById('selection-grid');
+            grid.innerHTML = '';
+            
+            const chapters = [...new Set(allQuestions.filter(q => q.subject === subject).map(q => q.chapter))].filter(Boolean);
+
+            chapters.forEach(chap => {
+                const btn = document.createElement('div');
+                btn.className = 'selection-chip';
+                btn.innerText = chap;
+                btn.onclick = () => { selectedChapter = chap; startTest(); };
+                grid.appendChild(btn);
+            });
+        }
+
+        function startTest() {
+            filteredQuestions = allQuestions.filter(q => q.subject === selectedSubject && q.chapter === selectedChapter);
+            
+            // SECURITY: Store start state in LocalStorage for the Result Page to find
+            localStorage.setItem('testStartTime', Date.now());
+            localStorage.setItem('activeTest', JSON.stringify({
+                subject: selectedSubject,
+                chapter: selectedChapter,
+                questions: filteredQuestions
+            }));
+            
+            // Clean slate for new answers
+            userAnswers = {};
+            localStorage.removeItem('userAnswers');
+
+            document.getElementById('selection-view').classList.add('hidden');
+            document.getElementById('test-view').classList.remove('hidden');
+            document.getElementById('test-header').classList.remove('hidden');
+            document.getElementById('progress-container').classList.remove('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+            
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const q = filteredQuestions[currentIndex];
+            const grid = document.getElementById('options-grid');
+            const nextBtn = document.getElementById('next-btn');
+
+            grid.innerHTML = '';
+            nextBtn.classList.add('opacity-50', 'pointer-events-none');
+            nextBtn.innerText = (currentIndex === filteredQuestions.length - 1) ? "Finalize_Test" : "Next_Phase";
+            
+            document.getElementById('question-count').innerText = `QUESTION_${currentIndex + 1}/${filteredQuestions.length}`;
+            document.getElementById('question-text').innerText = q.question_text;
+
+            const options = [
+                { id: 'A', text: q.option_a },
+                { id: 'B', text: q.option_b },
+                { id: 'C', text: q.option_c },
+                { id: 'D', text: q.option_d }
+            ].filter(o => o.text); // Only show options that aren't empty
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-[10px] font-black border border-white/10">${opt.id}</span>
+                    <span>${opt.text}</span>
+                `;
+                
+                if(userAnswers[q.id] === opt.id) btn.classList.add('selected');
+
+                btn.onclick = () => {
+                    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    
+                    // Critical: Update the answer object
+                    userAnswers[q.id] = opt.id;
+                    nextBtn.classList.remove('opacity-50', 'pointer-events-none');
+                };
+                grid.appendChild(btn);
+            });
+
+            const progress = ((currentIndex + 1) / filteredQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        document.getElementById('next-btn').onclick = () => {
+            // CRITICAL SYNC: Save the answer sheet to memory before moving
+            localStorage.setItem('userAnswers', JSON.stringify(userAnswers));
+
+            if (currentIndex < filteredQuestions.length - 1) {
+                currentIndex++;
+                displayQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                // Redirect to results after 200ms to ensure localStorage finishes
+                setTimeout(() => {
+                    window.location.href = 'results.html';
+                }, 200);
+            }
+        };
+
+        init();
+    </script>
+</body>
+</html>

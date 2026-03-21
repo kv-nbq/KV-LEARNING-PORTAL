@@ -1,0 +1,95 @@
+/* 1. ROOT & THEME ENGINE */
+:root {
+    --accent: #6366f1; /* Indigo 500 */
+    --modal-bg: rgba(255, 255, 255, 0.03);
+    --text: #f8fafc;
+    --card-border: rgba(255, 255, 255, 0.1);
+    --transition-speed: 0.4s;
+}
+
+/* Rule: Dark Theme (Default) */
+.theme-dark { 
+    --bg: #020617; 
+    --accent: #6366f1; 
+    --text: #f8fafc;
+    --modal-bg: rgba(255, 255, 255, 0.03);
+}
+
+/* Rule: Light Theme */
+.theme-light { 
+    --bg: #f1f5f9; 
+    --accent: #ec4899; /* Pink 500 */
+    --text: #1e293b;
+    --modal-bg: rgba(255, 255, 255, 0.8); /* Solid white/gray glass for readability */
+    --card-border: rgba(0, 0, 0, 0.05);
+}
+
+body { 
+    background-color: var(--bg); 
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+    overflow-x: hidden;
+}
+
+/* 2. GLASS EFFECT (Rule 4: Visual Polish) */
+.glass-card {
+    background: var(--modal-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px); /* For Safari support */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+}
+
+/* 3. BUTTONS (Rule: Interactive Feedback) */
+.btn-vibrant {
+    background: var(--accent);
+    color: white;
+    padding: 0.8rem 1.6rem;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    border: none;
+}
+
+.btn-vibrant:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 10px 25px -5px var(--accent);
+}
+
+.btn-vibrant:active {
+    transform: scale(0.95);
+}
+
+/* 4. MODAL ANIMATION SYSTEM */
+#modal-content {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.4s ease-out;
+    transform: scale(0.9) translateY(20px); /* Hidden State */
+    opacity: 0;
+}
+
+.modal-active {
+    transform: scale(1) translateY(0) !important; /* Visible State */
+    opacity: 1 !important;
+}
+
+/* 5. ANIMATIONS */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(1deg); }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Utility for text gradients */
+.text-gradient {
+    background: linear-gradient(135deg, var(--accent) 0%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

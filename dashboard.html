@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | KV MCQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; min-height: 100vh; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .card-grad { background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(2, 6, 23, 0) 100%); }
+        .ai-card-grad { background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.05) 100%); }
+        #main-content { display: none; } 
+        .loader-spin { border-top-color: #6366f1; animation: spin 1s linear infinite; border-radius: 50%; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .hidden { display: none !important; }
+        .stat-card { border-left: 4px solid #6366f1; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div id="loading-screen" class="fixed inset-0 bg-[#020617] z-[100] flex flex-col items-center justify-center">
+        <div class="loader-spin w-12 h-12 border-4 border-white/10 mb-4"></div>
+        <p id="status-text" class="text-indigo-400 font-bold tracking-widest text-xs uppercase">Initializing Profile...</p>
+    </div>
+
+    <main id="main-content" class="max-w-6xl mx-auto">
+        <nav class="flex justify-between items-center mb-12">
+            <div>
+                <h1 class="text-2xl font-black italic tracking-tighter uppercase">KV<span class="text-indigo-500">Mastery</span></h1>
+                <p id="user-badge" class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-1">Authenticated Access</p>
+            </div>
+            <button onclick="handleLogout()" class="bg-red-500/10 text-red-500 px-5 py-2 rounded-xl border border-red-500/20 text-xs font-black hover:bg-red-500 hover:text-white transition uppercase tracking-widest">
+                Logout
+            </button>
+        </nav>
+
+        <header class="mb-10">
+            <div class="inline-block px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-[10px] font-bold uppercase tracking-widest mb-4">Student Portal</div>
+            <h2 class="text-5xl font-extrabold mb-2" id="welcome-name">Hello, Scholar</h2>
+            <p class="text-slate-400">Ready to boost your NCERT scores with +4/-1 marking?</p>
+        </header>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+            <div class="glass p-5 rounded-2xl stat-card">
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Last Score</p>
+                <h4 id="stat-last-score" class="text-2xl font-black">--</h4>
+            </div>
+            <div class="glass p-5 rounded-2xl border-l-4 border-emerald-500">
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Tests Done</p>
+                <h4 id="stat-total-tests" class="text-2xl font-black">0</h4>
+            </div>
+            <div class="glass p-5 rounded-2xl border-l-4 border-amber-500">
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Avg. Pace</p>
+                <h4 id="stat-avg-pace" class="text-2xl font-black">0s</h4>
+            </div>
+            <div class="glass p-5 rounded-2xl border-l-4 border-indigo-500">
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Ranking</p>
+                <h4 class="text-2xl font-black text-indigo-400">#--</h4>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div onclick="location.href='test.html'" class="glass card-grad p-8 rounded-[2.5rem] border-indigo-500/20 hover:border-indigo-500/50 transition-all cursor-pointer group">
+                <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-xl shadow-indigo-600/30 group-hover:scale-110 transition">📝</div>
+                <h3 class="text-lg font-bold mb-2 uppercase tracking-tight">Practice Lab</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Attempt Subject-wise MCQs. Get +4 for correct and -1 for wrong.</p>
+            </div>
+
+            <div onclick="window.open('https://learnmeai.vercel.app', '_blank')" class="glass ai-card-grad p-8 rounded-[2.5rem] border-purple-500/20 hover:border-purple-500/50 transition-all cursor-pointer group">
+                <div class="w-14 h-14 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-xl shadow-purple-600/30 group-hover:scale-110 transition">🧠</div>
+                <h3 class="text-lg font-bold mb-2 uppercase tracking-tight text-indigo-300">Learn with AI</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Personalized AI tutoring for NCERT concepts. Ask, learn, and grow.</p>
+            </div>
+
+            <div onclick="location.href='results.html'" class="glass p-8 rounded-[2.5rem] border-emerald-500/10 hover:border-emerald-500/40 hover:bg-white/5 transition-all cursor-pointer group">
+                <div class="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-xl shadow-emerald-600/30 group-hover:scale-110 transition">🏆</div>
+                <h3 class="text-lg font-bold mb-2 uppercase tracking-tight">Performance</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">View your detailed history, time analytics, and point totals.</p>
+            </div>
+
+            <div onclick="location.href='profile.html'" class="glass p-8 rounded-[2.5rem] border-white/5 hover:border-white/20 hover:bg-white/5 transition-all cursor-pointer group">
+                <div class="w-14 h-14 bg-slate-700 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-xl group-hover:scale-110 transition">👤</div>
+                <h3 class="text-lg font-bold mb-2 uppercase tracking-tight">Profile</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Update your Class, School, or Region details to sync with your school.</p>
+            </div>
+        </div>
+    </main>
+
+<script type="module">
+    import { supabase } from './js/supabase.js';
+
+    // 1. GLOBAL LOGOUT - Redirects to Home (index.html)
+    window.handleLogout = async () => {
+        try {
+            await supabase.auth.signOut();
+            localStorage.clear();
+            // Using window.location.href to Home Page as requested
+            window.location.href = 'index.html'; 
+        } catch (err) {
+            console.error("Logout failed:", err);
+            window.location.href = 'index.html';
+        }
+    };
+
+    // 2. INITIALIZE DASHBOARD
+    async function initDashboard() {
+        try {
+            const { data: { user }, error: authError } = await supabase.auth.getUser();
+            
+            if (authError || !user) {
+                window.location.replace('index.html');
+                return;
+            }
+
+            // Fetch Profile
+            const { data: profile } = await supabase.from("users").select("*").eq("id", user.id).maybeSingle();
+
+            if (!profile) {
+                window.location.replace('role.html'); 
+                return;
+            }
+
+            // Fetch Recent Results for Stats
+            const { data: results } = await supabase
+                .from('results')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('completed_at', { ascending: false });
+
+            // Update Stats UI
+            if (results && results.length > 0) {
+                document.getElementById('stat-last-score').innerText = results[0].score;
+                document.getElementById('stat-total-tests').innerText = results.length;
+                document.getElementById('stat-avg-pace').innerText = (results[0].average_time_per_question || 0) + 's';
+            }
+
+            // UI Update
+            const firstName = profile.full_name ? profile.full_name.trim().split(' ')[0] : 'Scholar';
+            document.getElementById('welcome-name').innerText = `Hello, ${firstName}`;
+            
+            document.getElementById('loading-screen').classList.add('hidden');
+            document.getElementById('main-content').style.display = 'block';
+
+        } catch (err) {
+            console.error("Dashboard Failed:", err);
+            document.getElementById('status-text').innerText = "Connection lost. Re-logging...";
+            setTimeout(() => window.location.replace('index.html'), 2000);
+        }
+    }
+
+    initDashboard();
+</script>
+</body>
+</html>

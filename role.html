@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KV MCQ | Identity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #020617; 
+            color: white; 
+        }
+        .role-card { 
+            background: rgba(255,255,255,0.03); 
+            border: 2px solid rgba(255,255,255,0.1); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer; 
+        }
+        .role-card:hover { 
+            border-color: #6366f1; 
+            background: rgba(99,102,241,0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+    <div id="selection-ui" class="max-w-md w-full text-center">
+        <h2 class="text-4xl font-black mb-4">Welcome to <span class="text-indigo-500">KV MCQ</span></h2>
+        <p class="text-slate-400 mb-12">Confirm your student identity to begin the test.</p>
+        
+        <div onclick="selectStudent()" id="student-btn" class="role-card p-12 rounded-[3rem]">
+            <div class="text-7xl mb-6">🎓</div>
+            <h3 class="text-3xl font-extrabold mb-2">Student</h3>
+            <p class="text-slate-500 text-sm">Access your assigned MCQs and view your performance results.</p>
+            
+            <div class="mt-8 py-3 px-6 bg-indigo-600 rounded-xl font-bold text-sm uppercase tracking-widest inline-block">
+                Enter Terminal
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase } from './js/supabase.js';
+
+        window.selectStudent = async () => {
+            const btn = document.getElementById('student-btn');
+            btn.style.pointerEvents = 'none';
+            btn.innerText = "Initializing...";
+
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Removed updated_at to prevent 400 Bad Request error
+                const { error } = await supabase.from('users').upsert({ 
+                    id: user.id, 
+                    email: user.email, 
+                    role: 'student',
+                    profile_completed: false
+                });
+
+                if (error) throw error;
+
+                // Success: Go to student profile/dashboard
+                window.location.href = 'profile.html';
+
+            } catch (err) {
+                console.error("Role Error:", err.message);
+                alert("Connection failed. Please refresh and try again.");
+                btn.style.pointerEvents = 'auto';
+                btn.innerText = "Student";
+            }
+        };
+    </script>
+</body>
+</html>
