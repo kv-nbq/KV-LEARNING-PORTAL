@@ -74,6 +74,30 @@
             box-shadow: 0 0 30px rgba(99, 102, 241, 0.5); 
         }
 
+        /* Continuous Popping Animation */
+        @keyframes continuous-pop {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .ebsb-tag {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+            animation: continuous-pop 2s ease-in-out infinite;
+            background: linear-gradient(to right, #FF9933, #FFFFFF, #128807);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 15px rgba(255, 153, 51, 0.2);
+        }
+
         .ai-floating-ball {
             position: fixed;
             bottom: 100px; 
@@ -184,9 +208,10 @@
 
     <section class="min-h-screen pt-40 md:pt-64 flex flex-col md:flex-row items-center max-w-7xl mx-auto px-8 gap-12">
         <div class="flex-1 text-center md:text-left">
-            <span class="bg-indigo-500/10 text-indigo-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-8 inline-block border border-indigo-500/20">
-                Academic Excellence 2.0
-            </span>
+            <div class="ebsb-tag">
+                एक भारत, श्रेष्ठ भारत
+            </div>
+            
             <h1 class="text-5xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-tight glow-text">
                 Welcome to <br> <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">Smart MCQ Portal</span>
             </h1>
@@ -194,7 +219,7 @@
                 Unlock comprehensive NCERT practice from Class 6 to 12. AI-driven tracking designed specifically for Kendriya Vidyalaya scholars.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <button onclick="loginWithGoogle()" class="btn-shiny px-8 py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3" aria-label="Get started by logging in">
+                <button onclick="loginWithGoogle()" class="btn-shiny px-8 py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3">
                     Start Now 🚀
                 </button>
                 <a href="faq.html" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition backdrop-blur-sm text-center flex items-center justify-center">View FAQ</a>
