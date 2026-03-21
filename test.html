@@ -17,6 +17,7 @@
         .selection-chip { background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); padding: 1.25rem; border-radius: 1rem; cursor: pointer; transition: 0.3s; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
         .selection-chip:hover { background: #6366f1; color: white; transform: translateY(-3px); box-shadow: 0 10px 20px -10px #6366f1; }
         .hidden { display: none !important; }
+        input[type=number]::-webkit-inner-spin-button { opacity: 1; }
     </style>
 </head>
 <body class="bg-[#020617] text-white flex items-center justify-center p-4 md:p-6">
@@ -45,10 +46,27 @@
                         Select <span class="text-indigo-500">Subject</span>
                     </h1>
                     <div class="h-1 w-20 bg-indigo-500 mx-auto rounded-full mb-4"></div>
-                    <p class="text-slate-400 text-sm">Pick a topic to begin your assessment.</p>
+                    <p id="selection-subtitle" class="text-slate-400 text-sm">Pick a topic to begin your assessment.</p>
                 </div>
-                <div id="selection-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+
+                <div id="selection-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+
+                <div id="limit-view" class="hidden max-w-sm mx-auto space-y-6 text-center">
+                    <div class="bg-indigo-500/5 border border-indigo-500/20 p-6 rounded-2xl">
+                        <p class="text-xs font-black uppercase tracking-widest text-indigo-400 mb-2">Available in Database</p>
+                        <div class="text-5xl font-black text-white" id="max-qs-display">0</div>
+                        <p class="text-slate-500 text-[10px] mt-2 italic">Total questions found for this chapter</p>
                     </div>
+                    
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Questions to Attempt</label>
+                        <input type="number" id="user-limit-input" 
+                               class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-center text-2xl font-black outline-none focus:border-indigo-500 transition-all"
+                               placeholder="0">
+                    </div>
+
+                    <button id="start-session-btn" class="btn-neon w-full">Initiate_Session</button>
+                </div>
             </div>
 
             <div id="test-view" class="hidden animate-in fade-in duration-700">
@@ -56,8 +74,7 @@
                     <h2 id="question-text" class="text-2xl md:text-3xl font-black leading-tight mb-10 tracking-tight italic">
                         LOADING_QUESTION...
                     </h2>
-                    <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        </div>
+                    <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                 </div>
             </div>
 
@@ -86,23 +103,31 @@
             if(confirm("Discard progress and return to dashboard?")) window.location.href = 'dashboard.html';
         };
 
+        // --- Fisher-Yates Shuffle Logic ---
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
         async function init() {
             try {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) return window.location.href = 'index.html';
 
-                // Fetch student class info
                 const { data: profile } = await supabase.from('users').select('class').eq('id', user.id).single();
                 if (!profile?.class) return window.location.href = 'profile.html';
 
-                // Fetch only questions for this specific class
                 const { data: fetched, error } = await supabase.from('questions')
                     .select('*')
                     .eq('class', profile.class);
                 
                 if (error || !fetched || fetched.length === 0) {
                     document.getElementById('selection-title').innerText = "SYSTEM_OFFLINE";
-                    document.getElementById('selection-grid').innerHTML = '<p class="text-center col-span-full text-rose-400 font-bold">No questions found for Class ' + profile.class + '</p>';
                     return;
                 }
 
@@ -115,7 +140,10 @@
 
         function showSubjectSelection() {
             const grid = document.getElementById('selection-grid');
+            grid.classList.remove('hidden');
+            document.getElementById('limit-view').classList.add('hidden');
             grid.innerHTML = '';
+            
             const subjects = [...new Set(allQuestions.map(q => q.subject))].filter(Boolean);
             
             subjects.forEach(sub => {
@@ -139,15 +167,51 @@
                 const btn = document.createElement('div');
                 btn.className = 'selection-chip';
                 btn.innerText = chap;
-                btn.onclick = () => { selectedChapter = chap; startTest(); };
+                btn.onclick = () => showLimitView(chap);
                 grid.appendChild(btn);
             });
         }
 
-        function startTest() {
-            filteredQuestions = allQuestions.filter(q => q.subject === selectedSubject && q.chapter === selectedChapter);
+        function showLimitView(chapter) {
+            selectedChapter = chapter;
+            const availableQs = allQuestions.filter(q => q.subject === selectedSubject && q.chapter === selectedChapter);
             
-            // SECURITY: Store start state in LocalStorage for the Result Page to find
+            document.getElementById('selection-title').innerHTML = `Test <span class="text-indigo-500">Limit</span>`;
+            document.getElementById('selection-subtitle').innerText = "Specify the number of questions for this session.";
+            
+            document.getElementById('selection-grid').classList.add('hidden');
+            const limitView = document.getElementById('limit-view');
+            limitView.classList.remove('hidden');
+
+            const maxDisplay = document.getElementById('max-qs-display');
+            const input = document.getElementById('user-limit-input');
+            
+            maxDisplay.innerText = availableQs.length;
+            input.value = availableQs.length; 
+            input.max = availableQs.length;
+            input.min = 1;
+
+            document.getElementById('start-session-btn').onclick = () => {
+                let limit = parseInt(input.value);
+                
+                if (isNaN(limit) || limit < 1) {
+                    alert("Please enter a valid number of questions.");
+                    return;
+                }
+
+                if (limit > availableQs.length) limit = availableQs.length;
+
+                // --- SHUFFLE ACTION ---
+                // We shuffle the full pool of available questions first
+                const shuffledPool = shuffle([...availableQs]);
+                // Then we take only the amount the user requested
+                filteredQuestions = shuffledPool.slice(0, limit);
+                
+                startTest();
+            };
+        }
+
+        function startTest() {
             localStorage.setItem('testStartTime', Date.now());
             localStorage.setItem('activeTest', JSON.stringify({
                 subject: selectedSubject,
@@ -155,7 +219,6 @@
                 questions: filteredQuestions
             }));
             
-            // Clean slate for new answers
             userAnswers = {};
             localStorage.removeItem('userAnswers');
 
@@ -185,7 +248,7 @@
                 { id: 'B', text: q.option_b },
                 { id: 'C', text: q.option_c },
                 { id: 'D', text: q.option_d }
-            ].filter(o => o.text); // Only show options that aren't empty
+            ].filter(o => o.text);
 
             options.forEach(opt => {
                 const btn = document.createElement('button');
@@ -200,8 +263,6 @@
                 btn.onclick = () => {
                     document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
-                    
-                    // Critical: Update the answer object
                     userAnswers[q.id] = opt.id;
                     nextBtn.classList.remove('opacity-50', 'pointer-events-none');
                 };
@@ -213,7 +274,6 @@
         }
 
         document.getElementById('next-btn').onclick = () => {
-            // CRITICAL SYNC: Save the answer sheet to memory before moving
             localStorage.setItem('userAnswers', JSON.stringify(userAnswers));
 
             if (currentIndex < filteredQuestions.length - 1) {
@@ -221,7 +281,6 @@
                 displayQuestion();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                // Redirect to results after 200ms to ensure localStorage finishes
                 setTimeout(() => {
                     window.location.href = 'results.html';
                 }, 200);
