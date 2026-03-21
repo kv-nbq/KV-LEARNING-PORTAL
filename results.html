@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scorecard | KV MCQ</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; min-height: 100vh; }
@@ -13,54 +14,90 @@
         .history-btn:hover { background: rgba(99, 102, 241, 0.15); transform: translateY(-2px); border-color: rgba(99, 102, 241, 0.5); }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
         .modal.active { display: flex; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .cal-day { aspect-ratio: 1; border-radius: 4px; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        .level-none { background: rgba(255,255,255,0.05); color: #475569; }
+        .level-low { background: #ef4444; color: white; } 
+        .level-mid { background: #eab308; color: black; } 
+        .level-high { background: #22c55e; color: white; }
     </style>
 </head>
-<body class="p-6">
+<body class="p-4 md:p-8">
 
-    <div class="max-w-3xl mx-auto space-y-6">
-        <div class="glass-card rounded-[2.5rem] p-8 text-center shadow-2xl border-t-4 border-indigo-500">
-            <p id="res-subject" class="text-indigo-400 font-bold text-[10px] tracking-[0.3em] uppercase mb-2 italic">LOADING...</p>
-            <h1 class="text-3xl font-black italic uppercase mb-6">Assessment <span class="text-indigo-500">Report</span></h1>
-            
-            <div class="inline-block p-8 border-4 border-indigo-500/20 rounded-full mb-8 bg-indigo-500/5 relative">
-                <span id="res-score" class="text-6xl font-black italic">0</span>
-                <p id="res-total-label" class="text-[10px] text-slate-500 font-bold uppercase">TOTAL POINTS</p>
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <div class="lg:col-span-2 space-y-6">
+            <div class="glass-card rounded-[2.5rem] p-8 shadow-2xl border-t-4 border-indigo-500">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <p class="text-indigo-400 font-bold text-[10px] tracking-[0.3em] uppercase italic">Overall Analytics</p>
+                        <h1 class="text-2xl font-black italic uppercase">Lifetime <span class="text-indigo-500">Scorecard</span></h1>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-slate-500 font-bold uppercase">Current Date</p>
+                        <p id="res-time" class="text-xs font-bold text-white">--:--</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-indigo-500/10 p-4 rounded-2xl border border-indigo-500/20">
+                        <p class="text-[9px] text-indigo-300 font-bold uppercase mb-1">Total Points</p>
+                        <p id="res-score" class="text-3xl font-black italic text-white">0</p>
+                    </div>
+                    <div class="bg-emerald-500/10 p-4 rounded-2xl border border-emerald-500/20">
+                        <p class="text-[9px] text-emerald-300 font-bold uppercase mb-1">Total Correct</p>
+                        <p id="res-correct" class="text-3xl font-black italic text-white">0</p>
+                    </div>
+                    <div class="bg-rose-500/10 p-4 rounded-2xl border border-rose-500/20">
+                        <p class="text-[9px] text-rose-300 font-bold uppercase mb-1">Total Wrong</p>
+                        <p id="res-wrong" class="text-3xl font-black italic text-white">0</p>
+                    </div>
+                    <div class="bg-slate-500/10 p-4 rounded-2xl border border-slate-500/20">
+                        <p class="text-[9px] text-slate-400 font-bold uppercase mb-1">Avg Accuracy</p>
+                        <p id="res-percent" class="text-3xl font-black italic text-white">0%</p>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-4 text-center tracking-widest">Questions Practiced (Last 7 Days)</p>
+                    <div class="h-[180px] w-full">
+                        <canvas id="improvementChart"></canvas>
+                    </div>
+                </div>
+
+                <button onclick="window.location.href='dashboard.html'" class="w-full bg-white text-black font-black py-4 rounded-xl hover:bg-indigo-600 hover:text-white transition-all uppercase text-xs tracking-widest">
+                    Continue to Dashboard
+                </button>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-                <div class="bg-white/5 p-4 rounded-2xl">
-                    <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">Accuracy</p>
-                    <p id="res-percent" class="text-xl font-black text-emerald-400">0%</p>
-                </div>
-                <div class="bg-white/5 p-4 rounded-2xl">
-                    <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">Total Qs</p>
-                    <p id="res-total-qs" class="text-xl font-black text-white">0</p>
-                </div>
-                <div class="bg-white/5 p-4 rounded-2xl">
-                    <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">Correct (+4)</p>
-                    <p id="res-correct" class="text-xl font-black text-indigo-400">0</p>
-                </div>
-                <div class="bg-white/5 p-4 rounded-2xl">
-                    <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">Wrong (-1)</p>
-                    <p id="res-wrong" class="text-xl font-black text-rose-500">0</p>
-                </div>
+            <div class="glass-card rounded-2xl p-6">
+                <h3 class="text-xs font-black uppercase text-slate-400 mb-4 italic tracking-widest">Recent Sessions</h3>
+                <div id="history-list" class="space-y-3"></div>
             </div>
-
-            <button onclick="window.location.href='dashboard.html'" class="w-full bg-white text-black font-black py-4 rounded-xl hover:bg-indigo-600 hover:text-white transition uppercase text-xs tracking-widest">
-                Continue to Dashboard
-            </button>
         </div>
 
-        <div class="glass-card rounded-2xl p-6">
-            <h3 class="text-xs font-black uppercase text-slate-400 mb-4 italic tracking-widest">Recent History (Click to Review)</h3>
-            <div id="history-list" class="space-y-3"></div>
+        <div class="space-y-6">
+            <div class="glass-card rounded-3xl p-6 text-center border-b-4 border-orange-500">
+                <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Current Streak</p>
+                <div class="flex items-center justify-center gap-2">
+                    <span class="text-4xl">🔥</span>
+                    <span id="streak-count" class="text-5xl font-black italic">0</span>
+                </div>
+                <p class="text-[9px] text-orange-400 font-bold uppercase mt-2">Days Consistent</p>
+            </div>
+
+            <div class="glass-card rounded-3xl p-6">
+                <h3 class="text-xs font-black uppercase text-indigo-400 mb-4 tracking-widest text-center">Activity Calendar</h3>
+                <div id="calendar-month" class="text-center text-sm font-bold mb-4 uppercase italic">Month</div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+            </div>
         </div>
     </div>
 
     <div id="review-modal" class="modal">
         <div class="glass-card w-full max-w-xl max-h-[85vh] overflow-y-auto rounded-3xl p-6 relative">
-            <button onclick="closeModal()" class="fixed md:absolute top-4 right-4 bg-rose-500 text-white w-8 h-8 rounded-full font-bold">×</button>
-            <h2 id="modal-title" class="text-xl font-black italic mb-6 text-indigo-400 uppercase text-center">Test Review</h2>
+            <button onclick="closeModal()" class="absolute top-4 right-4 bg-rose-500 text-white w-8 h-8 rounded-full font-bold">×</button>
+            <h2 id="modal-title" class="text-xl font-black italic mb-6 text-indigo-400 uppercase text-center">Review</h2>
             <div id="review-content" class="space-y-4"></div>
         </div>
     </div>
@@ -70,134 +107,206 @@
 
         async function startAnalysis() {
             try {
+                // 1. Process Current Test from LocalStorage
                 const testData = JSON.parse(localStorage.getItem('activeTest'));
                 const userAnswers = JSON.parse(localStorage.getItem('userAnswers')) || {};
-                const startTime = localStorage.getItem('testStartTime');
+                const startTime = localStorage.getItem('testStartTime') || Date.now();
                 
-                if (!testData) return;
+                if (testData) {
+                    const now = new Date();
+                    const formattedTime = now.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-                let correctCount = 0;
-                let wrongCount = 0;
-                let reviewData = [];
+                    let correctCount = 0;
+                    let wrongCount = 0;
+                    let reviewData = [];
 
-                // 1. Calculate Results with (+4 / -1) Logic
-                testData.questions.forEach(q => {
-                    const actualCorrect = q.answer || q.correct_answer || q.correct_option;
-                    const studentChoice = userAnswers[q.id];
-                    
-                    if (studentChoice) {
-                        const isCorrect = String(studentChoice).trim() === String(actualCorrect).trim();
-                        if (isCorrect) {
-                            correctCount++;
-                        } else {
-                            wrongCount++;
-                        }
+                    testData.questions.forEach(q => {
+                        const actualCorrect = q.answer || q.correct_answer || q.correct_option;
+                        const studentChoice = userAnswers[q.id];
+                        const isCorrect = studentChoice && String(studentChoice).trim() === String(actualCorrect).trim();
                         
+                        if (studentChoice) { isCorrect ? correctCount++ : wrongCount++; }
                         reviewData.push({
                             question: q.question_text,
-                            student: studentChoice,
+                            student: studentChoice || "Skipped",
                             correct: actualCorrect,
-                            status: isCorrect ? 'correct' : 'wrong'
+                            status: isCorrect ? 'correct' : (studentChoice ? 'wrong' : 'skipped')
                         });
-                    } else {
-                        // Skipped questions
-                        reviewData.push({
-                            question: q.question_text,
-                            student: "Skipped",
-                            correct: actualCorrect,
-                            status: 'skipped'
-                        });
-                    }
-                });
+                    });
 
-                // Final Points Calculation
-                const finalPoints = (correctCount * 4) - (wrongCount * 1);
-                const totalQs = testData.questions.length;
-                const accuracy = totalQs > 0 ? Math.round((correctCount / totalQs) * 100) : 0;
+                    // Points based on your law: +4 for correct, -1 for wrong
+                    const testPoints = (correctCount * 4) - (wrongCount * 1);
+                    const testTotal = testData.questions.length;
+                    const testAccuracy = Math.round((correctCount / testTotal) * 100) || 0;
 
-                // 2. Update UI
-                document.getElementById('res-subject').innerText = `${testData.subject} • ${testData.chapter}`;
-                document.getElementById('res-score').innerText = finalPoints;
-                document.getElementById('res-total-qs').innerText = totalQs;
-                document.getElementById('res-correct').innerText = correctCount;
-                document.getElementById('res-wrong').innerText = wrongCount;
-                document.getElementById('res-percent').innerText = accuracy + "%";
-
-                // 3. Save to Local History
-                let history = JSON.parse(localStorage.getItem('test_history') || '[]');
-                const alreadySaved = history.find(h => h.startTime === startTime);
-                
-                if (!alreadySaved) {
+                    // Save this specific test to history
+                    let history = JSON.parse(localStorage.getItem('test_history') || '[]');
                     const testEntry = { 
                         startTime: startTime,
+                        displayTime: formattedTime,
                         subject: testData.subject, 
                         chapter: testData.chapter, 
-                        points: finalPoints,
+                        points: testPoints,
                         correct: correctCount,
-                        total: totalQs, 
+                        wrong: wrongCount,
+                        total: testTotal, 
+                        accuracy: testAccuracy,
                         review: reviewData 
                     };
-                    history.unshift(testEntry);
-                    localStorage.setItem('test_history', JSON.stringify(history.slice(0, 15)));
-                }
-
-                renderHistory(history);
-
-                // 4. Sync to Database
-                if (!alreadySaved) {
-                    const { data: { user } } = await supabase.auth.getUser();
-                    if (user) {
-                        await supabase.from('results').insert([{
-                            user_id: user.id,
-                            subject: testData.subject,
-                            chapter: testData.chapter,
-                            score: finalPoints, // Saving calculated points
-                            total_questions: totalQs,
-                            percentage: accuracy,
-                            wrong_answers: wrongCount
-                        }]);
+                    
+                    // Prevent duplicate saves on refresh
+                    if (!history.find(h => h.startTime === startTime)) {
+                        history.unshift(testEntry);
+                        localStorage.setItem('test_history', JSON.stringify(history.slice(0, 50)));
+                        localStorage.removeItem('activeTest'); // Clear once saved
                     }
                 }
+
+                // 2. Calculate Lifetime Stats from all tests in History
+                const fullHistory = JSON.parse(localStorage.getItem('test_history') || '[]');
+                
+                let lifetimePoints = 0;
+                let lifetimeCorrect = 0;
+                let lifetimeWrong = 0;
+                let totalPossibleQuestions = 0;
+
+                fullHistory.forEach(item => {
+                    lifetimePoints += (item.points || 0);
+                    lifetimeCorrect += (item.correct || 0);
+                    lifetimeWrong += (item.wrong || 0);
+                    totalPossibleQuestions += (item.total || 0);
+                });
+
+                const lifetimeAccuracy = totalPossibleQuestions > 0 
+                    ? Math.round((lifetimeCorrect / totalPossibleQuestions) * 100) 
+                    : 0;
+
+                // 3. UI Global Updates
+                document.getElementById('res-time').innerText = new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('res-score').innerText = lifetimePoints;
+                document.getElementById('res-correct').innerText = lifetimeCorrect;
+                document.getElementById('res-wrong').innerText = lifetimeWrong;
+                document.getElementById('res-percent').innerText = lifetimeAccuracy + "%";
+
+                updateStreak();
+                renderHistory(fullHistory);
+                renderGraph(fullHistory);
+                initCalendar(fullHistory);
+
             } catch (err) { console.error(err); }
+        }
+
+        function updateStreak() {
+            const today = new Date().toDateString();
+            const lastDate = localStorage.getItem('last_activity_date');
+            let streak = parseInt(localStorage.getItem('user_streak') || '0');
+
+            if (lastDate !== today) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (lastDate === yesterday.toDateString()) {
+                    streak++;
+                } else {
+                    streak = 1; 
+                }
+                localStorage.setItem('user_streak', streak);
+                localStorage.setItem('last_activity_date', today);
+            }
+            document.getElementById('streak-count').innerText = streak || 1;
+        }
+
+        function renderGraph(history) {
+            const ctx = document.getElementById('improvementChart').getContext('2d');
+            const dailyData = {};
+            history.forEach(h => {
+                const date = new Date(parseInt(h.startTime) || Date.now()).toLocaleDateString([], { month: 'short', day: 'numeric' });
+                dailyData[date] = (dailyData[date] || 0) + h.total;
+            });
+
+            const labels = Object.keys(dailyData).reverse().slice(-7);
+            const dataValues = labels.map(l => dailyData[l]);
+
+            if (window.myChart) window.myChart.destroy();
+            window.myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataValues,
+                        backgroundColor: dataValues.map(v => v > 50 ? '#22c55e' : (v >= 20 ? '#eab308' : '#6366f1')),
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+                        x: { grid: { display: false }, ticks: { color: '#64748b' } }
+                    }
+                }
+            });
+        }
+
+        function initCalendar(history) {
+            const grid = document.getElementById('calendar-grid');
+            const now = new Date();
+            document.getElementById('calendar-month').innerText = now.toLocaleString('default', { month: 'long' });
+            
+            const dailyStats = {};
+            history.forEach(h => {
+                const d = new Date(parseInt(h.startTime) || Date.now()).getDate();
+                dailyStats[d] = (dailyStats[d] || 0) + h.total;
+            });
+
+            grid.innerHTML = '';
+            for (let i = 1; i <= new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate(); i++) {
+                const count = dailyStats[i] || 0;
+                let lvl = 'level-none';
+                if (count > 0 && count < 5) lvl = 'level-low';
+                else if (count >= 20 && count <= 50) lvl = 'level-mid';
+                else if (count > 50) lvl = 'level-high';
+
+                grid.innerHTML += `<div class="cal-day ${lvl}">${i}</div>`;
+            }
         }
 
         function renderHistory(history) {
             const list = document.getElementById('history-list');
-            list.innerHTML = history.map((item, index) => `
+            list.innerHTML = history.slice(0, 10).map((item, index) => `
                 <div onclick="openReview(${index})" class="p-4 rounded-xl flex justify-between items-center bg-white/5 history-btn">
                     <div>
-                        <p class="text-[9px] text-indigo-400 font-bold uppercase tracking-tighter">${item.subject}</p>
-                        <p class="text-xs font-bold">${item.chapter}</p>
+                        <p class="text-[8px] text-indigo-400 font-bold uppercase tracking-widest">${item.displayTime}</p>
+                        <p class="text-xs font-bold text-slate-200">${item.chapter}</p>
                     </div>
                     <div class="text-right">
-                        <div class="font-black italic text-lg text-indigo-400">${item.points} PTS</div>
-                        <div class="text-[8px] text-slate-400 uppercase font-bold">${item.correct}/${item.total} Correct</div>
+                        <div class="font-black italic text-indigo-400">${item.points > 0 ? '+' : ''}${item.points} PTS</div>
+                        <div class="text-[8px] text-slate-500 font-bold">${item.correct}/${item.total} CORRECT</div>
                     </div>
                 </div>
             `).join('');
         }
 
-        window.openReview = (index) => {
-            const history = JSON.parse(localStorage.getItem('test_history'));
-            const test = history[index];
-            const content = document.getElementById('review-content');
-            document.getElementById('modal-title').innerText = `${test.chapter} Review`;
-            
-            content.innerHTML = test.review.map((r, i) => `
-                <div class="p-4 rounded-xl ${r.status === 'correct' ? 'bg-emerald-500/10 border border-emerald-500/20' : r.status === 'skipped' ? 'bg-slate-500/10 border border-slate-500/20' : 'bg-rose-500/10 border border-rose-500/20'}">
-                    <p class="text-xs font-bold mb-2">Q${i+1}: ${r.question}</p>
-                    <div class="grid grid-cols-2 gap-2 text-[10px] uppercase font-black">
-                        <div class="${r.status === 'correct' ? 'text-emerald-400' : 'text-rose-400'}">You: ${r.student}</div>
-                        <div class="text-indigo-400 text-right">Correct: ${r.correct}</div>
+        window.openReview = (i) => {
+            const h = JSON.parse(localStorage.getItem('test_history'));
+            const t = h[i];
+            document.getElementById('modal-title').innerText = t.chapter;
+            document.getElementById('review-content').innerHTML = t.review.map((r, qI) => `
+                <div class="p-4 rounded-xl ${r.status === 'correct' ? 'bg-emerald-500/10' : (r.status === 'skipped' ? 'bg-slate-500/10' : 'bg-rose-500/10')} border border-white/5">
+                    <p class="text-xs font-bold mb-2">Q${qI+1}: ${r.question}</p>
+                    <div class="flex justify-between text-[10px] font-black uppercase">
+                        <span class="${r.status === 'correct' ? 'text-emerald-400' : 'text-rose-400'}">You: ${r.student}</span>
+                        <span class="text-indigo-400">Correct: ${r.correct}</span>
                     </div>
                 </div>
             `).join('');
-            
             document.getElementById('review-modal').classList.add('active');
         };
 
         window.closeModal = () => document.getElementById('review-modal').classList.remove('active');
-
+        
         startAnalysis();
     </script>
 </body>
