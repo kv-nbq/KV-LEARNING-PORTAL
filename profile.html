@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings | KV MCQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; min-height: 100vh; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .input-style { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: rgb(58, 134, 42); transition: all 0.2s; }
+        .input-style:focus { border-color: #393cf4; outline: none; background: rgba(255, 255, 255, 0.08); }
+        .kv-only { display: none; }
+        .kv-only.show { display: block; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none; }
+        
+        /* Force uppercase visuals while typing */
+        .uppercase-input { text-transform: uppercase; }
+    </style>
+</head>
+<body class="flex items-center justify-center p-6">
+
+    <div id="loader" class="fixed inset-0 bg-[#020617] z-[100] flex flex-col items-center justify-center font-bold text-indigo-500 uppercase tracking-widest">
+        <div class="mb-4">Loading Profile...</div>
+        <div id="db-status" class="text-[10px] text-slate-500">Checking Database Sync...</div>
+    </div>
+
+    <div class="glass w-full max-w-xl rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-extrabold italic">ACCOUNT <span class="text-indigo-500">SETTINGS</span></h1>
+            <p class="text-slate-400 text-sm mt-2">Personalize your learning experience.</p>
+        </header>
+
+        <form id="profile-form" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-1">Full Name</label>
+                    <input type="text" id="name" class="input-style w-full p-4 rounded-2xl font-semibold uppercase-input" placeholder="YOUR NAME" required>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-1">Current Class</label>
+                    <select id="class" class="input-style w-full p-4 rounded-2xl font-bold cursor-pointer" required>
+                        <option value="6">Class 6</option>
+                        <option value="7">Class 7</option>
+                        <option value="8">Class 8</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                        <option value="11">Class 11</option>
+                        <option value="12">Class 12</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-black text-indigo-400 uppercase tracking-widest ml-1">School Affiliation</label>
+                <select id="type" class="input-style w-full p-4 rounded-2xl font-bold cursor-pointer" required>
+                    <option value="non-kv">Non-KV / Guest Student</option>
+                    <option value="kv">KV Student (PM Shri Kendriya Vidyalaya)</option>
+                </select>
+            </div>
+
+            <div id="kv-section" class="kv-only space-y-4 pt-6 border-t border-white/10">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Full School Name</label>
+                    <input type="text" id="school_name" class="input-style w-full p-4 rounded-2xl uppercase-input" placeholder="e.g. KV NO.1 AFS">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">State / UT</label>
+                        <select id="state" class="input-style w-full p-4 rounded-2xl font-bold cursor-pointer">
+                             <option value="" disabled selected>Select State</option>
+                             <option value="Andhra Pradesh">Andhra Pradesh</option>
+                             <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                             <option value="Assam">Assam</option>
+                             <option value="Bihar">Bihar</option>
+                             <option value="Chhattisgarh">Chhattisgarh</option>
+                             <option value="Goa">Goa</option>
+                             <option value="Gujarat">Gujarat</option>
+                             <option value="Haryana">Haryana</option>
+                             <option value="Himachal Pradesh">Himachal Pradesh</option>
+                             <option value="Jharkhand">Jharkhand</option>
+                             <option value="Karnataka">Karnataka</option>
+                             <option value="Kerala">Kerala</option>
+                             <option value="Madhya Pradesh">Madhya Pradesh</option>
+                             <option value="Maharashtra">Maharashtra</option>
+                             <option value="Manipur">Manipur</option>
+                             <option value="Meghalaya">Meghalaya</option>
+                             <option value="Mizoram">Mizoram</option>
+                             <option value="Nagaland">Nagaland</option>
+                             <option value="Odisha">Odisha</option>
+                             <option value="Punjab">Punjab</option>
+                             <option value="Rajasthan">Rajasthan</option>
+                             <option value="Sikkim">Sikkim</option>
+                             <option value="Tamil Nadu">Tamil Nadu</option>
+                             <option value="Telangana">Telangana</option>
+                             <option value="Tripura">Tripura</option>
+                             <option value="Uttar Pradesh">Uttar Pradesh</option>
+                             <option value="Uttarakhand">Uttarakhand</option>
+                             <option value="West Bengal">West Bengal</option>
+                             <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                             <option value="Chandigarh">Chandigarh</option>
+                             <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                             <option value="Delhi">Delhi</option>
+                             <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                             <option value="Ladakh">Ladakh</option>
+                             <option value="Lakshadweep">Lakshadweep</option>
+                             <option value="Puducherry">Puducherry</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">KV Region</label>
+                        <input type="text" id="region" placeholder="e.g. GUWAHATI" class="input-style w-full p-4 rounded-2xl uppercase-input">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">City</label>
+                    <input type="text" id="city" placeholder="CITY" class="input-style w-full p-4 rounded-2xl uppercase-input">
+                </div>
+            </div>
+
+            <button type="submit" id="save-btn" class="w-full bg-indigo-600 py-5 rounded-2xl font-black text-lg hover:bg-indigo-500 transition shadow-xl uppercase tracking-widest">
+                Save & Continue
+            </button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { supabase } from './js/supabase.js';
+
+        const form = document.getElementById('profile-form');
+        const typeSelect = document.getElementById('type');
+        const kvSection = document.getElementById('kv-section');
+        const btn = document.getElementById('save-btn');
+        let currentUser = null;
+
+        typeSelect.onchange = () => {
+            const isKV = typeSelect.value === 'kv';
+            kvSection.classList.toggle('show', isKV);
+            document.querySelectorAll('#kv-section input, #kv-section select').forEach(el => el.required = isKV);
+        };
+
+        async function loadProfile() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    window.location.replace('index.html');
+                    return;
+                }
+                currentUser = user;
+
+                const { data: dbData, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', user.id)
+                    .maybeSingle();
+
+                if (dbData) {
+                    document.getElementById('name').value = dbData.full_name || '';
+                    document.getElementById('class').value = dbData.class || '10';
+                    typeSelect.value = dbData.school_type || 'non-kv';
+                    
+                    if (typeSelect.value === 'kv') {
+                        kvSection.classList.add('show');
+                        document.getElementById('school_name').value = dbData.school_name || '';
+                        document.getElementById('region').value = dbData.region || '';
+                        document.getElementById('city').value = dbData.city || '';
+                        document.getElementById('state').value = dbData.state || '';
+                    }
+                }
+                document.getElementById('loader').classList.add('hidden');
+            } catch (err) {
+                console.error("Load error:", err);
+                document.getElementById('db-status').innerText = "Database error. Please reload.";
+            }
+        }
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            btn.innerText = "SYNCING DATA...";
+            btn.disabled = true;
+            
+            const isKV = typeSelect.value === 'kv';
+            
+            // Logic to convert everything to Uppercase (Block Letters) except State
+            const updateData = {
+                id: currentUser.id,
+                full_name: document.getElementById('name').value.trim().toUpperCase(),
+                class: document.getElementById('class').value,
+                school_type: typeSelect.value,
+                profile_completed: true,
+                updated_at: new Date().toISOString()
+            };
+
+            if (isKV) {
+                updateData.school_name = document.getElementById('school_name').value.trim().toUpperCase();
+                updateData.region = document.getElementById('region').value.trim().toUpperCase();
+                updateData.city = document.getElementById('city').value.trim().toUpperCase();
+                updateData.state = document.getElementById('state').value; // Keep original (Normal case)
+            }
+
+            const { error } = await supabase.from('users').upsert(updateData);
+
+            if (error) {
+                console.error("Upsert error:", error);
+                alert("Update Failed: " + error.message);
+                btn.innerText = "RETRY UPDATE";
+                btn.disabled = false;
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        };
+
+        loadProfile();
+    </script>
+</body>
+</html>
