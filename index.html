@@ -1,424 +1,205 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>KV LEARNING PORTAL </title>
-    <meta name="description" content="Official PM SHRI KV New Bongaigaon practice portal. Comprehensive NCERT MCQs for Class 6 to 12. Boost your CBSE exam preparation with AI-driven tracking and analytics.">
-    
-    <meta name="keywords" content="Kendriya, Vidyalaya, KVS, NCERT, CBSE, MCQ, Practice, Learning, Portal, Students, Education, Exam, Preparation, Class, 6, 7, 8, 9, 10, 11, 12, Science, Commerce, Arts, Quiz, Study, Material, Online, Testing, PM-SHRI">
-    <meta name="author" content="Mohit Mandal | PM SHRI KV NBQ">
-    <meta name="robots" content="index, follow">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KV Logo Cinematic Reveal</title>
 
-    <link rel="icon" type="image/png" href="a.png">
+<style>
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: Arial, sans-serif;
+}
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        
-        :root {
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --bg-ultra-dark: #010409; 
-            --card-dark: #0d1117;
-        }
+canvas {
+  display: block;
+}
 
-        body { 
-            background-color: var(--bg-ultra-dark); 
-            color: #e6edf3; 
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            scroll-behavior: smooth;
-        }
+#logo-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  text-align: center;
+  opacity: 0;
+  animation: zoomIn 4s forwards 3s;
+}
 
-        .glass-nav {
-            background: rgba(1, 4, 9, 0.85);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
+#kv-logo-img {
+  width: 320px;
+  filter: drop-shadow(0 0 40px #00ffff88);
+  opacity: 0;
+  transform: scale(0.5);
+  animation: logoPop 2.5s ease forwards 3.5s;
+}
 
-        .mobile-bottom-nav {
-            background: rgba(1, 4, 9, 0.9);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
+#motto {
+  font-size: 24px;
+  color: #ffd700;
+  margin-top: 20px;
+  opacity: 0;
+  animation: fadeIn 2s forwards 6s;
+  text-shadow: 0 0 10px #00ffff;
+}
 
-        .hero-gradient {
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 40%),
-                linear-gradient(to bottom, #010409, #020617);
-        }
+/* Animations */
+@keyframes zoomIn {
+  from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+  to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
 
-        .btn-shiny {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            color: white;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
+@keyframes logoPop {
+  0% { opacity: 0; transform: scale(0.5) translateY(50px); }
+  50% { opacity: 1; transform: scale(1.1) translateY(-10px); }
+  100% { opacity: 1; transform: scale(1); }
+}
 
-        .btn-shiny::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: rgba(255,255,255,0.15);
-            transform: rotate(45deg);
-            transition: 0.5s;
-        }
-
-        .btn-shiny:hover::after { left: 120%; }
-        .btn-shiny:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5); 
-        }
-
-        /* Continuous Popping Animation */
-        @keyframes continuous-pop {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-
-        .ebsb-tag {
-            display: inline-block;
-            padding: 0.5rem 1.25rem;
-            border-radius: 9999px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 2rem;
-            animation: continuous-pop 2s ease-in-out infinite;
-            background: linear-gradient(to right, #FF9933, #FFFFFF, #128807);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 15px rgba(255, 153, 51, 0.2);
-        }
-
-        .ai-floating-ball {
-            position: fixed;
-            bottom: 100px; 
-            right: 20px;
-            width: 55px;
-            height: 55px;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        @media (min-width: 768px) {
-            .ai-floating-ball { bottom: 30px; right: 30px; width: 60px; height: 60px; }
-        }
-
-        .ai-ping {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: inherit;
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: ai-pulse 2s infinite;
-            z-index: -1;
-        }
-
-        @keyframes ai-pulse {
-            0% { transform: scale(1); opacity: 0.6; }
-            100% { transform: scale(1.6); opacity: 0; }
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(8px);
-            transition: all 0.4s ease;
-        }
-
-        .feature-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--primary);
-            transform: translateY(-8px) scale(1.02);
-        }
-
-        .video-wrapper {
-            width: 100%;
-            border-radius: 2rem;
-            overflow: hidden;
-            box-shadow: 0 0 50px rgba(99, 102, 241, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .glow-text {
-            text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-        }
-    </style>
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+</style>
 </head>
-<body class="hero-gradient overflow-x-hidden pb-24 md:pb-0">
 
-    <a href="https://learnmeai.vercel.app" target="_blank" class="ai-floating-ball" title="Open AI Learning Assistance">
-        <div class="ai-ping"></div>
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-        </svg>
-    </a>
+<body>
 
-    <nav class="fixed top-0 w-full z-50 glass-nav py-4 md:py-6 px-4 md:px-10">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3 md:gap-5 group cursor-pointer">
-                <img src="a.png" alt="KV Learning Portal Logo" class="w-14 h-14 md:w-24 md:h-24 object-cover rounded-full shadow-2xl border-2 border-indigo-500/20 transition-transform group-hover:scale-110">
-                <div class="flex flex-col">
-                    <span class="text-white text-lg md:text-4xl font-black tracking-tighter leading-none uppercase">KV LEARNING</span>
-                    <span class="text-indigo-500 text-sm md:text-3xl font-bold tracking-[0.15em] leading-none mt-1 md:mt-2 uppercase">PORTAL</span>
-                </div>
-            </div>
-            
-            <div class="hidden lg:flex gap-10 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">
-                <a href="index.html" class="hover:text-white transition">Home</a>
-                <a href="#features" class="hover:text-white transition">Features</a>
-                <a href="about.html" class="hover:text-white transition">About</a>
-            </div>
+<canvas id="canvas"></canvas>
 
-            <button onclick="loginWithGoogle()" class="btn-shiny px-6 py-2.5 md:px-10 md:py-4 rounded-full font-black text-xs md:text-base shadow-xl" aria-label="Sign in with Google">Get Started</button>
-        </div>
-    </nav>
+<div id="logo-container">
+  <img 
+    id="kv-logo-img"
+    src="https://seeklogo.com/images/K/kendriya-vidyalaya-sangathan-logo-7E6F0E0E0E-seeklogo.com.png"
+    onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/1/1d/Kendriya_Vidyalaya_Family_Logo.png';"
+  />
+  <div id="motto">
+    तत् त्वं पूषन् अपावृणु<br>
+    केन्द्रीय विद्यालय संगठन
+  </div>
+</div>
 
-    <nav class="md:hidden fixed bottom-0 w-full z-50 mobile-bottom-nav py-3 px-6 flex justify-around items-center">
-        <a href="index.html" class="flex flex-col items-center gap-1">
-            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-            <span class="text-[9px] font-black text-indigo-500 uppercase tracking-widest">Home</span>
-        </a>
-        <a href="#features" class="flex flex-col items-center gap-1">
-            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Features</span>
-        </a>
-        <a href="about.html" class="flex flex-col items-center gap-1">
-            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Team</span>
-        </a>
-    </nav>
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
 
-    <section class="min-h-screen pt-40 md:pt-64 flex flex-col md:flex-row items-center max-w-7xl mx-auto px-8 gap-12">
-        <div class="flex-1 text-center md:text-left">
-            <div class="ebsb-tag">
-                एक भारत, श्रेष्ठ भारत
-            </div>
-            
-            <h1 class="text-5xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-tight glow-text">
-                Welcome to <br> <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">Smart MCQ Portal</span>
-            </h1>
-            <p class="text-slate-400 text-base md:text-xl mb-10 max-w-lg leading-relaxed mx-auto md:mx-0">
-                Unlock comprehensive NCERT practice from Class 6 to 12. AI-driven tracking designed specifically for Kendriya Vidyalaya scholars.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <button onclick="loginWithGoogle()" class="btn-shiny px-8 py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3">
-                    Start Now 🚀
-                </button>
-                <a href="faq.html" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition backdrop-blur-sm text-center flex items-center justify-center">View FAQ</a>
-            </div>
-        </div>
-        
-        <div class="flex-1 w-full relative">
-            <div class="video-wrapper">
-                <video class="w-full h-auto block" autoplay loop muted playsinline>
-                    <source src="hi.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-            <div class="absolute top-5 md:top-10 right-0 bg-indigo-600/90 backdrop-blur-lg text-white p-4 md:p-5 rounded-3xl rounded-bl-none text-[10px] md:text-xs font-black shadow-2xl animate-bounce border border-indigo-400/30">
-                Practice Now! 🎯
-            </div>
-        </div>
-    </section>
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
- <section id="features" class="py-20 md:py-32">
-    <div class="text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-black mb-4 text-white">Advanced Learning</h2>
-        <p class="text-indigo-500 uppercase tracking-[0.5em] text-[10px] font-black">Powered by PM SHRI KV New Bongaigaon</p>
-    </div>
+// PARTICLES
+let particles = [];
+const count = 180;
 
-    <div class="features-overflow-container">
-        <div class="features-track">
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🛡️</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Curated Content</h3>
-                <p class="text-slate-500 text-sm">100% verified MCQs strictly following the latest NCERT standards.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🛰️</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Cloud Sync</h3>
-                <p class="text-slate-500 text-sm">Real-time progress syncing across all your mobile and desktop devices.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🏆</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Achievement System</h3>
-                <p class="text-slate-500 text-sm">Earn digital badges and climb the PM SHRI school-wide leaderboard.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">⚡</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Zero Cost</h3>
-                <p class="text-slate-500 text-sm">Always free open-access for every Kendriya Vidyalaya student.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🤖</div>
-                <h3 class="text-xl font-bold mb-3 text-white">AI Insights</h3>
-                <p class="text-slate-500 text-sm">Vidyut AI analyzes your performance to highlight weak subject areas.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">📅</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Board Ready</h3>
-                <p class="text-slate-500 text-sm">Updated weekly to match the latest CBSE Board exam difficulty level.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🔍</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Chapter Mastery</h3>
-                <p class="text-slate-500 text-sm">Drill down into specific chapters to clear your fundamental doubts.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">📱</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Mobile Optimized</h3>
-                <p class="text-slate-500 text-sm">Practice anytime, anywhere with our fully responsive web experience.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🤝</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Expert Verified</h3>
-                <p class="text-slate-500 text-sm">Questions and solutions cross-checked by KV PGT & TGT subject experts.</p>
-            </div>
+class Particle {
+  constructor() {
+    this.reset();
+  }
 
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🛡️</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Curated Content</h3>
-                <p class="text-slate-500 text-sm">100% verified MCQs strictly following the latest NCERT standards.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🛰️</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Cloud Sync</h3>
-                <p class="text-slate-500 text-sm">Real-time progress syncing across all your mobile and desktop devices.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🏆</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Achievement System</h3>
-                <p class="text-slate-500 text-sm">Earn digital badges and climb the PM SHRI school-wide leaderboard.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">⚡</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Zero Cost</h3>
-                <p class="text-slate-500 text-sm">Always free open-access for every Kendriya Vidyalaya student.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🤖</div>
-                <h3 class="text-xl font-bold mb-3 text-white">AI Insights</h3>
-                <p class="text-slate-500 text-sm">AI analyzes your performance to highlight weak subject areas.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">📅</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Board Ready</h3>
-                <p class="text-slate-500 text-sm">Updated weekly to match the latest CBSE Board exam difficulty level.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🔍</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Chapter Mastery</h3>
-                <p class="text-slate-500 text-sm">Drill down into specific chapters to clear your fundamental doubts.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">📱</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Mobile Optimized</h3>
-                <p class="text-slate-500 text-sm">Practice anytime, anywhere with our fully responsive web experience.</p>
-            </div>
-            <div class="feature-card">
-                <div class="text-4xl mb-6">🤝</div>
-                <h3 class="text-xl font-bold mb-3 text-white">Expert Verified</h3>
-                <p class="text-slate-500 text-sm">Questions and solutions cross-checked by KV PGT & TGT subject experts.</p>
-            </div>
-        </div>
-    </div>
-</section>
-<style>/* Container that hides the overflow */
-.features-overflow-container {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    padding: 20px 0;
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2 + 0.5;
+    this.speedX = Math.random() * 0.6 - 0.3;
+    this.speedY = Math.random() * 0.6 - 0.3;
+    this.color = `hsl(${Math.random()*60 + 180}, 100%, ${Math.random()*40 + 60}%)`;
+  }
+
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+
+    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+  }
+
+  draw() {
+    ctx.globalAlpha = 0.7;
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
 }
 
-/* The moving track */
-.features-track {
-    display: flex;
-    width: max-content;
-    animation: scrollFeatures 35s linear infinite; /* Adjust time for speed */
+for (let i = 0; i < count; i++) {
+  particles.push(new Particle());
 }
 
-/* Pause on hover so students can read */
-.features-track:hover {
-    animation-play-state: paused;
+// ANIMATION
+let time = 0;
+
+function animate() {
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
+
+  time += 0.016;
+
+  // ENERGY LINES
+  if (time > 1.5 && time < 4) {
+    ctx.globalAlpha = 0.5;
+    ctx.strokeStyle = '#00ffff';
+    ctx.lineWidth = 2;
+
+    for (let i = 0; i < 5; i++) {
+      ctx.beginPath();
+      ctx.moveTo(
+        canvas.width/2 + Math.sin(time*5 + i)*200,
+        canvas.height/2 + Math.cos(time*5 + i)*200
+      );
+      ctx.lineTo(canvas.width/2, canvas.height/2);
+      ctx.stroke();
+    }
+  }
+
+  // GLITCH EFFECT
+  if (time > 3 && time < 3.8) {
+    ctx.globalAlpha = 0.25;
+    ctx.fillStyle = '#00ffff';
+    ctx.fillRect(
+      Math.random()*canvas.width,
+      Math.random()*canvas.height,
+      80,
+      15
+    );
+  }
+
+  // ENERGY WAVE
+  if (time > 5) {
+    ctx.globalAlpha = 0.3 * (Math.sin(time*2) + 1)/2;
+    ctx.strokeStyle = '#ffd700';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(canvas.width/2, canvas.height/2, (time-5)*80, 0, Math.PI*2);
+    ctx.stroke();
+  }
+
+  requestAnimationFrame(animate);
 }
 
-/* Keyframes for the right-to-left infinite loop */
-@keyframes scrollFeatures {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); } /* Moves exactly half the width */
-}
+animate();
 
-.feature-card {
-    width: 320px;
-    margin: 0 15px;
-    flex-shrink: 0;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(8px);
-    transition: all 0.4s ease;
-    padding: 2.5rem;
-    border-radius: 2.5rem;
-}
+// FLASH EFFECT
+setTimeout(() => {
+  ctx.globalAlpha = 0.8;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-.feature-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: #6366f1; /* Your --primary color */
-    transform: translateY(-8px);
-}</style>
-    <footer class="py-20 border-t border-white/5 px-8 text-center bg-black/40">
-        <div class="max-w-7xl mx-auto">
-            <div class="pt-8">
-                <p class="text-[9px] text-slate-500 uppercase tracking-[0.3em] leading-relaxed">
-                    © 2026 PM SHRI KV NEW BONGAIGAON. All rights reserved with care.
-                </p>
-                <div class="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[9px] text-slate-600 uppercase tracking-widest font-bold">
-                    <span class="text-slate-700">Educational purposes only. Please respect the effort and avoid unauthorized use.</span>
-                </div>
-                <p class="mt-4 text-[8px] text-slate-700 max-w-2xl mx-auto italic">
-                    Disclaimer: This platform is an independent academic initiative. NCERT materials belong to the National Council of Educational Research and Training.
-                </p>
-            </div>
-        </div>
-    </footer>
+  setTimeout(() => {
+    ctx.globalAlpha = 0;
+  }, 200);
+}, 4000);
 
-    <script type="module">
-        import { supabase } from './js/supabase.js';
-        window.loginWithGoogle = async () => {
-            try {
-                const currentFolder = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-                const redirectUrl = window.location.origin + currentFolder + '/role.html';
-                const { error } = await supabase.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: { 
-                        redirectTo: redirectUrl, 
-                        queryParams: { access_type: 'offline', prompt: 'select_account' } 
-                    }
-                });
-                if (error) throw error;
-            } catch (error) {
-                console.error("Auth Error:", error.message);
-                alert("Login failed: " + error.message);
-            }
-        };
-    </script>
+</script>
+
 </body>
 </html>
