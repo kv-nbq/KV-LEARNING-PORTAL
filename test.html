@@ -7,84 +7,178 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; min-height: 100vh; overflow-x: hidden; }
-        .cyber-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; }
-        .btn-neon { background: white; color: black; font-weight: 900; padding: 0.8rem 2rem; border-radius: 0.5rem; transition: 0.3s; text-transform: uppercase; cursor: pointer; }
-        .btn-neon:hover:not(.pointer-events-none) { background: #6366f1; color: white; box-shadow: 0 0 20px #6366f1; }
-        .option-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 1.2rem; border-radius: 1rem; text-align: left; transition: all 0.2s; font-weight: 600; width: 100%; display: flex; align-items: center; gap: 1rem; }
-        .option-btn:hover { background: rgba(99, 102, 241, 0.1); border-color: #6366f1; }
-        .option-btn.selected { background: #6366f1 !important; color: white; border-color: #6366f1; transform: translateX(5px); }
-        .selection-chip { background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); padding: 1.25rem; border-radius: 1rem; cursor: pointer; transition: 0.3s; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
-        .selection-chip:hover { background: #6366f1; color: white; transform: translateY(-3px); box-shadow: 0 10px 20px -10px #6366f1; }
-        .hidden { display: none !important; }
-        input[type=number]::-webkit-inner-spin-button { opacity: 1; }
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: linear-gradient(135deg, #1e1b4b 0%, #020617 50%, #064e3b 100%);
+            color: white; 
+            min-height: 100vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Blobs for that Pink/Green/Blue feel */
+        .blob {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(to right, #ec4899, #8b5cf6, #10b981);
+            filter: blur(100px);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.4;
+            animation: move 20s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-20%, -20%); }
+            to { transform: translate(20%, 20%); }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Neon Buttons with Gradient */
+        .btn-gradient { 
+            background: linear-gradient(90deg, #ec4899, #6366f1, #10b981);
+            color: white; 
+            font-weight: 800; 
+            padding: 1rem 2rem; 
+            border-radius: 1rem; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            text-transform: uppercase; 
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-gradient:hover:not(.pointer-events-none) { 
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .option-btn { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            padding: 1rem 1.5rem; 
+            border-radius: 1.2rem; 
+            text-align: left; 
+            transition: all 0.2s ease;
+            width: 100%; 
+            display: flex; 
+            align-items: center; 
+            gap: 1rem; 
+        }
+
+        .option-btn:hover { 
+            background: rgba(255, 255, 255, 0.08); 
+            border-color: #10b981;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected { 
+            background: linear-gradient(90deg, #6366f1, #10b981) !important; 
+            border-color: transparent;
+            font-weight: bold;
+        }
+
+        .selection-chip { 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            padding: 1.5rem 1rem; 
+            border-radius: 1.2rem; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            text-align: center; 
+            font-weight: 700;
+        }
+
+        .selection-chip:hover { 
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ec4899;
+            box-shadow: 0 10px 20px -10px #ec4899;
+        }
+
+        .loader-ring { 
+            width: 50px; height: 50px; 
+            border: 4px solid rgba(255,255,255,0.1); 
+            border-top-color: #ec4899; 
+            border-radius: 50%; 
+            animation: rotation 1s linear infinite; 
+        }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .glass-card { padding: 1.5rem !important; border-radius: 1.5rem; }
+            h1 { font-size: 1.8rem !important; }
+            #question-text { font-size: 1.25rem !important; }
+        }
     </style>
 </head>
-<body class="bg-[#020617] text-white flex items-center justify-center p-4 md:p-6">
+<body>
+    <div class="blob"></div>
 
-    <div id="progress-container" class="fixed top-0 left-0 w-full h-1.5 bg-white/5 z-50 hidden">
-        <div id="progress-bar" class="h-full bg-indigo-500 transition-all duration-500 shadow-[0_0_15px_#6366f1]" style="width: 0%"></div>
+    <div id="upload-overlay" class="fixed inset-0 bg-[#020617]/95 z-[100] flex flex-col items-center justify-center hidden">
+        <span class="loader-ring mb-4"></span>
+        <h2 class="text-white font-bold tracking-widest uppercase animate-pulse">Syncing Cloud...</h2>
     </div>
 
-    <div class="w-full max-w-4xl">
-        
-        <div id="test-header" class="flex justify-between items-center mb-6 font-mono text-[10px] tracking-[0.2em] text-slate-500 hidden">
-            <div class="flex items-center gap-3">
-                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-                <span id="question-count">PHASE_00</span>
+    <div id="progress-container" class="fixed top-0 left-0 w-full h-1 bg-white/10 z-50 hidden">
+        <div id="progress-bar" class="h-full bg-gradient-to-r from-pink-500 via-indigo-500 to-emerald-500 transition-all duration-500" style="width: 0%"></div>
+    </div>
+
+    <div class="w-full max-w-5xl px-4 md:px-0">
+        <div id="test-header" class="flex justify-between items-center mb-4 px-2 hidden">
+            <div class="flex items-center gap-2">
+                <span class="px-3 py-1 rounded-full bg-white/10 text-[10px] font-black uppercase tracking-widest" id="question-count">Phase 0/0</span>
             </div>
-            <div id="timer" class="text-indigo-400 font-bold bg-indigo-500/10 px-4 py-1.5 rounded-full border border-indigo-500/20">
-                LIVE_SESSION
-            </div>
+            <div id="timer" class="text-emerald-400 font-mono font-bold bg-emerald-500/10 px-4 py-1 rounded-full border border-emerald-500/20">00:00</div>
         </div>
 
-        <div class="cyber-card p-6 md:p-12 min-h-[500px] flex flex-col justify-between shadow-2xl relative overflow-hidden">
+        <div class="glass-card p-8 md:p-14 min-h-[550px] flex flex-col justify-between">
             
-            <div id="selection-view" class="space-y-10">
+            <div id="selection-view" class="space-y-8">
                 <div class="text-center">
-                    <h1 id="selection-title" class="text-4xl font-black italic uppercase tracking-tighter mb-3">
-                        Select <span class="text-indigo-500">Subject</span>
+                    <h1 id="selection-title" class="text-3xl md:text-5xl font-extrabold uppercase tracking-tighter mb-4">
+                        CHOOSE <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500">SUBJECT</span>
                     </h1>
-                    <div class="h-1 w-20 bg-indigo-500 mx-auto rounded-full mb-4"></div>
-                    <p id="selection-subtitle" class="text-slate-400 text-sm">Pick a topic to begin your assessment.</p>
+                    <p class="text-slate-400 text-sm">Select a category to initialize assessment.</p>
                 </div>
+                <div id="selection-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 
-                <div id="selection-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
-
-                <div id="limit-view" class="hidden max-w-sm mx-auto space-y-6 text-center">
-                    <div class="bg-indigo-500/5 border border-indigo-500/20 p-6 rounded-2xl">
-                        <p class="text-xs font-black uppercase tracking-widest text-indigo-400 mb-2">Available in Database</p>
-                        <div class="text-5xl font-black text-white" id="max-qs-display">0</div>
-                        <p class="text-slate-500 text-[10px] mt-2 italic">Total questions found for this chapter</p>
+                <div id="limit-view" class="hidden max-w-sm mx-auto space-y-6 text-center animate-in fade-in zoom-in duration-300">
+                    <div class="bg-white/5 border border-white/10 p-8 rounded-3xl">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Available Database</p>
+                        <div class="text-6xl font-black" id="max-qs-display">0</div>
                     </div>
-                    
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Questions to Attempt</label>
-                        <input type="number" id="user-limit-input" 
-                               class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-center text-2xl font-black outline-none focus:border-indigo-500 transition-all"
-                               placeholder="0">
+                    <div class="space-y-3">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Question Quantity</label>
+                        <input type="number" id="user-limit-input" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center text-3xl font-black outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
                     </div>
-
-                    <button id="start-session-btn" class="btn-neon w-full">Initiate_Session</button>
+                    <button id="start-session-btn" class="btn-gradient w-full">Begin Session</button>
                 </div>
             </div>
 
-            <div id="test-view" class="hidden animate-in fade-in duration-700">
-                <div id="test-content">
-                    <h2 id="question-text" class="text-2xl md:text-3xl font-black leading-tight mb-10 tracking-tight italic">
-                        LOADING_QUESTION...
-                    </h2>
-                    <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                </div>
+            <div id="test-view" class="hidden animate-in slide-in-from-bottom-4 duration-500">
+                <div id="question-text" class="text-xl md:text-3xl font-bold leading-snug mb-10 text-white">LOADING...</div>
+                <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
-            <div class="flex justify-between items-center mt-12 pt-8 border-t border-white/5">
-                <button onclick="quitTest()" class="text-slate-500 hover:text-rose-500 transition-all font-black text-[10px] tracking-widest uppercase py-2 px-4">
-                    Abort_Mission
-                </button>
-                <button id="next-btn" class="btn-neon opacity-50 pointer-events-none hidden">
-                    Next_Phase
-                </button>
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-6 mt-12 pt-8 border-t border-white/10">
+                <button onclick="quitTest()" class="text-slate-500 hover:text-rose-400 transition-all font-bold text-[10px] tracking-widest uppercase">Abort_Mission</button>
+                <button id="next-btn" class="btn-gradient w-full sm:w-auto opacity-50 pointer-events-none hidden">Next_Phase</button>
             </div>
         </div>
     </div>
@@ -98,58 +192,35 @@
         let userAnswers = {};
         let selectedSubject = "";
         let selectedChapter = "";
+        let startTime = null;
+        let timerInterval = null;
 
-        window.quitTest = () => {
-            if(confirm("Discard progress and return to dashboard?")) window.location.href = 'dashboard.html';
+        window.quitTest = () => { 
+            if(confirm("Abort session? Progress will not be saved.")) window.location.href = 'dashboard.html'; 
         };
 
-        // --- Fisher-Yates Shuffle Logic ---
-        function shuffle(array) {
-            let currentIndex = array.length, randomIndex;
-            while (currentIndex != 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-            }
-            return array;
-        }
-
         async function init() {
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) return window.location.href = 'index.html';
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return window.location.href = 'index.html';
 
-                const { data: profile } = await supabase.from('users').select('class').eq('id', user.id).single();
-                if (!profile?.class) return window.location.href = 'profile.html';
+            const { data: profile } = await supabase.from('users').select('*').eq('id', user.id).single();
+            if (!profile || !profile.profile_completed) return window.location.href = 'profile.html';
 
-                const { data: fetched, error } = await supabase.from('questions')
-                    .select('*')
-                    .eq('class', profile.class);
-                
-                if (error || !fetched || fetched.length === 0) {
-                    document.getElementById('selection-title').innerText = "SYSTEM_OFFLINE";
-                    return;
-                }
-
-                allQuestions = fetched;
-                showSubjectSelection();
-            } catch (err) {
-                console.error("Init Error:", err);
-            }
+            const { data: fetched } = await supabase.from('questions').select('*').eq('class', profile.class);
+            allQuestions = fetched || [];
+            if (allQuestions.length === 0) window.location.href = 'dashboard.html';
+            
+            showSubjectSelection();
         }
 
         function showSubjectSelection() {
-            const grid = document.getElementById('selection-grid');
-            grid.classList.remove('hidden');
-            document.getElementById('limit-view').classList.add('hidden');
-            grid.innerHTML = '';
-            
             const subjects = [...new Set(allQuestions.map(q => q.subject))].filter(Boolean);
-            
+            const grid = document.getElementById('selection-grid');
+            grid.innerHTML = '';
             subjects.forEach(sub => {
                 const btn = document.createElement('div');
                 btn.className = 'selection-chip';
-                btn.innerHTML = `<span>${sub}</span>`;
+                btn.innerText = sub;
                 btn.onclick = () => showChapterSelection(sub);
                 grid.appendChild(btn);
             });
@@ -157,11 +228,19 @@
 
         function showChapterSelection(subject) {
             selectedSubject = subject;
-            document.getElementById('selection-title').innerHTML = `Select <span class="text-indigo-500">Chapter</span>`;
+            document.getElementById('selection-title').innerHTML = `CHOOSE <span class="text-indigo-400">CHAPTER</span>`;
+            const chapters = [...new Set(allQuestions.filter(q => q.subject === subject).map(q => q.chapter))].filter(Boolean);
             const grid = document.getElementById('selection-grid');
             grid.innerHTML = '';
             
-            const chapters = [...new Set(allQuestions.filter(q => q.subject === subject).map(q => q.chapter))].filter(Boolean);
+            const backBtn = document.createElement('div');
+            backBtn.className = 'selection-chip border-rose-500/30 text-rose-500';
+            backBtn.innerText = "← Back";
+            backBtn.onclick = () => {
+                document.getElementById('selection-title').innerHTML = `CHOOSE <span class="text-pink-500">SUBJECT</span>`;
+                showSubjectSelection();
+            };
+            grid.appendChild(backBtn);
 
             chapters.forEach(chap => {
                 const btn = document.createElement('div');
@@ -174,118 +253,120 @@
 
         function showLimitView(chapter) {
             selectedChapter = chapter;
-            const availableQs = allQuestions.filter(q => q.subject === selectedSubject && q.chapter === selectedChapter);
-            
-            document.getElementById('selection-title').innerHTML = `Test <span class="text-indigo-500">Limit</span>`;
-            document.getElementById('selection-subtitle').innerText = "Specify the number of questions for this session.";
-            
+            const pool = allQuestions.filter(q => q.subject === selectedSubject && q.chapter === selectedChapter);
             document.getElementById('selection-grid').classList.add('hidden');
-            const limitView = document.getElementById('limit-view');
-            limitView.classList.remove('hidden');
-
-            const maxDisplay = document.getElementById('max-qs-display');
-            const input = document.getElementById('user-limit-input');
-            
-            maxDisplay.innerText = availableQs.length;
-            input.value = availableQs.length; 
-            input.max = availableQs.length;
-            input.min = 1;
+            document.getElementById('limit-view').classList.remove('hidden');
+            document.getElementById('max-qs-display').innerText = pool.length;
+            document.getElementById('user-limit-input').value = Math.min(pool.length, 10);
+            document.getElementById('user-limit-input').max = pool.length;
 
             document.getElementById('start-session-btn').onclick = () => {
-                let limit = parseInt(input.value);
-                
-                if (isNaN(limit) || limit < 1) {
-                    alert("Please enter a valid number of questions.");
-                    return;
-                }
-
-                if (limit > availableQs.length) limit = availableQs.length;
-
-                // --- SHUFFLE ACTION ---
-                // We shuffle the full pool of available questions first
-                const shuffledPool = shuffle([...availableQs]);
-                // Then we take only the amount the user requested
-                filteredQuestions = shuffledPool.slice(0, limit);
-                
+                let limit = parseInt(document.getElementById('user-limit-input').value) || 10;
+                filteredQuestions = pool.sort(() => Math.random() - 0.5).slice(0, limit);
                 startTest();
             };
         }
 
         function startTest() {
-            localStorage.setItem('testStartTime', Date.now());
-            localStorage.setItem('activeTest', JSON.stringify({
-                subject: selectedSubject,
-                chapter: selectedChapter,
-                questions: filteredQuestions
-            }));
-            
-            userAnswers = {};
-            localStorage.removeItem('userAnswers');
-
             document.getElementById('selection-view').classList.add('hidden');
             document.getElementById('test-view').classList.remove('hidden');
             document.getElementById('test-header').classList.remove('hidden');
             document.getElementById('progress-container').classList.remove('hidden');
             document.getElementById('next-btn').classList.remove('hidden');
-            
+            startTime = Date.now();
+            startTimer();
             displayQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
+                const secs = String(elapsed % 60).padStart(2, '0');
+                document.getElementById('timer').innerText = `${mins}:${secs}`;
+            }, 1000);
         }
 
         function displayQuestion() {
             const q = filteredQuestions[currentIndex];
-            const grid = document.getElementById('options-grid');
             const nextBtn = document.getElementById('next-btn');
-
-            grid.innerHTML = '';
-            nextBtn.classList.add('opacity-50', 'pointer-events-none');
-            nextBtn.innerText = (currentIndex === filteredQuestions.length - 1) ? "Finalize_Test" : "Next_Phase";
+            const previouslyAnswered = userAnswers[q.id];
             
-            document.getElementById('question-count').innerText = `QUESTION_${currentIndex + 1}/${filteredQuestions.length}`;
+            nextBtn.classList.add('opacity-50', 'pointer-events-none');
+            nextBtn.innerText = (currentIndex === filteredQuestions.length - 1) ? "Finalize Result" : "Next Phase";
+            
+            document.getElementById('question-count').innerText = `Phase ${currentIndex + 1} / ${filteredQuestions.length}`;
             document.getElementById('question-text').innerText = q.question_text;
 
-            const options = [
-                { id: 'A', text: q.option_a },
-                { id: 'B', text: q.option_b },
-                { id: 'C', text: q.option_c },
-                { id: 'D', text: q.option_d }
-            ].filter(o => o.text);
-
-            options.forEach(opt => {
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+            ['a', 'b', 'c', 'd'].forEach(key => {
                 const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerHTML = `
-                    <span class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-[10px] font-black border border-white/10">${opt.id}</span>
-                    <span>${opt.text}</span>
-                `;
-                
-                if(userAnswers[q.id] === opt.id) btn.classList.add('selected');
-
+                btn.className = 'option-btn' + (previouslyAnswered === key.toUpperCase() ? ' selected' : '');
+                btn.innerHTML = `<span class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/10 uppercase text-xs font-black">${key}</span><span>${q[`option_${key}`]}</span>`;
                 btn.onclick = () => {
                     document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
-                    userAnswers[q.id] = opt.id;
+                    userAnswers[q.id] = key.toUpperCase();
                     nextBtn.classList.remove('opacity-50', 'pointer-events-none');
                 };
                 grid.appendChild(btn);
             });
-
-            const progress = ((currentIndex + 1) / filteredQuestions.length) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
+            if (previouslyAnswered) nextBtn.classList.remove('opacity-50', 'pointer-events-none');
+            document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / filteredQuestions.length) * 100}%`;
         }
 
         document.getElementById('next-btn').onclick = () => {
-            localStorage.setItem('userAnswers', JSON.stringify(userAnswers));
-
             if (currentIndex < filteredQuestions.length - 1) {
                 currentIndex++;
                 displayQuestion();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                setTimeout(() => {
-                    window.location.href = 'results.html';
-                }, 200);
+                finishAssessment();
             }
         };
+
+        async function finishAssessment() {
+            const overlay = document.getElementById('upload-overlay');
+            overlay.classList.remove('hidden');
+            clearInterval(timerInterval);
+            const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+            let correct = 0, wrong = 0;
+            
+            filteredQuestions.forEach(q => {
+                if (userAnswers[q.id] === q.correct_answer.toUpperCase()) correct++;
+                else if (userAnswers[q.id]) wrong++; 
+            });
+
+            const score = (correct * 4) - (wrong * 1);
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if (user) {
+                try {
+                    const { data: u } = await supabase.from('users').select('*').eq('id', user.id).single();
+                    const payload = {
+                        student_id: user.id, student_email: user.email, student_name: u?.full_name || 'Anonymous',
+                        subject: selectedSubject, chapter: selectedChapter, total_questions: filteredQuestions.length,
+                        correct_answers: correct, wrong_answers: wrong, score: score,
+                        percentage: Math.round((correct / filteredQuestions.length) * 100),
+                        school_name: u?.school_name || 'N/A', city: u?.city || 'N/A', state: u?.state || 'N/A',
+                        time_taken_seconds: timeTaken, class_name: u?.class || 'N/A',
+                        region: u?.region || 'N/A', created_at: new Date().toISOString()
+                    };
+                    await supabase.from('test_results').insert([payload]);
+                    await supabase.from('users').update({
+                        total_points: (u?.total_points || 0) + score,
+                        total_tests: (u?.total_tests || 0) + 1,
+                        last_active: new Date().toISOString()
+                    }).eq('id', user.id);
+                } catch (err) { console.error(err); }
+            }
+
+            localStorage.setItem('activeTest', JSON.stringify({
+                subject: selectedSubject, chapter: selectedChapter, questions: filteredQuestions,
+                userAnswers: userAnswers, stats: { correct, wrong, score, time: timeTaken }
+            }));
+            window.location.href = 'results.html';
+        }
 
         init();
     </script>
