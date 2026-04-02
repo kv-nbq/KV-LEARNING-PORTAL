@@ -3,160 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard | KV MCQ</title>
+    <title>Elite Dashboard | KV MCQ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; min-height: 100vh; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .card-grad { background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(2, 6, 23, 0) 100%); }
-        .ai-card-grad { background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.05) 100%); }
-        #main-content { display: none; } 
-        .loader-spin { border-top-color: #6366f1; animation: spin 1s linear infinite; border-radius: 50%; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .hidden { display: none !important; }
-        .stat-card { border-left: 4px solid #6366f1; }
         
-        /* Tooltip Modal Styles */
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            color: white; 
+            min-height: 100vh; 
+            overflow-x: hidden;
+            background: linear-gradient(-45deg, #020617, #1e1b4b, #312e81, #1e1b4b, #020617);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .card-grad { background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(2, 6, 23, 0) 100%); }
+        .ai-card-grad { background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); }
+        .leader-grad { background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(2, 6, 23, 0) 100%); }
+
+        .info-btn { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: help; color: #94a3b8; transition: all 0.2s; }
+        .info-btn:hover { background: white; color: black; border-color: white; }
+
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         .modal-overlay.active { display: flex; }
+
+        .loader-spin { border-top-color: #6366f1; animation: spin 1s linear infinite; border-radius: 50%; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .bar-container { display: flex; align-items: flex-end; gap: 8px; height: 150px; padding-top: 20px; }
+        .bar { flex: 1; min-width: 12px; border-radius: 4px 4px 0 0; position: relative; transition: height 1s ease-out; }
+        .bar:hover::after { content: attr(data-value); position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 800; color: #818cf8; white-space: nowrap; }
+
+        .results-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        .results-row { background: rgba(255,255,255,0.03); transition: all 0.2s; }
+        .results-row:hover { background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+        .results-row td { padding: 1.25rem 1rem; font-size: 0.75rem; }
+        .results-row td:first-child { border-radius: 16px 0 0 16px; }
+        .results-row td:last-child { border-radius: 0 16px 16px 0; }
+        .badge-score { padding: 6px 12px; border-radius: 8px; font-weight: 800; border-width: 1px; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div id="rank-modal" class="modal-overlay p-4" onclick="closeModal('rank-modal')">
-        <div class="glass p-8 rounded-[2rem] max-w-sm w-full border-t-4 border-indigo-500 shadow-2xl" onclick="event.stopPropagation()">
-            <h3 class="text-xl font-black italic uppercase mb-4 text-indigo-400">Rank Criteria</h3>
-            <div class="space-y-3 text-sm">
-                <div class="flex justify-between border-b border-white/5 pb-2"><span>Outstanding</span><span class="font-black italic text-indigo-300">100+ Pts</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span>Excellent</span><span class="font-black italic text-emerald-400">75+ Pts</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span>Good</span><span class="font-black italic text-blue-400">50+ Pts</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span>Average</span><span class="font-black italic text-amber-400">20+ Pts</span></div>
-                <div class="flex justify-between"><span>Poor</span><span class="font-black italic text-rose-500">Below 5 Pts</span></div>
-            </div>
-            <button onclick="closeModal('rank-modal')" class="w-full mt-6 py-3 bg-white text-black font-black rounded-xl uppercase text-xs tracking-widest hover:bg-indigo-500 hover:text-white transition">Got it</button>
-        </div>
-    </div>
-
     <div id="streak-modal" class="modal-overlay p-4" onclick="closeModal('streak-modal')">
-        <div class="glass p-8 rounded-[2rem] max-w-sm w-full border-t-4 border-orange-500 shadow-2xl" onclick="event.stopPropagation()">
-            <div class="text-4xl mb-4">🔥</div>
-            <h3 class="text-xl font-black italic uppercase mb-2 text-orange-400">Streak System</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">Your streak increases every day you complete a test. Don't skip a day or the flame resets!</p>
-            <button onclick="closeModal('streak-modal')" class="w-full mt-6 py-3 bg-white text-black font-black rounded-xl uppercase text-xs tracking-widest hover:bg-orange-500 hover:text-white transition">Continue</button>
+        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-orange-500 shadow-2xl" onclick="event.stopPropagation()">
+            <h3 class="text-xl font-black italic uppercase mb-4 text-orange-400">Streak System</h3>
+            <div class="space-y-4 text-sm text-slate-300">
+                <p>Maintain consistency to grow your power:</p>
+                <div class="flex items-start gap-3 bg-white/5 p-3 rounded-xl">
+                    <span class="text-xl">🔥</span>
+                    <p class="text-xs">Solve MCQs daily to increase your streak.</p>
+                </div>
+                <div class="flex items-start gap-3 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
+                    <span class="text-xl">⚠️</span>
+                    <p class="text-xs text-red-200">Break consistency for even one day and your streak restarts from 0.</p>
+                </div>
+            </div>
+            <button onclick="closeModal('streak-modal')" class="w-full mt-6 py-3 bg-white text-black font-black rounded-xl uppercase text-xs tracking-widest">Understood</button>
         </div>
     </div>
 
-    <div id="badge-modal" class="modal-overlay p-4" onclick="closeModal('badge-modal')">
-        <div class="glass p-8 rounded-[2rem] max-w-md w-full border-t-4 border-slate-400 shadow-2xl" onclick="event.stopPropagation()">
-            <h3 class="text-xl font-black italic uppercase mb-4 text-slate-300">Badge Progression</h3>
-            <p class="text-slate-500 text-[10px] uppercase font-bold mb-4">Based on Total Questions Attempted</p>
-            <div class="grid grid-cols-2 gap-3 text-xs">
-                <div class="p-3 bg-white/5 rounded-xl border border-white/10">💎 Diamond: <span class="text-cyan-400 font-bold">500+</span></div>
-                <div class="p-3 bg-white/5 rounded-xl border border-white/10">🟡 Gold: <span class="text-yellow-400 font-bold">350+</span></div>
-                <div class="p-3 bg-white/5 rounded-xl border border-white/10">⚪ Platinum: <span class="text-slate-200 font-bold">250+</span></div>
-                <div class="p-3 bg-white/5 rounded-xl border border-white/10">🔘 Silver: <span class="text-slate-400 font-bold">150+</span></div>
-                <div class="p-3 bg-white/5 rounded-xl border border-white/10">🟠 Copper: <span class="text-orange-400 font-bold">100+</span></div>
-                <div class="p-3 bg-white/5 rounded-xl border border-white/10">⛓️ Iron: <span class="text-slate-500 font-bold">50+</span></div>
-                <div class="p-3 bg-white/5 rounded-xl border border-white/10">🌑 Coal: <span class="text-slate-700 font-bold">0+</span></div>
+    <div id="rank-modal" class="modal-overlay p-4" onclick="closeModal('rank-modal')">
+        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-indigo-500 shadow-2xl" onclick="event.stopPropagation()">
+            <h3 class="text-xl font-black italic uppercase mb-4 text-indigo-400">Rank Tiers</h3>
+            <div class="space-y-2 text-[11px] uppercase font-bold text-slate-300">
+                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-purple-400">Pro</span><span>100+ MCQs Right</span></div>
+                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-emerald-400">Excellent</span><span>50+ MCQs Right</span></div>
+                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-blue-400">Good</span><span>20+ MCQs Right</span></div>
+                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-yellow-400">Beginner</span><span>10+ MCQs Right</span></div>
+                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-red-400">Poor</span><span>Below 5 MCQs Right</span></div>
             </div>
-            <button onclick="closeModal('badge-modal')" class="w-full mt-6 py-3 bg-white text-black font-black rounded-xl uppercase text-xs tracking-widest hover:bg-slate-500 hover:text-white transition">Understood</button>
+            <button onclick="closeModal('rank-modal')" class="w-full mt-6 py-3 bg-white text-black font-black rounded-xl uppercase text-xs tracking-widest">Got it</button>
         </div>
     </div>
 
     <div id="loading-screen" class="fixed inset-0 bg-[#020617] z-[100] flex flex-col items-center justify-center">
         <div class="loader-spin w-12 h-12 border-4 border-white/10 mb-4"></div>
-        <p id="status-text" class="text-indigo-400 font-bold tracking-widest text-xs uppercase">Initializing Profile...</p>
+        <p class="text-indigo-400 font-bold tracking-widest text-xs uppercase">Syncing Scholar Data...</p>
     </div>
 
-    <main id="main-content" class="max-w-6xl mx-auto">
-        <nav class="flex justify-between items-center mb-12">
-            <div>
-                <h1 class="text-2xl font-black italic tracking-tighter uppercase">KV<span class="text-indigo-500">Mastery</span></h1>
-                <p id="user-badge" class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-1">Authenticated Access</p>
+    <main id="main-content" class="max-w-6xl mx-auto hidden">
+        <nav class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+            <div class="cursor-pointer text-center md:text-left" onclick="location.href='index.html'">
+                <h1 class="text-2xl font-black italic tracking-tighter uppercase">MY_<span class="text-indigo-500">DASHBOARD</span></h1>
+                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-1">Accuracy comes from practice, not luck.</p>
             </div>
-            <button onclick="handleLogout()" class="bg-red-500/10 text-red-500 px-5 py-2 rounded-xl border border-red-500/20 text-xs font-black hover:bg-red-500 hover:text-white transition uppercase tracking-widest">
-                Logout
-            </button>
+            
+            <div class="flex items-center gap-3">
+                <button onclick="location.href='index.html'" class="bg-white/5 hover:bg-white/10 text-slate-300 px-5 py-2.5 rounded-xl border border-white/10 text-xs font-black uppercase transition-all">Home</button>
+                <button onclick="location.href='profile.html'" class="bg-indigo-500/10 text-indigo-400 px-5 py-2.5 rounded-xl border border-indigo-500/20 text-xs font-black uppercase">Profile</button>
+                <button id="logout-btn" class="bg-red-500/10 text-red-500 px-5 py-2.5 rounded-xl border border-red-500/20 text-xs font-black uppercase hover:bg-red-500 hover:text-white transition-all">Logout</button>
+            </div>
         </nav>
 
-        <header class="mb-10">
-            <div class="inline-block px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-[10px] font-bold uppercase tracking-widest mb-4">Student Portal</div>
-            <h2 class="text-5xl font-extrabold mb-2" id="welcome-name">Hello, Scholar</h2>
-            <p class="text-slate-400 text-sm">Mastering concepts through precision practice.</p>
-        </header>
+        <div class="max-w-4xl mx-auto space-y-8">
+            <header>
+                <div id="school-tag" class="inline-block px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-[10px] font-bold uppercase tracking-widest mb-4">LOADING PORTAL...</div>
+                <h2 class="text-5xl font-extrabold mb-2" id="welcome-name">Hello, Scholar</h2>
+            </header>
 
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
-            <div class="glass p-5 rounded-2xl stat-card relative group">
-                <div class="flex justify-between items-start mb-1">
-                    <p class="text-[10px] text-slate-500 uppercase font-bold">Performance</p>
-                    <button onclick="openModal('rank-modal')" class="text-slate-500 hover:text-indigo-400 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </button>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass p-5 rounded-3xl cursor-pointer hover:bg-white/5 transition" onclick="openModal('rank-modal')">
+                    <div class="flex justify-between mb-2">
+                        <p class="text-[10px] text-slate-500 uppercase font-black">Rank</p>
+                        <div class="info-btn">?</div>
+                    </div>
+                    <h4 id="stat-rank" class="text-lg font-black italic uppercase tracking-tighter text-indigo-400">--</h4>
                 </div>
-                <h4 id="stat-rank" class="text-lg font-black italic uppercase tracking-tighter">--</h4>
-            </div>
-
-            <div class="glass p-5 rounded-2xl border-l-4 border-emerald-500">
-                <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Tests Done</p>
-                <h4 id="stat-total-tests" class="text-2xl font-black">0</h4>
-            </div>
-
-            <div class="glass p-5 rounded-2xl border-l-4 border-orange-500 relative group">
-                <div class="flex justify-between items-start mb-1">
-                    <p class="text-[10px] text-slate-500 uppercase font-bold">Streak</p>
-                    <button onclick="openModal('streak-modal')" class="text-slate-500 hover:text-orange-400 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </button>
+                <div class="glass p-5 rounded-3xl">
+                    <div class="flex justify-between mb-2">
+                        <p class="text-[10px] text-slate-500 uppercase font-black">Total Pts</p>
+                    </div>
+                    <h4 id="stat-points" class="text-2xl font-black text-slate-200">0</h4>
                 </div>
-                <div class="flex items-center gap-2">
-                    <h4 id="stat-streak" class="text-2xl font-black">0</h4>
-                    <span class="text-lg">🔥</span>
+                <div class="glass p-5 rounded-3xl cursor-pointer hover:bg-white/5 transition" onclick="openModal('streak-modal')">
+                    <div class="flex justify-between mb-2">
+                        <p class="text-[10px] text-slate-500 uppercase font-black">Streak</p>
+                        <div class="info-btn">?</div>
+                    </div>
+                    <h4 id="stat-streak" class="text-2xl font-black text-orange-400">0 🔥</h4>
+                </div>
+                <div class="glass p-5 rounded-3xl">
+                    <p class="text-[10px] text-slate-500 uppercase font-black mb-2">Tests</p>
+                    <h4 id="stat-total-tests" class="text-2xl font-black text-emerald-400">0</h4>
                 </div>
             </div>
 
-            <div class="glass p-5 rounded-2xl border-l-4 border-slate-400 relative group">
-                <div class="flex justify-between items-start mb-1">
-                    <p class="text-[10px] text-slate-500 uppercase font-bold">Badge</p>
-                    <button onclick="openModal('badge-modal')" class="text-slate-500 hover:text-slate-200 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </button>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div onclick="location.href='test.html'" class="glass card-grad p-8 rounded-[2.5rem] border-indigo-500/20 hover:border-indigo-500/50 transition cursor-pointer group">
+                    <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">📝</div>
+                    <h3 class="font-black uppercase text-sm tracking-widest mb-1">Practice Lab</h3>
+                    <p class="text-xs text-slate-500 font-bold uppercase">Launch Mock Exams</p>
                 </div>
-                <div class="flex items-center gap-2">
-                    <h4 id="stat-badge" class="text-lg font-black italic uppercase tracking-tighter">--</h4>
+                
+                <div onclick="location.href='leaderboard.html'" class="glass leader-grad p-8 rounded-[2.5rem] border-amber-500/20 hover:border-amber-500/50 transition cursor-pointer group">
+                    <div class="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">🏆</div>
+                    <h3 class="font-black uppercase text-sm tracking-widest mb-1 text-amber-500">Leaderboard</h3>
+                    <p class="text-xs text-slate-500 font-bold uppercase">Global Rankings</p>
+                </div>
+
+                <div onclick="window.open('https://learnmeai.vercel.app', '_blank')" class="glass ai-card-grad p-8 rounded-[2.5rem] border-pink-500/20 hover:border-pink-500/50 transition cursor-pointer group">
+                    <div class="w-12 h-12 bg-pink-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">🧠</div>
+                    <h3 class="font-black uppercase text-sm tracking-widest mb-1">Learn with AI</h3>
+                    <p class="text-xs text-slate-500 font-bold uppercase">Personal AI Tutor</p>
                 </div>
             </div>
 
-            <div class="glass p-5 rounded-2xl border-l-4 border-indigo-500">
-                <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Ranking</p>
-                <h4 class="text-2xl font-black text-indigo-400">#--</h4>
-            </div>
-        </div>
+            <section class="glass p-8 rounded-[2.5rem]">
+                <h3 class="text-xs font-black uppercase tracking-widest text-indigo-400 mb-6">Monthly Progress (Total Qs Attempted)</h3>
+                <div class="bar-container" id="bar-graph"></div>
+                <div class="flex justify-between mt-4 px-2 text-[8px] md:text-[10px] font-black text-slate-500 uppercase">
+                    <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+                    <span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+                </div>
+            </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div onclick="location.href='test.html'" class="glass card-grad p-8 rounded-[2.5rem] border-indigo-500/20 hover:border-indigo-500/50 transition-all cursor-pointer group">
-                <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-xl shadow-indigo-600/30 group-hover:scale-110 transition">📝</div>
-                <h3 class="text-lg font-bold mb-2 uppercase tracking-tight">Practice Lab</h3>
-                <p class="text-slate-400 text-xs leading-relaxed">Attempt Subject-wise MCQs. Get +4 for correct and -1 for wrong.</p>
-            </div>
-
-            <div onclick="window.open('https://learnmeai.vercel.app', '_blank')" class="glass ai-card-grad p-8 rounded-[2.5rem] border-purple-500/20 hover:border-purple-500/50 transition-all cursor-pointer group">
-                <div class="w-14 h-14 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-xl shadow-purple-600/30 group-hover:scale-110 transition">🧠</div>
-                <h3 class="text-lg font-bold mb-2 uppercase tracking-tight text-indigo-300">Learn with AI</h3>
-                <p class="text-slate-400 text-xs leading-relaxed">Personalized AI tutoring for NCERT concepts. Ask, learn, and grow.</p>
-            </div>
-
-            <div onclick="location.href='results.html'" class="glass p-8 rounded-[2.5rem] border-emerald-500/10 hover:border-emerald-500/40 hover:bg-white/5 transition-all cursor-pointer group">
-                <div class="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-xl shadow-emerald-600/30 group-hover:scale-110 transition">🏆</div>
-                <h3 class="text-lg font-bold mb-2 uppercase tracking-tight">Performance</h3>
-                <p class="text-slate-400 text-xs leading-relaxed">View your detailed history, time analytics, and point totals.</p>
-            </div>
-
-            <div onclick="location.href='profile.html'" class="glass p-8 rounded-[2.5rem] border-white/5 hover:border-white/20 hover:bg-white/5 transition-all cursor-pointer group">
-                <div class="w-14 h-14 bg-slate-700 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-xl group-hover:scale-110 transition">👤</div>
-                <h3 class="text-lg font-bold mb-2 uppercase tracking-tight">Profile</h3>
-                <p class="text-slate-400 text-xs leading-relaxed">Update your Class, School, or Region details to sync with your school.</p>
-            </div>
+            <section class="glass p-8 rounded-[2.5rem]">
+                <h3 class="text-sm font-black uppercase tracking-widest text-indigo-400 mb-6">Recent Sessions</h3>
+                <div class="overflow-x-auto">
+                    <table class="results-table">
+                        <thead>
+                            <tr class="text-[10px] uppercase text-slate-500 text-left">
+                                <th class="pb-4 px-4">Subject</th>
+                                <th class="pb-4 px-4">Date</th>
+                                <th class="pb-4 px-4">Performance (Right/Wrong)</th>
+                                <th class="pb-4 px-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body"></tbody>
+                    </table>
+                </div>
+                <div id="more-tests-footer" class="hidden w-full mt-6 text-center text-[10px] font-black uppercase tracking-widest text-slate-500">
+                    more tests are there
+                </div>
+            </section>
         </div>
     </main>
 
@@ -166,83 +194,132 @@
     window.openModal = (id) => document.getElementById(id).classList.add('active');
     window.closeModal = (id) => document.getElementById(id).classList.remove('active');
 
-    window.handleLogout = async () => {
-        try {
+    async function init() {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) { window.location.replace('index.html'); return; }
+        const userId = session.user.id;
+
+        document.getElementById('logout-btn').onclick = async () => {
             await supabase.auth.signOut();
             localStorage.clear();
-            window.location.href = 'index.html'; 
-        } catch (err) { window.location.href = 'index.html'; }
-    };
+            window.location.replace('index.html');
+        };
 
-    async function initDashboard() {
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) { window.location.replace('index.html'); return; }
+        async function syncData() {
+            try {
+                const { data: profile } = await supabase.from("users").select("*").eq("id", userId).single();
+                const { data: history } = await supabase.from("test_results")
+                    .select("*")
+                    .or(`user_id.eq.${userId},student_id.eq.${userId}`)
+                    .order('created_at', { ascending: false });
 
-            const { data: profile } = await supabase.from("users").select("*").eq("id", user.id).maybeSingle();
-            if (!profile) { window.location.replace('role.html'); return; }
-
-            const history = JSON.parse(localStorage.getItem('test_history') || '[]');
-            const streak = localStorage.getItem('user_streak') || '0';
-
-            let lifetimePoints = 0;
-            let totalAttempted = 0;
-            
-            // Loop through history and calculate totals
-            history.forEach(test => {
-                lifetimePoints += Number(test.points || 0);
+                const logs = history || [];
                 
-                // ROBUST QUESTION COUNT CHECK
-                // Tries various keys, defaults to 10 if none found to ensure progress is shown
-                const qCount = test.total_questions || test.total || test.questions || 10;
-                totalAttempted += Number(qCount);
+                const totalPoints = logs.reduce((s, t) => s + (parseInt(t.score) || 0), 0);
+                const correctCount = logs.reduce((s, t) => s + (parseInt(t.correct_answers) || 0), 0);
+                
+                let currentRank = "Poor";
+                if (correctCount >= 100) currentRank = "Pro";
+                else if (correctCount >= 50) currentRank = "Excellent";
+                else if (correctCount >= 20) currentRank = "Good";
+                else if (correctCount >= 10) currentRank = "Beginner";
+
+                const activeDates = logs.map(t => new Date(t.created_at).toDateString());
+                const sortedUniqueDates = [...new Set(activeDates)].map(d => new Date(d)).sort((a,b) => b - a);
+                
+                let streakCount = 0;
+                if (sortedUniqueDates.length > 0) {
+                    const today = new Date().toDateString();
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    const yestString = yesterday.toDateString();
+
+                    if (sortedUniqueDates[0].toDateString() === today || sortedUniqueDates[0].toDateString() === yestString) {
+                        streakCount = 1;
+                        for (let i = 0; i < sortedUniqueDates.length - 1; i++) {
+                            const diff = Math.abs(sortedUniqueDates[i] - sortedUniqueDates[i+1]);
+                            if (Math.ceil(diff / (1000 * 60 * 60 * 24)) === 1) streakCount++;
+                            else break;
+                        }
+                    }
+                }
+
+                document.getElementById('welcome-name').innerText = `Hello, ${profile?.full_name?.split(' ')[0] || 'Scholar'}`;
+                document.getElementById('school-tag').innerText = profile?.school_name || 'STUDENT PORTAL';
+                document.getElementById('stat-points').innerText = totalPoints;
+                document.getElementById('stat-total-tests').innerText = logs.length;
+                document.getElementById('stat-streak').innerText = `${streakCount} 🔥`;
+                document.getElementById('stat-rank').innerText = currentRank;
+
+                renderTable(logs);
+                renderGraph(logs);
+
+                await supabase.from("users").update({
+                    total_points: totalPoints,
+                    total_tests: logs.length,
+                    streak: streakCount,
+                    rank: currentRank,
+                    last_active: new Date().toISOString()
+                }).eq("id", userId);
+
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+
+            } catch (err) {
+                console.error("Sync Error:", err);
+            }
+        }
+
+        function renderTable(logs) {
+            const body = document.getElementById('results-body');
+            body.innerHTML = logs.length ? '' : '<tr><td colspan="4" class="text-center text-slate-500 py-12 text-[10px] font-bold uppercase">No data yet.</td></tr>';
+            
+            logs.slice(0, 5).forEach(test => {
+                const date = new Date(test.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+                
+                const correct = test.correct_answers || 0;
+                const wrong = test.wrong_answers || 0;
+                
+                body.innerHTML += `
+                    <tr class="results-row">
+                        <td class="px-4">
+                            <div class="text-white font-bold text-sm">${test.subject || 'General'}</div>
+                            <div class="text-[9px] text-slate-500 uppercase font-black">${test.topic || 'Assessment'}</div>
+                        </td>
+                        <td class="px-4 text-slate-400 uppercase text-[10px] font-bold">${date}</td>
+                        <td class="px-4">
+                            <div class="flex gap-2">
+                                <span class="badge-score border-emerald-500/20 text-emerald-400 bg-emerald-500/10">${correct} ✔</span>
+                                <span class="badge-score border-red-500/20 text-red-400 bg-red-500/10">${wrong} ✖</span>
+                            </div>
+                        </td>
+                        <td class="px-4 font-black text-indigo-400 text-[10px]">COMPLETED</td>
+                    </tr>`;
+            });
+            document.getElementById('more-tests-footer').classList.toggle('hidden', logs.length <= 5);
+        }
+
+        function renderGraph(logs) {
+            const graph = document.getElementById('bar-graph');
+            const monthlyData = new Array(12).fill(0);
+            
+            logs.forEach(t => {
+                const month = new Date(t.created_at).getMonth();
+                const totalInTest = parseInt(t.total_questions) || 0;
+                monthlyData[month] += totalInTest;
             });
 
-            // 1. PERFORMANCE RANK LOGIC (By Points)
-            let rankText = "Poor";
-            let rankColor = "#f43f5e";
-            if (lifetimePoints >= 100) { rankText = "Outstanding"; rankColor = "#818cf8"; }
-            else if (lifetimePoints >= 75) { rankText = "Excellent"; rankColor = "#34d399"; }
-            else if (lifetimePoints >= 50) { rankText = "Good"; rankColor = "#60a5fa"; }
-            else if (lifetimePoints >= 20) { rankText = "Average"; rankColor = "#fbbf24"; }
-
-            // 2. BADGE LOGIC (By Questions Attempted)
-            let badgeText = "Coal";
-            let badgeColor = "#475569";
-            let badgeEmoji = "🌑";
-            
-            if (totalAttempted >= 500) { badgeText = "Diamond"; badgeColor = "#22d3ee"; badgeEmoji = "💎"; }
-            else if (totalAttempted >= 350) { badgeText = "Gold"; badgeColor = "#facc15"; badgeEmoji = "🟡"; }
-            else if (totalAttempted >= 250) { badgeText = "Platinum"; badgeColor = "#e2e8f0"; badgeEmoji = "⚪"; }
-            else if (totalAttempted >= 150) { badgeText = "Silver"; badgeColor = "#94a3b8"; badgeEmoji = "🔘"; }
-            else if (totalAttempted >= 100) { badgeText = "Copper"; badgeColor = "#fb923c"; badgeEmoji = "🟠"; }
-            else if (totalAttempted >= 50) { badgeText = "Iron"; badgeColor = "#64748b"; badgeEmoji = "⛓️"; }
-
-            // Update UI with calculated data
-            const rankEl = document.getElementById('stat-rank');
-            rankEl.innerText = rankText;
-            rankEl.style.color = rankColor;
-
-            const badgeEl = document.getElementById('stat-badge');
-            badgeEl.innerText = `${badgeEmoji} ${badgeText}`;
-            badgeEl.style.color = badgeColor;
-            
-            document.getElementById('stat-total-tests').innerText = history.length;
-            document.getElementById('stat-streak').innerText = streak;
-
-            const firstName = profile.full_name ? profile.full_name.trim().split(' ')[0] : 'Scholar';
-            document.getElementById('welcome-name').innerText = `Hello, ${firstName}`;
-            
-            document.getElementById('loading-screen').classList.add('hidden');
-            document.getElementById('main-content').style.display = 'block';
-
-        } catch (err) {
-            console.error(err);
-            setTimeout(() => window.location.replace('index.html'), 2000);
+            const max = Math.max(...monthlyData, 10);
+            graph.innerHTML = monthlyData.map(val => `
+                <div class="bar bg-indigo-500/20 border-t-2 border-indigo-500" 
+                     style="height: ${(val / max) * 100}%" 
+                     data-value="${val} Qs Attempted">
+                </div>`).join('');
         }
-    }
 
-    initDashboard();
+        syncData();
+    }
+    init();
 </script>
 </body>
 </html>
