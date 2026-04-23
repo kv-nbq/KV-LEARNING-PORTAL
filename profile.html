@@ -7,32 +7,53 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; min-height: 100vh; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .input-style { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.2s; }
-        .input-style:focus { border-color: #6366f1; outline: none; background: rgba(255, 255, 255, 0.08); }
-        /* Style for the locked email field */
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: rgb(0, 255, 0); min-height: 100vh; overflow-x: hidden; }
+        
+        /* Glassmorphism Styles */
+        .glass { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .input-style { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: rgb(48, 156, 21); transition: all 0.3s; }
+        .input-style:focus { border-color: #6366f1; outline: none; background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2); }
         .input-readonly { background: rgba(255, 255, 255, 0.02); color: #64748b; cursor: not-allowed; border-style: dashed; }
+        
+        /* Floating Animation */
+        @keyframes float { 0% { transform: translateY(0px) scale(1); } 50% { transform: translateY(-30px) scale(1.05); } 100% { transform: translateY(0px) scale(1); } }
+        .animate-float { animation: float 8s infinite ease-in-out; }
+        .delay-1 { animation-delay: 0s; }
+        .delay-2 { animation-delay: 2s; }
+        .delay-3 { animation-delay: 4s; }
+
         .kv-only { display: none; }
         .kv-only.show { display: block; animation: slideDown 0.3s ease-out; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .hidden { display: none !important; }
-        input:not(#email) { text-transform: uppercase; }
     </style>
 </head>
-<body class="flex items-center justify-center p-6">
+<body class="flex items-center justify-center min-h-screen p-6 relative">
 
-    <div id="loader" class="fixed inset-0 bg-[#020617] z-[100] flex flex-col items-center justify-center font-bold text-indigo-500 uppercase tracking-widest text-center">
+    <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[128px] animate-float delay-1"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[128px] animate-float delay-2"></div>
+        <div class="absolute top-[40%] left-[40%] w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-[96px] animate-float delay-3"></div>
+    </div>
+
+    <div id="loader" class="fixed inset-0 bg-[#020617]/80 backdrop-blur-sm z-[100] flex flex-col items-center justify-center font-bold text-indigo-500 uppercase tracking-widest text-center">
         <div class="mb-4 animate-pulse">Syncing Profile...</div>
     </div>
 
-    <div class="glass w-full max-w-xl rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative">
-        <button onclick="location.href='dashboard.html'" class="absolute top-8 left-8 text-[10px] font-black uppercase text-slate-500 hover:text-white transition">
+    <div class="glass w-full max-w-xl rounded-[2.5rem] p-8 md:p-12 relative z-10">
+        <button onclick="location.href='dashboard.html'" class="absolute top-8 left-8 text-[10px] font-black uppercase text-slate-500 hover:text-indigo-400 transition">
             ← Back
         </button>
 
         <header class="mb-8 text-center">
-            <h1 class="text-3xl font-extrabold italic uppercase">Account <span class="text-indigo-500">Settings</span></h1>
+            <h1 class="text-3xl font-extrabold italic uppercase tracking-tight">Account <span class="text-indigo-500">Settings</span></h1>
             <p class="text-slate-400 text-sm mt-2">Personalize your scholar profile.</p>
         </header>
 
@@ -91,7 +112,7 @@
                 </div>
             </div>
 
-            <button type="submit" id="save-btn" class="w-full bg-indigo-600 py-5 rounded-2xl font-black text-lg hover:bg-indigo-500 transition shadow-xl uppercase tracking-widest active:scale-95">
+            <button type="submit" id="save-btn" class="w-full bg-indigo-600 py-5 rounded-2xl font-black text-lg hover:bg-indigo-500 transition shadow-xl shadow-indigo-500/20 uppercase tracking-widest active:scale-95">
                 Save & Update Profile
             </button>
         </form>
@@ -122,7 +143,6 @@
 
         emailInput.value = user.email;
 
-        // Load data from users table
         const { data: dbData } = await supabase.from('users').select('*').eq('id', user.id).maybeSingle();
 
         if (dbData) {
@@ -150,7 +170,6 @@
         const { data: { user } } = await supabase.auth.getUser();
         const isKV = schoolTypeSelect.value === 'kv';
         
-        // Data shared by BOTH tables
         const baseData = {
             id: user.id,
             email: user.email,
@@ -161,12 +180,11 @@
             region: isKV ? document.getElementById('region').value.trim().toUpperCase() : "N/A",
             city: isKV ? document.getElementById('city').value.trim().toUpperCase() : "N/A",
             state: isKV ? document.getElementById('state').value.trim().toUpperCase() : "N/A",
-            profile_completed: true, // Forces column to turn TRUE in database
+            profile_completed: true,
             updated_at: new Date().toISOString()
         };
 
         try {
-            // 1. Update 'users' table
             const { error: userError } = await supabase
                 .from('users')
                 .upsert({
@@ -176,14 +194,12 @@
 
             if (userError) throw userError;
 
-            // 2. Update 'profiles' table
             const { error: profileError } = await supabase
                 .from('profiles')
                 .upsert(baseData);
 
             if (profileError) throw profileError;
 
-            // SUCCESS
             window.location.href = 'dashboard.html';
 
         } catch (error) {
