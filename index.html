@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>KV LEARNING PORTAL</title>
-    <meta name="description" content="Official PM SHRI KV New Bongaigaon practice portal. Comprehensive NCERT MCQs for Class 6 to 12. Boost your CBSE exam preparation with AI-driven tracking and analytics.">
+    <meta name="description" content="Official PM SHRI KENDRIYA VIDYALAYA practice portal. Comprehensive NCERT MCQs for Class 6 to 12. Boost your CBSE exam preparation with AI-driven tracking and analytics.">
     
     <meta name="keywords" content="Kendriya, Vidyalaya, KVS, NCERT, CBSE, MCQ, Practice, Learning, Portal, Students, Education, Exam, Preparation, Class, 6, 7, 8, 9, 10, 11, 12, Science, Commerce, Arts, Quiz, Study, Material, Online, Testing, PM-SHRI">
     <meta name="author" content="Mohit Mandal | PM SHRI KV NBQ">
@@ -31,16 +31,61 @@
             scroll-behavior: smooth;
         }
 
+        /* Welcome Overlay Styles */
+        #welcome-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #010409;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-in-out;
+        }
+
+        #welcome-video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+
         .glass-nav {
             background: rgba(1, 4, 9, 0.85);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
 
+        /* --- LIQUID FLOATING MOBILE NAV --- */
         .mobile-bottom-nav {
-            background: rgba(1, 4, 9, 0.9);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 450px;
+            background: rgba(13, 17, 23, 0.6);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-radius: 24px;
+            z-index: 1000;
+            padding: 12px 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border: 2px solid transparent;
+            background-image: linear-gradient(rgba(1, 4, 9, 0.8), rgba(1, 4, 9, 0.8)), 
+                            linear-gradient(270deg, #00f2ff, #00ff88, #f0ff00, #ff00c8, #6366f1);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            background-size: 100% 100%, 400% 400%;
+            animation: liquidGradient 8s ease infinite;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(99, 102, 241, 0.2);
+        }
+
+        @keyframes liquidGradient {
+            0% { background-position: 0% 50%, 0% 50%; }
+            50% { background-position: 0% 50%, 100% 50%; }
+            100% { background-position: 0% 50%, 0% 50%; }
         }
 
         .hero-gradient {
@@ -72,6 +117,15 @@
         .btn-shiny:hover { 
             transform: translateY(-2px); 
             box-shadow: 0 0 30px rgba(99, 102, 241, 0.5); 
+        }
+
+        .glowing-btn {
+            box-shadow: 0 0 15px #6366f1, 0 0 30px #a855f7;
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px #6366f1, 0 0 30px #a855f7; }
+            50% { box-shadow: 0 0 25px #6366f1, 0 0 50px #a855f7; }
         }
 
         .ebsb-tag {
@@ -109,7 +163,7 @@
 
         .ai-floating-ball {
             position: fixed;
-            bottom: 100px; 
+            bottom: 110px; 
             right: 20px;
             width: 55px;
             height: 55px;
@@ -198,7 +252,13 @@
         }
     </style>
 </head>
-<body class="hero-gradient overflow-x-hidden pb-24 md:pb-0">
+<body class="hero-gradient overflow-x-hidden pb-32 md:pb-0">
+
+    <div id="welcome-screen">
+        <video id="welcome-video" autoplay muted playsinline>
+            <source src="a.mp4" type="video/mp4">
+        </video>
+    </div>
 
     <a href="https://learnmeai.vercel.app" target="_blank" class="ai-floating-ball" title="Open AI Learning Assistance">
         <div class="ai-ping"></div>
@@ -227,18 +287,29 @@
         </div>
     </nav>
 
-    <nav class="md:hidden fixed bottom-0 w-full z-50 mobile-bottom-nav py-3 px-6 flex justify-around items-center">
-        <a href="index.html" class="flex flex-col items-center gap-1">
-            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-            <span class="text-[9px] font-black text-indigo-500 uppercase">Home</span>
+    <nav class="md:hidden mobile-bottom-nav">
+        <a href="index.html" class="flex flex-col items-center gap-1 group">
+            <svg class="w-5 h-5 text-indigo-400 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            <span class="text-[8px] font-black text-indigo-400 group-hover:text-white uppercase">Home</span>
         </a>
-        <a href="#features" class="flex flex-col items-center gap-1">
-            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            <span class="text-[9px] font-black text-slate-400 uppercase">Features</span>
+        <a href="#features" class="flex flex-col items-center gap-1 group">
+            <svg class="w-5 h-5 text-slate-400 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            <span class="text-[8px] font-black text-slate-400 group-hover:text-white uppercase">Features</span>
         </a>
-        <a href="about.html" class="flex flex-col items-center gap-1">
-            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            <span class="text-[9px] font-black text-slate-400 uppercase">Team</span>
+        
+        <button id="mobile-auth-btn" class="flex flex-col items-center gap-1 group -mt-6 bg-indigo-600 p-3 rounded-full border-4 border-[#010409] glowing-btn">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-width="2" d="M5 15l7-7 7 7"></path>
+            </svg>
+        </button>
+        
+        <a href="faq.html" class="flex flex-col items-center gap-1 group">
+            <svg class="w-5 h-5 text-slate-400 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093v3m3 0h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-[8px] font-black text-slate-400 group-hover:text-white uppercase">FAQ</span>
+        </a>
+        <a href="about.html" class="flex flex-col items-center gap-1 group">
+            <svg class="w-5 h-5 text-slate-400 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <span class="text-[8px] font-black text-slate-400 group-hover:text-white uppercase">About</span>
         </a>
     </nav>
 
@@ -322,6 +393,20 @@
     <script type="module">
         import { supabase } from './js/supabase.js';
 
+        // --- WELCOME VIDEO LOGIC ---
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const welcomeVideo = document.getElementById('welcome-video');
+
+        // Play video on every refresh
+        welcomeVideo.play().catch(error => console.log("Autoplay prevented:", error));
+
+        welcomeVideo.onended = () => {
+            welcomeScreen.style.opacity = '0';
+            setTimeout(() => {
+                welcomeScreen.style.display = 'none';
+            }, 1000);
+        };
+
         const languages = [
             "এক ভাৰত শ্ৰেষ্ঠ ভাৰত", "এক ভারত শ্রেষ্ঠ ভারত", "मोन भारत स्रेष्ठ भारत", "इक भारत श्रेष्ठ भारत", 
             "એક ভারত શ્રેષ્ઠ ભારત", "एक भारत श्रेष्ठ भारत", "ಒಂದು ಭಾರತ ಶ್ರೇಷ್ಠ ಭಾರತ", "اَکھ بھارت شریشٹھ بھارت", 
@@ -351,8 +436,10 @@
             const { data: { session } } = await supabase.auth.getSession();
             const navBtn = document.getElementById('auth-btn-nav');
             const heroBtn = document.getElementById('auth-btn-hero');
+            const mobileAuthBtn = document.getElementById('mobile-auth-btn');
 
             const handleAuth = async () => {
+                // Double check session to be absolutely sure before triggering OAuth
                 const { data: { session: currentSession } } = await supabase.auth.getSession();
                 if(currentSession) {
                     window.location.href = 'dashboard.html';
@@ -366,15 +453,19 @@
                 }
             };
 
-            [navBtn, heroBtn].forEach(btn => {
-                if(!btn) return;
-                if(session) {
+            // If session exists, remove "Get Started" behavior and redirect to dashboard
+            if (session) {
+                [navBtn, heroBtn, mobileAuthBtn].forEach(btn => {
+                    if(!btn) return;
                     btn.innerText = "LETS अभ्यास ⚡";
                     btn.onclick = () => window.location.href = 'dashboard.html';
-                } else {
+                });
+            } else {
+                [navBtn, heroBtn, mobileAuthBtn].forEach(btn => {
+                    if(!btn) return;
                     btn.onclick = handleAuth;
-                }
-            });
+                });
+            }
         }
         initHome();
     </script>
