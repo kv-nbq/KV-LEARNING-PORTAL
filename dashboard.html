@@ -13,8 +13,8 @@
             color: white; 
             min-height: 100vh; 
             overflow-x: hidden;
-            /* Changed to Maroon/Dark Deep Red Gradient */
-            background: linear-gradient(-45deg, #020617, #450a0a, #7f1d1d, #450a0a, #020617);
+            /* Navy & Midnight Blue Gradient */
+            background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #0f172a, #020617);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
         }
@@ -29,8 +29,8 @@
             background: rgba(255, 255, 255, 0.03); 
             backdrop-filter: blur(16px); 
             -webkit-backdrop-filter: blur(16px);
-            /* Border changed to Golden/Amber transparency */
-            border: 1px solid rgba(217, 119, 6, 0.2); 
+            /* Sky Blue Border Transparency */
+            border: 1px solid rgba(56, 189, 248, 0.2); 
             box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
@@ -42,75 +42,75 @@
             top: 0; left: 0; right: 0; bottom: 0;
             pointer-events: none;
             border-radius: inherit;
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(251, 191, 36, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(56, 189, 248, 0.05) 100%);
         }
 
-        /* Gold Liquid Glass Buttons */
+        /* Sky Blue Liquid Glass Buttons */
         .btn-liquid-blue {
-            background: rgba(180, 83, 9, 0.2);
+            background: rgba(14, 165, 233, 0.2);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(251, 191, 36, 0.4);
-            box-shadow: inset 0 0 10px rgba(251, 191, 36, 0.2), 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.2), 0 4px 15px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
         .btn-liquid-blue:hover {
-            background: rgba(180, 83, 9, 0.4);
+            background: rgba(14, 165, 233, 0.4);
             transform: translateY(-2px);
-            box-shadow: inset 0 0 15px rgba(251, 191, 36, 0.5), 0 6px 20px rgba(180, 83, 9, 0.4);
-            border-color: #fbbf24;
+            box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.5), 0 6px 20px rgba(14, 165, 233, 0.4);
+            border-color: #38bdf8;
         }
 
-        /* Fire Effect for Motto */
+        /* Cyber Glow Effect for Motto */
         .fire-text {
-            background: linear-gradient(to bottom, #fff700, #ffae00, #ff4d00, #ff0000);
+            background: linear-gradient(to bottom, #f0f9ff, #7dd3fc, #38bdf8, #0ea5e9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 5px rgba(255, 69, 0, 0.6));
-            animation: flicker 1.5s infinite alternate;
+            filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.6));
+            animation: glow 1.5s infinite alternate;
         }
-        @keyframes flicker {
-            0% { opacity: 0.9; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.02); }
+        @keyframes glow {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.01); }
         }
 
-        /* Card Gradients Updated to Gold/Maroon mix */
-        .card-grad { background: linear-gradient(135deg, rgba(217, 119, 6, 0.15) 0%, rgba(2, 6, 23, 0) 100%); }
-        .ai-card-grad { background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(153, 27, 27, 0.05) 100%); }
-        .leader-grad { background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(2, 6, 23, 0) 100%); }
+        /* Sky Blue Card Gradients */
+        .card-grad { background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(2, 6, 23, 0) 100%); }
+        .ai-card-grad { background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(30, 27, 75, 0.05) 100%); }
+        .leader-grad { background: linear-gradient(135deg, rgba(7, 89, 133, 0.15) 0%, rgba(2, 6, 23, 0) 100%); }
 
         .info-btn { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: help; color: #94a3b8; transition: all 0.2s; }
-        .info-btn:hover { background: #fbbf24; color: black; border-color: #fbbf24; }
+        .info-btn:hover { background: #38bdf8; color: black; border-color: #38bdf8; }
 
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.9); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         .modal-overlay.active { display: flex; }
 
-        .loader-spin { border-top-color: #fbbf24; animation: spin 1s linear infinite; border-radius: 50%; }
+        .loader-spin { border-top-color: #38bdf8; animation: spin 1s linear infinite; border-radius: 50%; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         .bar-container { display: flex; align-items: flex-end; gap: 8px; height: 150px; padding-top: 20px; }
         .bar { flex: 1; min-width: 12px; border-radius: 4px 4px 0 0; position: relative; transition: height 1s ease-out; }
-        .bar:hover::after { content: attr(data-value); position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 800; color: #fbbf24; white-space: nowrap; }
+        .bar:hover::after { content: attr(data-value); position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 800; color: #38bdf8; white-space: nowrap; }
 
         .results-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-        .results-row { background: rgba(255,255,255,0.03); transition: all 0.2s; position: relative; }
-        .results-row:hover { background: rgba(251, 191, 36, 0.08); transform: translateY(-2px); }
-        .results-row td { padding: 1.25rem 1rem; font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .results-row td:first-child { border-radius: 16px 0 0 16px; border-left: 1px solid rgba(255,255,255,0.05); }
-        .results-row td:last-child { border-radius: 0 16px 16px 0; border-right: 1px solid rgba(255,255,255,0.05); }
+        .results-row { background: rgba(255,255,255,0.02); transition: all 0.2s; position: relative; }
+        .results-row:hover { background: rgba(56, 189, 248, 0.08); transform: translateY(-2px); }
+        .results-row td { padding: 1.25rem 1rem; font-size: 0.75rem; border-top: 1px solid rgba(56, 189, 248, 0.05); border-bottom: 1px solid rgba(56, 189, 248, 0.05); }
+        .results-row td:first-child { border-radius: 16px 0 0 16px; border-left: 1px solid rgba(56, 189, 248, 0.05); }
+        .results-row td:last-child { border-radius: 0 16px 16px 0; border-right: 1px solid rgba(56, 189, 248, 0.05); }
         .badge-score { padding: 6px 12px; border-radius: 8px; font-weight: 800; border-width: 1px; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div id="streak-modal" class="modal-overlay p-4" onclick="closeModal('streak-modal')">
-        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-amber-500 shadow-2xl" onclick="event.stopPropagation()">
-            <h3 class="text-xl font-black italic uppercase mb-4 text-amber-400">Streak System</h3>
+        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-sky-500 shadow-2xl" onclick="event.stopPropagation()">
+            <h3 class="text-xl font-black italic uppercase mb-4 text-sky-400">Streak System</h3>
             <div class="space-y-4 text-sm text-slate-300">
                 <p>Maintain consistency to grow your power:</p>
-                <div class="flex items-start gap-3 bg-white/5 p-3 rounded-xl">
-                    <span class="text-xl">🔥</span>
+                <div class="flex items-start gap-3 bg-sky-500/10 p-3 rounded-xl border border-sky-500/20">
+                    <span class="text-xl">⚡</span>
                     <p class="text-xs">Solve MCQs daily to increase your streak.</p>
                 </div>
                 <div class="flex items-start gap-3 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
@@ -118,33 +118,33 @@
                     <p class="text-xs text-red-200">Break consistency for even one day and your streak restarts from 0.</p>
                 </div>
             </div>
-            <button onclick="closeModal('streak-modal')" class="w-full mt-6 py-3 bg-amber-500 text-black font-black rounded-xl uppercase text-xs tracking-widest">Understood</button>
+            <button onclick="closeModal('streak-modal')" class="w-full mt-6 py-3 bg-sky-500 text-black font-black rounded-xl uppercase text-xs tracking-widest">Understood</button>
         </div>
     </div>
 
     <div id="rank-modal" class="modal-overlay p-4" onclick="closeModal('rank-modal')">
-        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-yellow-500 shadow-2xl" onclick="event.stopPropagation()">
-            <h3 class="text-xl font-black italic uppercase mb-4 text-yellow-500">Rank Tiers</h3>
+        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-sky-400 shadow-2xl" onclick="event.stopPropagation()">
+            <h3 class="text-xl font-black italic uppercase mb-4 text-sky-400">Rank Tiers</h3>
             <div class="space-y-2 text-[11px] uppercase font-bold text-slate-300">
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-amber-400">Pro</span><span>100+ MCQs Right</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-yellow-400">Excellent</span><span>50+ MCQs Right</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-orange-400">Good</span><span>20+ MCQs Right</span></div>
+                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-sky-300">Pro</span><span>100+ MCQs Right</span></div>
+                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-sky-400">Excellent</span><span>50+ MCQs Right</span></div>
+                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-blue-400">Good</span><span>20+ MCQs Right</span></div>
                 <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-slate-400">Beginner</span><span>10+ MCQs Right</span></div>
                 <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-red-500">Poor</span><span>Below 5 MCQs Right</span></div>
             </div>
-            <button onclick="closeModal('rank-modal')" class="w-full mt-6 py-3 bg-yellow-600 text-white font-black rounded-xl uppercase text-xs tracking-widest">Got it</button>
+            <button onclick="closeModal('rank-modal')" class="w-full mt-6 py-3 bg-sky-600 text-white font-black rounded-xl uppercase text-xs tracking-widest">Got it</button>
         </div>
     </div>
 
     <div id="loading-screen" class="fixed inset-0 bg-[#020617] z-[100] flex flex-col items-center justify-center">
         <div class="loader-spin w-12 h-12 border-4 border-white/10 mb-4"></div>
-        <p class="text-amber-500 font-bold tracking-widest text-xs uppercase">Syncing Scholar Data...</p>
+        <p class="text-sky-500 font-bold tracking-widest text-xs uppercase">Syncing Scholar Data...</p>
     </div>
 
     <main id="main-content" class="max-w-6xl mx-auto hidden">
         <nav class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
             <div class="cursor-pointer text-center md:text-left" onclick="location.href='index.html'">
-                <h1 class="text-2xl font-black italic tracking-tighter uppercase">MY_<span class="text-amber-500">DASHBOARD</span></h1>
+                <h1 class="text-2xl font-black italic tracking-tighter uppercase">MY_<span class="text-sky-500">DASHBOARD</span></h1>
                 <p id="dynamic-motto" class="text-[10px] font-extrabold uppercase tracking-widest mt-1 fire-text">Accuracy comes from practice, not luck</p>
             </div>
             
@@ -157,59 +157,59 @@
 
         <div class="max-w-4xl mx-auto space-y-8">
             <header>
-                <div id="school-tag" class="inline-block px-3 py-1 rounded-full bg-amber-500/10 text-amber-500 text-[10px] font-bold uppercase tracking-widest mb-4">LOADING PORTAL...</div>
+                <div id="school-tag" class="inline-block px-3 py-1 rounded-full bg-sky-500/10 text-sky-500 text-[10px] font-bold uppercase tracking-widest mb-4">LOADING PORTAL...</div>
                 <h2 class="text-5xl font-extrabold mb-2" id="welcome-name">Hello, Scholar</h2>
             </header>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="glass p-5 rounded-3xl cursor-pointer hover:bg-amber-500/5 transition" onclick="openModal('rank-modal')">
+                <div class="glass p-5 rounded-3xl cursor-pointer hover:bg-sky-500/5 transition" onclick="openModal('rank-modal')">
                     <div class="flex justify-between mb-2">
                         <p class="text-[10px] text-slate-500 uppercase font-black">Rank</p>
                         <div class="info-btn">?</div>
                     </div>
-                    <h4 id="stat-rank" class="text-lg font-black italic uppercase tracking-tighter text-amber-500">--</h4>
+                    <h4 id="stat-rank" class="text-lg font-black italic uppercase tracking-tighter text-sky-400">--</h4>
                 </div>
                 <div class="glass p-5 rounded-3xl">
                     <div class="flex justify-between mb-2">
                         <p class="text-[10px] text-slate-500 uppercase font-black">Total Pts</p>
                     </div>
-                    <h4 id="stat-points" class="text-2xl font-black text-amber-400">0</h4>
+                    <h4 id="stat-points" class="text-2xl font-black text-sky-300">0</h4>
                 </div>
-                <div class="glass p-5 rounded-3xl cursor-pointer hover:bg-amber-500/5 transition" onclick="openModal('streak-modal')">
+                <div class="glass p-5 rounded-3xl cursor-pointer hover:bg-sky-500/5 transition" onclick="openModal('streak-modal')">
                     <div class="flex justify-between mb-2">
                         <p class="text-[10px] text-slate-500 uppercase font-black">Streak</p>
                         <div class="info-btn">?</div>
                     </div>
-                    <h4 id="stat-streak" class="text-2xl font-black text-orange-500">0 🔥</h4>
+                    <h4 id="stat-streak" class="text-2xl font-black text-sky-500">0 ⚡</h4>
                 </div>
                 <div class="glass p-5 rounded-3xl">
                     <p class="text-[10px] text-slate-500 uppercase font-black mb-2">Tests</p>
-                    <h4 id="stat-total-tests" class="text-2xl font-black text-slate-300">0</h4>
+                    <h4 id="stat-total-tests" class="text-2xl font-black text-slate-400">0</h4>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div onclick="location.href='test.html'" class="glass card-grad p-8 rounded-[2.5rem] border-amber-500/20 hover:border-amber-500/50 transition cursor-pointer group">
-                    <div class="w-12 h-12 bg-amber-700 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">📝</div>
+                <div onclick="location.href='test.html'" class="glass card-grad p-8 rounded-[2.5rem] border-sky-500/20 hover:border-sky-500/50 transition cursor-pointer group">
+                    <div class="w-12 h-12 bg-sky-900 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">📝</div>
                     <h3 class="font-black uppercase text-sm tracking-widest mb-1">Practice Lab</h3>
                     <p class="text-xs text-slate-500 font-bold uppercase">Launch Mock Exams</p>
                 </div>
                 
-                <div onclick="location.href='leaderboard.html'" class="glass leader-grad p-8 rounded-[2.5rem] border-orange-500/20 hover:border-orange-500/50 transition cursor-pointer group">
-                    <div class="w-12 h-12 bg-orange-700 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">🏆</div>
-                    <h3 class="font-black uppercase text-sm tracking-widest mb-1 text-amber-500">Leaderboard</h3>
+                <div onclick="location.href='leaderboard.html'" class="glass leader-grad p-8 rounded-[2.5rem] border-blue-500/20 hover:border-blue-500/50 transition cursor-pointer group">
+                    <div class="w-12 h-12 bg-blue-900 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">🏆</div>
+                    <h3 class="font-black uppercase text-sm tracking-widest mb-1 text-sky-400">Leaderboard</h3>
                     <p class="text-xs text-slate-500 font-bold uppercase">Global Rankings</p>
                 </div>
 
-                <div onclick="window.open('https://learnmeai.vercel.app', '_blank')" class="glass ai-card-grad p-8 rounded-[2.5rem] border-yellow-500/20 hover:border-yellow-500/50 transition cursor-pointer group">
-                    <div class="w-12 h-12 bg-yellow-700 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">🧠</div>
-                    <h3 class="font-black uppercase text-sm tracking-widest mb-1 text-yellow-500">Learn with AI</h3>
+                <div onclick="window.open('https://learnmeai.vercel.app', '_blank')" class="glass ai-card-grad p-8 rounded-[2.5rem] border-sky-400/20 hover:border-sky-400/50 transition cursor-pointer group">
+                    <div class="w-12 h-12 bg-sky-800 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">🧠</div>
+                    <h3 class="font-black uppercase text-sm tracking-widest mb-1 text-sky-300">Learn with AI</h3>
                     <p class="text-xs text-slate-500 font-bold uppercase">Personal AI Tutor</p>
                 </div>
             </div>
 
             <section class="glass p-8 rounded-[2.5rem]">
-                <h3 class="text-xs font-black uppercase tracking-widest text-amber-500 mb-6">Monthly Progress (Total Qs Attempted)</h3>
+                <h3 class="text-xs font-black uppercase tracking-widest text-sky-500 mb-6">Monthly Progress (Total Qs Attempted)</h3>
                 <div class="bar-container" id="bar-graph"></div>
                 <div class="flex justify-between mt-4 px-2 text-[8px] md:text-[10px] font-black text-slate-500 uppercase">
                     <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
@@ -218,7 +218,7 @@
             </section>
 
             <section class="glass p-8 rounded-[2.5rem]">
-                <h3 class="text-sm font-black uppercase tracking-widest text-amber-500 mb-6">Recent Sessions</h3>
+                <h3 class="text-sm font-black uppercase tracking-widest text-sky-500 mb-6">Recent Sessions</h3>
                 <div class="overflow-x-auto">
                     <table class="results-table">
                         <thead>
@@ -326,7 +326,7 @@
                 document.getElementById('school-tag').innerText = profile?.school_name || 'STUDENT PORTAL';
                 document.getElementById('stat-points').innerText = totalPoints;
                 document.getElementById('stat-total-tests').innerText = logs.length;
-                document.getElementById('stat-streak').innerText = `${streakCount} 🔥`;
+                document.getElementById('stat-streak').innerText = `${streakCount} ⚡`;
                 document.getElementById('stat-rank').innerText = currentRank;
 
                 renderTable(logs);
@@ -361,16 +361,16 @@
                     <tr class="results-row">
                         <td class="px-4">
                             <div class="text-white font-bold text-sm">${test.subject || 'General'}</div>
-                            <div class="text-[9px] text-amber-600 uppercase font-black">${test.topic || 'Assessment'}</div>
+                            <div class="text-[9px] text-sky-500 uppercase font-black">${test.topic || 'Assessment'}</div>
                         </td>
                         <td class="px-4 text-slate-400 uppercase text-[10px] font-bold">${date}</td>
                         <td class="px-4">
                             <div class="flex gap-2">
-                                <span class="badge-score border-amber-500/20 text-amber-400 bg-amber-500/10">${correct} ✔</span>
+                                <span class="badge-score border-sky-500/20 text-sky-400 bg-sky-500/10">${correct} ✔</span>
                                 <span class="badge-score border-red-500/20 text-red-400 bg-red-500/10">${wrong} ✖</span>
                             </div>
                         </td>
-                        <td class="px-4 font-black text-amber-500 text-[10px]">COMPLETED</td>
+                        <td class="px-4 font-black text-sky-500 text-[10px]">COMPLETED</td>
                     </tr>`;
             });
             document.getElementById('more-tests-footer').classList.toggle('hidden', logs.length <= 5);
@@ -388,7 +388,7 @@
 
             const max = Math.max(...monthlyData, 10);
             graph.innerHTML = monthlyData.map(val => `
-                <div class="bar bg-amber-500/20 border-t-2 border-amber-500" 
+                <div class="bar bg-sky-500/20 border-t-2 border-sky-500" 
                      style="height: ${(val / max) * 100}%" 
                      data-value="${val} Qs Attempted">
                 </div>`).join('');
