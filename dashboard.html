@@ -9,10 +9,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
         
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            color: white; 
-            min-height: 100vh; 
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: white;
+            min-height: 100vh;
             overflow-x: hidden;
             background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #0f172a, #020617);
             background-size: 400% 400%;
@@ -25,11 +25,11 @@
             100% { background-position: 0% 50%; }
         }
         
-        .glass { 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(16px); 
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(56, 189, 248, 0.2); 
+            border: 1px solid rgba(56, 189, 248, 0.2);
             box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
@@ -100,13 +100,79 @@
         .results-row td:first-child { border-radius: 16px 0 0 16px; border-left: 1px solid rgba(56, 189, 248, 0.05); }
         .results-row td:last-child { border-radius: 0 16px 16px 0; border-right: 1px solid rgba(56, 189, 248, 0.05); }
         .badge-score { padding: 6px 12px; border-radius: 8px; font-weight: 800; border-width: 1px; }
+        
+        .badge-img { width: 60px; height: 60px; object-fit: contain; margin: 0 auto 15px; filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4)); }
+        .rank-list-img { width: 18px; height: 18px; object-fit: contain; }
+
+        #rank-up-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.95);
+            z-index: 500;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(12px);
+        }
+        #rank-up-overlay.active { display: flex; }
+        .floating-badge {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.8));
+            animation: floatAnim 3s ease-in-out infinite;
+        }
+        @keyframes floatAnim {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+        .rank-title-anim {
+            font-size: 3rem;
+            font-weight: 900;
+            font-style: italic;
+            text-transform: uppercase;
+            margin-top: 2rem;
+            letter-spacing: -0.05em;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
+    <div id="rank-up-overlay" onclick="this.classList.remove('active')">
+        <p id="rank-status-label" class="text-sky-400 font-black tracking-[0.5em] uppercase mb-4 text-sm">Rank Updated</p>
+        <img id="large-rank-badge" src="p.png" class="floating-badge" alt="New Badge">
+        <h2 id="large-rank-name" class="rank-title-anim fire-text">POOR</h2>
+        <p class="text-slate-500 font-bold uppercase tracking-widest mt-4 animate-pulse">Tap to continue</p>
+    </div>
+
     <div id="coming-soon-overlay" class="modal-overlay flex-col p-6" onclick="closeModal('coming-soon-overlay')">
         <video src="gif.mp4" autoplay loop muted playsinline class="big-video"></video>
         <p class="text-sky-400/60 text-[12px] font-black uppercase tracking-[0.4em] mt-8">Tap anywhere to return</p>
+    </div>
+
+    <div id="coin-modal" class="modal-overlay p-4" onclick="closeModal('coin-modal')">
+        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-yellow-500 shadow-2xl" onclick="event.stopPropagation()">
+            <h3 class="text-xl font-black italic uppercase mb-4 text-yellow-500">Economy System</h3>
+            <div class="space-y-4 text-sm text-slate-300">
+                <p class="font-bold text-white uppercase text-[10px] tracking-widest">Points = Total Coins</p>
+                <div class="flex items-start gap-3 bg-green-500/10 p-3 rounded-xl border border-green-500/20">
+                    <span class="text-xl">✅</span>
+                    <div>
+                        <p class="text-xs font-black text-green-400 uppercase">Correct Answer</p>
+                        <p class="text-[10px] text-slate-400">+4 Coins awarded per correct MCQ.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
+                    <span class="text-xl">❌</span>
+                    <div>
+                        <p class="text-xs font-black text-red-400 uppercase">Wrong Answer</p>
+                        <p class="text-[10px] text-slate-400">-1 Coin deducted per mistake.</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="closeModal('coin-modal')" class="w-full mt-6 py-3 bg-yellow-500 text-black font-black rounded-xl uppercase text-xs tracking-widest">Close</button>
+        </div>
     </div>
 
     <div id="streak-modal" class="modal-overlay p-4" onclick="closeModal('streak-modal')">
@@ -128,16 +194,41 @@
     </div>
 
     <div id="rank-modal" class="modal-overlay p-4" onclick="closeModal('rank-modal')">
-        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-sky-400 shadow-2xl" onclick="event.stopPropagation()">
-            <h3 class="text-xl font-black italic uppercase mb-4 text-sky-400">Rank Tiers</h3>
-            <div class="space-y-2 text-[11px] uppercase font-bold text-slate-300">
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-sky-300">Pro</span><span>100+ MCQs Right</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-sky-400">Excellent</span><span>50+ MCQs Right</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-blue-400">Good</span><span>20+ MCQs Right</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-slate-400">Beginner</span><span>10+ MCQs Right</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-red-500">Poor</span><span>Below 5 MCQs Right</span></div>
+        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-sky-400 shadow-2xl text-center" onclick="event.stopPropagation()">
+            <img id="modal-badge-icon" src="p.png" class="badge-img" alt="Badge">
+            <h3 id="modal-rank-name" class="text-2xl font-black italic uppercase mb-1 text-sky-400">RANK</h3>
+            <p class="text-[10px] text-slate-500 font-bold uppercase mb-6 tracking-widest">Current Status</p>
+            
+            <div class="space-y-2 text-[10px] uppercase font-bold text-slate-300 text-left mb-6">
+                <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                    <div class="flex items-center gap-2"><img src="v.png" class="rank-list-img"> <span class="text-orange-400">VEER</span></div>
+                    <span>200+ Coins</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                    <div class="flex items-center gap-2"><img src="pr.png" class="rank-list-img"> <span class="text-sky-300">Pro</span></div>
+                    <span>125+ Coins</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                    <div class="flex items-center gap-2"><img src="e.png" class="rank-list-img"> <span class="text-sky-400">Excellent</span></div>
+                    <span>75+ Coins</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                    <div class="flex items-center gap-2"><img src="g.png" class="rank-list-img"> <span class="text-blue-400">Good</span></div>
+                    <span>35+ Coins</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                    <div class="flex items-center gap-2"><img src="be.png" class="rank-list-img"> <span class="text-slate-400">Beginner</span></div>
+                    <span>10+ Coins</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                    <div class="flex items-center gap-2"><img src="p.png" class="rank-list-img"> <span class="text-red-500">Poor</span></div>
+                    <span>&lt; 10 Coins</span>
+                </div>
             </div>
-            <button onclick="closeModal('rank-modal')" class="w-full mt-6 py-3 bg-sky-600 text-white font-black rounded-xl uppercase text-xs tracking-widest">Got it</button>
+
+            <p class="text-[9px] text-yellow-500/60 font-black uppercase mb-4 italic">⚠️ Disclaimer: Your rank can be promoted as well as demoted based on performance.</p>
+            
+            <button onclick="closeModal('rank-modal')" class="w-full py-3 bg-sky-600 text-white font-black rounded-xl uppercase text-xs tracking-widest">Got it</button>
         </div>
     </div>
 
@@ -174,12 +265,15 @@
                     </div>
                     <h4 id="stat-rank" class="text-lg font-black italic uppercase tracking-tighter text-sky-400">--</h4>
                 </div>
-                <div class="glass p-5 rounded-3xl">
+                
+                <div class="glass p-5 rounded-3xl cursor-pointer hover:bg-yellow-500/5 transition" onclick="openModal('coin-modal')">
                     <div class="flex justify-between mb-2">
-                        <p class="text-[10px] text-slate-500 uppercase font-black">Total Pts</p>
+                        <p class="text-[10px] text-slate-500 uppercase font-black">Total Coins</p>
+                        <div class="info-btn">?</div>
                     </div>
                     <h4 id="stat-points" class="text-2xl font-black text-sky-300">0</h4>
                 </div>
+
                 <div class="glass p-5 rounded-3xl cursor-pointer hover:bg-sky-500/5 transition" onclick="openModal('streak-modal')">
                     <div class="flex justify-between mb-2">
                         <p class="text-[10px] text-slate-500 uppercase font-black">Streak</p>
@@ -187,6 +281,7 @@
                     </div>
                     <h4 id="stat-streak" class="text-2xl font-black text-sky-500">0 🔥</h4>
                 </div>
+                
                 <div class="glass p-5 rounded-3xl">
                     <p class="text-[10px] text-slate-500 uppercase font-black mb-2">Tests</p>
                     <h4 id="stat-total-tests" class="text-2xl font-black text-slate-400">0</h4>
@@ -238,10 +333,10 @@
                     </table>
                 </div>
                <div id="more-tests-footer" 
-     onclick="location.href='allresults.html'" 
-     class="hidden w-full mt-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-sky-500 cursor-pointer hover:text-sky-300 transition-all border-t border-white/5">
-    View All Test History →
-</div>
+                    onclick="location.href='allresults.html'"
+                    class="hidden w-full mt-6 text-center text-[10px] font-black uppercase tracking-[widest] text-sky-500 cursor-pointer hover:text-white transition-all animate-pulse">
+                Click to view all results →
+               </div>
             </section>
         </div>
     </main>
@@ -279,6 +374,43 @@
             window.location.replace('index.html');
         };
 
+        function triggerRankAnimation(rankName, badgeSrc, isPromotion) {
+            const overlay = document.getElementById('rank-up-overlay');
+            const label = document.getElementById('rank-status-label');
+            const largeBadge = document.getElementById('large-rank-badge');
+            const largeName = document.getElementById('large-rank-name');
+
+            label.innerText = isPromotion ? "NEW RANK ACHIEVED" : "RANK DEMOTED";
+            label.style.color = isPromotion ? "#38bdf8" : "#ef4444";
+            largeBadge.src = badgeSrc;
+            largeName.innerText = rankName;
+            
+            overlay.classList.add('active');
+
+            if (isPromotion) {
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#38bdf8', '#ffffff', '#0ea5e9']
+                });
+            }
+        }
+
+        function checkRankChange(newRank, badgeImg) {
+            const lastRank = localStorage.getItem('user_rank_cache');
+            const rankOrder = ["Poor", "Beginner", "Good", "Excellent", "Pro", "VEER BADGE"];
+            
+            if (lastRank && lastRank !== newRank) {
+                const oldIndex = rankOrder.indexOf(lastRank);
+                const newIndex = rankOrder.indexOf(newRank);
+                const isPromotion = newIndex > oldIndex;
+                
+                triggerRankAnimation(newRank, badgeImg, isPromotion);
+            }
+            localStorage.setItem('user_rank_cache', newRank);
+        }
+
         async function syncData() {
             try {
                 const { data: profile } = await supabase.from("users").select("*").eq("id", userId).single();
@@ -289,14 +421,16 @@
 
                 const logs = history || [];
                 const totalPoints = logs.reduce((s, t) => s + (parseInt(t.score) || 0), 0);
-                const correctCount = logs.reduce((s, t) => s + (parseInt(t.correct_answers) || 0), 0);
-                const totalQs = logs.reduce((s, t) => s + (parseInt(t.total_questions) || 0), 0);
 
                 let currentRank = "Poor";
-                if (correctCount >= 100) currentRank = "Pro";
-                else if (correctCount >= 50) currentRank = "Excellent";
-                else if (correctCount >= 20) currentRank = "Good";
-                else if (correctCount >= 10) currentRank = "Beginner";
+                let badgeImg = "p.png";
+                
+                if (totalPoints >= 200) { currentRank = "VEER BADGE"; badgeImg = "v.png"; }
+                else if (totalPoints >= 125) { currentRank = "Pro"; badgeImg = "pr.png"; }
+                else if (totalPoints >= 75) { currentRank = "Excellent"; badgeImg = "e.png"; }
+                else if (totalPoints >= 35) { currentRank = "Good"; badgeImg = "g.png"; }
+                else if (totalPoints >= 10) { currentRank = "Beginner"; badgeImg = "be.png"; }
+                else { currentRank = "Poor"; badgeImg = "p.png"; }
 
                 const activeDates = logs.map(t => new Date(t.created_at).toDateString());
                 const sortedUniqueDates = [...new Set(activeDates)].map(d => new Date(d)).sort((a,b) => b - a);
@@ -316,15 +450,22 @@
                     }
                 }
 
+                // Update UI Elements
                 document.getElementById('welcome-name').innerText = `Hello, ${profile?.full_name?.split(' ')[0] || 'Scholar'}`;
                 document.getElementById('school-tag').innerText = profile?.school_name || 'STUDENT PORTAL';
                 document.getElementById('stat-points').innerText = totalPoints;
                 document.getElementById('stat-total-tests').innerText = logs.length;
                 document.getElementById('stat-streak').innerText = `${streakCount} ⚡`;
                 document.getElementById('stat-rank').innerText = currentRank;
+                
+                // Update Modal Content
+                document.getElementById('modal-rank-name').innerText = currentRank;
+                document.getElementById('modal-badge-icon').src = badgeImg;
 
                 renderTable(logs);
                 renderGraph(logs);
+
+                checkRankChange(currentRank, badgeImg);
 
                 await supabase.from("users").update({
                     total_points: totalPoints,
