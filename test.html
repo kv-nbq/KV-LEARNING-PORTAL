@@ -20,7 +20,6 @@
             position: relative;
         }
 
-        /* Animated Background Blobs for that Pink/Green/Blue feel */
         .blob {
             position: absolute;
             width: 300px;
@@ -38,7 +37,6 @@
             to { transform: translate(20%, 20%); }
         }
 
-        /* Glassmorphism Card */
         .glass-card { 
             background: rgba(255, 255, 255, 0.03); 
             backdrop-filter: blur(20px); 
@@ -48,7 +46,6 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        /* Neon Buttons with Gradient */
         .btn-gradient { 
             background: linear-gradient(90deg, #ec4899, #6366f1, #10b981);
             color: white; 
@@ -119,7 +116,6 @@
         }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Responsive adjustments */
         @media (max-width: 640px) {
             .glass-card { padding: 1.5rem !important; border-radius: 1.5rem; }
             h1 { font-size: 1.8rem !important; }
@@ -177,8 +173,14 @@
             </div>
 
             <div class="flex flex-col sm:flex-row justify-between items-center gap-6 mt-12 pt-8 border-t border-white/10">
-                <button onclick="quitTest()" class="text-slate-500 hover:text-rose-400 transition-all font-bold text-[10px] tracking-widest uppercase">Abort_Mission</button>
-                <button id="next-btn" class="btn-gradient w-full sm:w-auto opacity-50 pointer-events-none hidden">Next_Phase</button>
+                <button onclick="quitTest()" class="bg-rose-900/50 hover:bg-rose-600 transition-all text-white px-6 py-3 rounded-xl font-bold text-[10px] tracking-widest uppercase">Cancel Test</button>
+                
+                <div id="nav-controls" class="hidden flex gap-2">
+                    <button id="prev-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl transition-all font-bold text-[10px] tracking-widest uppercase">Previous</button>
+                    <button id="skip-btn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl transition-all font-bold text-[10px] tracking-widest uppercase">Skip</button>
+                </div>
+
+                <button id="next-btn" class="btn-gradient w-full sm:w-auto hidden">Next_Phase</button>
             </div>
         </div>
     </div>
@@ -273,6 +275,7 @@
             document.getElementById('test-header').classList.remove('hidden');
             document.getElementById('progress-container').classList.remove('hidden');
             document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('nav-controls').classList.remove('hidden');
             startTime = Date.now();
             startTimer();
             displayQuestion();
@@ -290,10 +293,16 @@
         function displayQuestion() {
             const q = filteredQuestions[currentIndex];
             const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
             const previouslyAnswered = userAnswers[q.id];
             
-            nextBtn.classList.add('opacity-50', 'pointer-events-none');
-            nextBtn.innerText = (currentIndex === filteredQuestions.length - 1) ? "Finalize Result" : "Next Phase";
+            // Handle Next/Submit logic
+            const isLast = (currentIndex === filteredQuestions.length - 1);
+            nextBtn.innerText = isLast ? "Submit Test" : "Next Phase";
+            
+            // Handle Navigation visibility
+            prevBtn.style.opacity = currentIndex === 0 ? "0.3" : "1";
+            prevBtn.style.pointerEvents = currentIndex === 0 ? "none" : "auto";
             
             document.getElementById('question-count').innerText = `Phase ${currentIndex + 1} / ${filteredQuestions.length}`;
             document.getElementById('question-text').innerText = q.question_text;
@@ -312,15 +321,42 @@
                 };
                 grid.appendChild(btn);
             });
-            if (previouslyAnswered) nextBtn.classList.remove('opacity-50', 'pointer-events-none');
+            
+            if (previouslyAnswered) {
+                nextBtn.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                nextBtn.classList.add('opacity-50', 'pointer-events-none');
+            }
+            
             document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / filteredQuestions.length) * 100}%`;
         }
+
+        // Navigation Functions
+        document.getElementById('prev-btn').onclick = () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                displayQuestion();
+            }
+        };
+
+        document.getElementById('skip-btn').onclick = () => {
+            userAnswers[filteredQuestions[currentIndex].id] = null; // Mark as skipped
+            if (currentIndex < filteredQuestions.length - 1) {
+                currentIndex++;
+                displayQuestion();
+            } else {
+                finishAssessment();
+            }
+        };
 
         document.getElementById('next-btn').onclick = () => {
             if (currentIndex < filteredQuestions.length - 1) {
                 currentIndex++;
                 displayQuestion();
             } else {
+                // Play sound on submit
+                const audio = new Audio('resultclick.mp3');
+                audio.play().catch(e => console.log("Audio play blocked"));
                 finishAssessment();
             }
         };
