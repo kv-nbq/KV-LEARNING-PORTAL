@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elite Dashboard | KV MCQ</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
         
@@ -13,7 +14,6 @@
             color: white; 
             min-height: 100vh; 
             overflow-x: hidden;
-            /* Navy & Midnight Blue Gradient */
             background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #0f172a, #020617);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -29,7 +29,6 @@
             background: rgba(255, 255, 255, 0.03); 
             backdrop-filter: blur(16px); 
             -webkit-backdrop-filter: blur(16px);
-            /* Sky Blue Border Transparency */
             border: 1px solid rgba(56, 189, 248, 0.2); 
             box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.4);
             position: relative;
@@ -45,7 +44,6 @@
             background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(56, 189, 248, 0.05) 100%);
         }
 
-        /* Sky Blue Liquid Glass Buttons */
         .btn-liquid-blue {
             background: rgba(14, 165, 233, 0.2);
             backdrop-filter: blur(10px);
@@ -62,7 +60,6 @@
             border-color: #38bdf8;
         }
 
-        /* Cyber Glow Effect for Motto */
         .fire-text {
             background: linear-gradient(to bottom, #f0f9ff, #7dd3fc, #38bdf8, #0ea5e9);
             -webkit-background-clip: text;
@@ -75,7 +72,6 @@
             100% { opacity: 1; transform: scale(1.01); }
         }
 
-        /* Sky Blue Card Gradients */
         .card-grad { background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(2, 6, 23, 0) 100%); }
         .ai-card-grad { background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(30, 27, 75, 0.05) 100%); }
         .leader-grad { background: linear-gradient(135deg, rgba(7, 89, 133, 0.15) 0%, rgba(2, 6, 23, 0) 100%); }
@@ -85,6 +81,10 @@
 
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.9); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         .modal-overlay.active { display: flex; }
+
+        #coming-soon-overlay { background: #000; z-index: 300; display: none; flex-direction: column; }
+        #coming-soon-overlay.active { display: flex; }
+        .big-video { width: 90vw; max-width: 800px; border-radius: 2rem; }
 
         .loader-spin { border-top-color: #38bdf8; animation: spin 1s linear infinite; border-radius: 50%; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -103,6 +103,11 @@
     </style>
 </head>
 <body class="p-4 md:p-8">
+
+    <div id="coming-soon-overlay" class="modal-overlay flex-col p-6" onclick="closeModal('coming-soon-overlay')">
+        <video src="gif.mp4" autoplay loop muted playsinline class="big-video"></video>
+        <p class="text-sky-400/60 text-[12px] font-black uppercase tracking-[0.4em] mt-8">Tap anywhere to return</p>
+    </div>
 
     <div id="streak-modal" class="modal-overlay p-4" onclick="closeModal('streak-modal')">
         <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-sky-500 shadow-2xl" onclick="event.stopPropagation()">
@@ -180,7 +185,7 @@
                         <p class="text-[10px] text-slate-500 uppercase font-black">Streak</p>
                         <div class="info-btn">?</div>
                     </div>
-                    <h4 id="stat-streak" class="text-2xl font-black text-sky-500">0 ⚡</h4>
+                    <h4 id="stat-streak" class="text-2xl font-black text-sky-500">0 🔥</h4>
                 </div>
                 <div class="glass p-5 rounded-3xl">
                     <p class="text-[10px] text-slate-500 uppercase font-black mb-2">Tests</p>
@@ -201,7 +206,7 @@
                     <p class="text-xs text-slate-500 font-bold uppercase">Global Rankings</p>
                 </div>
 
-                <div onclick="window.open('https://learnmeai.vercel.app', '_blank')" class="glass ai-card-grad p-8 rounded-[2.5rem] border-sky-400/20 hover:border-sky-400/50 transition cursor-pointer group">
+                <div onclick="openModal('coming-soon-overlay')" class="glass ai-card-grad p-8 rounded-[2.5rem] border-sky-400/20 hover:border-sky-400/50 transition cursor-pointer group">
                     <div class="w-12 h-12 bg-sky-800 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">🧠</div>
                     <h3 class="font-black uppercase text-sm tracking-widest mb-1 text-sky-300">Learn with AI</h3>
                     <p class="text-xs text-slate-500 font-bold uppercase">Personal AI Tutor</p>
@@ -232,9 +237,11 @@
                         <tbody id="results-body"></tbody>
                     </table>
                 </div>
-                <div id="more-tests-footer" class="hidden w-full mt-6 text-center text-[10px] font-black uppercase tracking-widest text-slate-500">
-                    more tests are there
-                </div>
+               <div id="more-tests-footer" 
+     onclick="location.href='allresults.html'" 
+     class="hidden w-full mt-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-sky-500 cursor-pointer hover:text-sky-300 transition-all border-t border-white/5">
+    View All Test History →
+</div>
             </section>
         </div>
     </main>
@@ -243,26 +250,16 @@
     import { supabase } from './js/supabase.js';
 
     const quotes = [
-        "Practice daily to achieve success",
-        "Focus more, worry less always",
-        "Small steps lead to success",
-        "Discipline creates strong future habits",
-        "Believe yourself and keep going",
-        "Hard work beats natural talent",
-        "Stay calm and think clearly",
-        "Learn today, lead tomorrow confidently",
-        "Consistency builds unstoppable powerful habits",
-        "Never quit until you succeed",
-        "Effort today brings success tomorrow",
-        "Keep learning, keep growing daily",
-        "Dreams demand action and effort",
-        "Think smart, act even smarter",
-        "Success comes from daily discipline",
-        "Stay focused on your goals",
-        "Growth happens outside comfort zone",
-        "Push limits, discover your strength",
-        "Keep trying, never lose hope",
-        "Work hard and stay humble"
+        "Practice daily to achieve success", "Focus more, worry less always",
+        "Small steps lead to success", "Discipline creates strong future habits",
+        "Believe yourself and keep going", "Hard work beats natural talent",
+        "Stay calm and think clearly", "Learn today, lead tomorrow confidently",
+        "Consistency builds unstoppable powerful habits", "Never quit until you succeed",
+        "Effort today brings success tomorrow", "Keep learning, keep growing daily",
+        "Dreams demand action and effort", "Think smart, act even smarter",
+        "Success comes from daily discipline", "Stay focused on your goals",
+        "Growth happens outside comfort zone", "Push limits, discover your strength",
+        "Keep trying, never lose hope", "Work hard and stay humble"
     ];
 
     window.openModal = (id) => document.getElementById(id).classList.add('active');
@@ -274,8 +271,7 @@
         const userId = session.user.id;
 
         const mottoEl = document.getElementById('dynamic-motto');
-        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-        mottoEl.innerText = randomQuote;
+        mottoEl.innerText = quotes[Math.floor(Math.random() * quotes.length)];
 
         document.getElementById('logout-btn').onclick = async () => {
             await supabase.auth.signOut();
@@ -292,10 +288,10 @@
                     .order('created_at', { ascending: false });
 
                 const logs = history || [];
-                
                 const totalPoints = logs.reduce((s, t) => s + (parseInt(t.score) || 0), 0);
                 const correctCount = logs.reduce((s, t) => s + (parseInt(t.correct_answers) || 0), 0);
-                
+                const totalQs = logs.reduce((s, t) => s + (parseInt(t.total_questions) || 0), 0);
+
                 let currentRank = "Poor";
                 if (correctCount >= 100) currentRank = "Pro";
                 else if (correctCount >= 50) currentRank = "Excellent";
@@ -310,9 +306,7 @@
                     const today = new Date().toDateString();
                     const yesterday = new Date();
                     yesterday.setDate(yesterday.getDate() - 1);
-                    const yestString = yesterday.toDateString();
-
-                    if (sortedUniqueDates[0].toDateString() === today || sortedUniqueDates[0].toDateString() === yestString) {
+                    if (sortedUniqueDates[0].toDateString() === today || sortedUniqueDates[0].toDateString() === yesterday.toDateString()) {
                         streakCount = 1;
                         for (let i = 0; i < sortedUniqueDates.length - 1; i++) {
                             const diff = Math.abs(sortedUniqueDates[i] - sortedUniqueDates[i+1]);
@@ -343,20 +337,14 @@
                 document.getElementById('loading-screen').classList.add('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
 
-            } catch (err) {
-                console.error("Sync Error:", err);
-            }
+            } catch (err) { console.error("Sync Error:", err); }
         }
 
         function renderTable(logs) {
             const body = document.getElementById('results-body');
             body.innerHTML = logs.length ? '' : '<tr><td colspan="4" class="text-center text-slate-500 py-12 text-[10px] font-bold uppercase">No data yet.</td></tr>';
-            
             logs.slice(0, 5).forEach(test => {
                 const date = new Date(test.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
-                const correct = test.correct_answers || 0;
-                const wrong = test.wrong_answers || 0;
-                
                 body.innerHTML += `
                     <tr class="results-row">
                         <td class="px-4">
@@ -364,12 +352,10 @@
                             <div class="text-[9px] text-sky-500 uppercase font-black">${test.topic || 'Assessment'}</div>
                         </td>
                         <td class="px-4 text-slate-400 uppercase text-[10px] font-bold">${date}</td>
-                        <td class="px-4">
-                            <div class="flex gap-2">
-                                <span class="badge-score border-sky-500/20 text-sky-400 bg-sky-500/10">${correct} ✔</span>
-                                <span class="badge-score border-red-500/20 text-red-400 bg-red-500/10">${wrong} ✖</span>
-                            </div>
-                        </td>
+                        <td class="px-4"><div class="flex gap-2">
+                            <span class="badge-score border-sky-500/20 text-sky-400 bg-sky-500/10">${test.correct_answers || 0} ✔</span>
+                            <span class="badge-score border-red-500/20 text-red-400 bg-red-500/10">${test.wrong_answers || 0} ✖</span>
+                        </div></td>
                         <td class="px-4 font-black text-sky-500 text-[10px]">COMPLETED</td>
                     </tr>`;
             });
@@ -379,21 +365,10 @@
         function renderGraph(logs) {
             const graph = document.getElementById('bar-graph');
             const monthlyData = new Array(12).fill(0);
-            
-            logs.forEach(t => {
-                const month = new Date(t.created_at).getMonth();
-                const totalInTest = parseInt(t.total_questions) || 0;
-                monthlyData[month] += totalInTest;
-            });
-
+            logs.forEach(t => { monthlyData[new Date(t.created_at).getMonth()] += (parseInt(t.total_questions) || 0); });
             const max = Math.max(...monthlyData, 10);
-            graph.innerHTML = monthlyData.map(val => `
-                <div class="bar bg-sky-500/20 border-t-2 border-sky-500" 
-                     style="height: ${(val / max) * 100}%" 
-                     data-value="${val} Qs Attempted">
-                </div>`).join('');
+            graph.innerHTML = monthlyData.map(val => `<div class="bar bg-sky-500/20 border-t-2 border-sky-500" style="height: ${(val / max) * 100}%" data-value="${val} Qs Attempted"></div>`).join('');
         }
-
         syncData();
     }
     init();
