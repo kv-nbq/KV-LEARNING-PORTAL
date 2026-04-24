@@ -7,12 +7,27 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; min-height: 100vh; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; min-height: 100vh; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        
+        .liquid-glass-modal { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8); }
+        
         .stat-card { border-top: 4px solid #6366f1; }
         .correct-bg { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); }
         .wrong-bg { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); }
         
+        @keyframes float { 0% { transform: translateY(100vh); opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
+        .balloon { position: fixed; width: 50px; height: 60px; border-radius: 50%; bottom: -100px; animation: float 4s ease-in forwards; z-index: 100; }
+        
+        @keyframes fall { 0% { transform: translateY(-10px) rotate(0deg); } 100% { transform: translateY(100vh) rotate(360deg); } }
+        .confetti { position: fixed; top: -10px; width: 10px; height: 10px; animation: fall 3s linear forwards; z-index: 300; }
+        
+        @keyframes cry { 0% { transform: translateY(-50px); opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }
+        .crying-emoji { position: fixed; top: -50px; font-size: 30px; animation: cry 4s linear forwards; z-index: 50; }
+        
+        .cracker-flash { position: fixed; inset: 0; background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%); z-index: 200; animation: flash 1s ease-out forwards; }
+        @keyframes flash { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+
         @media print {
             .no-print { display: none; }
             body { background: white !important; color: black !important; }
@@ -25,15 +40,34 @@
 </head>
 <body class="p-4 md:p-8">
 
+    <div id="ai-modal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="closeAIChat()"></div>
+        <div class="liquid-glass-modal w-full max-w-lg h-[85vh] rounded-[2.5rem] p-8 flex flex-col relative animate-in fade-in zoom-in duration-300 border border-indigo-500/30">
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
+                    <h3 class="font-black text-indigo-400 uppercase tracking-widest text-[10px]">Neural Performance Intelligence</h3>
+                </div>
+                <button onclick="closeAIChat()" class="text-slate-400 hover:text-white transition-colors">✕</button>
+            </div>
+            <div id="ai-response-area" class="flex-1 overflow-y-auto space-y-6 text-sm text-slate-300 pr-2 leading-relaxed">
+                <p class="animate-pulse italic">Synthesizing performance metrics...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="animation-layer"></div>
+
     <div id="sync-loader" class="fixed inset-0 bg-[#020617] z-50 flex flex-col items-center justify-center text-center">
         <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p class="text-indigo-400 font-black uppercase tracking-widest text-[10px]">Generating Report...</p>
+        <p class="text-indigo-400 font-black uppercase tracking-widest text-[10px]">Generating Insights...</p>
     </div>
 
     <main id="main-content" class="max-w-4xl mx-auto hidden">
         <header class="text-center mb-8">
             <h1 id="user-display-name" class="text-indigo-500 font-black uppercase tracking-widest text-sm mb-2 font-mono">STUDENT_REPORT</h1>
             <h2 class="text-5xl font-black italic uppercase tracking-tighter">Performance Analysis</h2>
+            <div id="performance-feedback" class="mt-4 text-xl font-black uppercase tracking-widest animate-bounce"></div>
         </header>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -66,12 +100,134 @@
 
         <div class="mt-12 flex flex-col md:flex-row gap-4 no-print pb-12">
             <button onclick="location.href='dashboard.html'" class="flex-1 bg-indigo-600 text-white font-black py-4 rounded-2xl uppercase tracking-widest hover:bg-indigo-500 transition-all shadow-lg active:scale-95">Back to Dashboard</button>
+            <button onclick="openAIChat()" class="flex-1 bg-emerald-600 text-white font-black py-4 rounded-2xl uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-lg active:scale-95">Analyze with AI</button>
             <button onclick="window.print()" class="glass flex-1 text-white font-black py-4 rounded-2xl uppercase tracking-widest hover:bg-white/10 transition-all active:scale-95">Print / Save PDF</button>
         </div>
     </main>
 
     <script type="module">
         import { supabase } from './js/supabase.js';
+
+        const motivations = [
+            "Dekho beta, Sapne dekho, phir unhe sach karo", "Dekho beta, Mehnat kabhi waste nahi jaati", 
+            "Dekho beta, Aaj ka struggle, kal ki success", "Dekho beta, Khud par believe rakho",
+            "Dekho beta, Har din ek nayi shuruaat hai", "Dekho beta, Dar ke aage jeet hai",
+            "Dekho beta, Chhote steps bhi progress hote hain", "Dekho beta, Failure se mat daro",
+            "Dekho beta, Try karte raho, rukna mat", "Dekho beta, Tum kar sakte ho",
+            "Dekho beta, Time waste mat karo", "Dekho beta, Consistency hi power hai",
+            "Dekho beta, Khud ko improve karo daily", "Dekho beta, Focus hi success ka raaz hai",
+            "Dekho beta, Soch badlo, life badlegi", "Dekho beta, Hard work beats talent",
+            "Dekho beta, Kabhi give up mat karo", "Dekho beta, Discipline > Motivation",
+            "Dekho beta, Action lo, wait mat karo", "Dekho beta, Aaj nahi toh kab",
+            "Dekho beta, Apna best do har din", "Dekho beta, Sapne free hote hain, par unke liye mehnat lagti hai",
+            "Dekho beta, Excuses bandh karo", "Dekho beta, Goal clear rakho",
+            "Dekho beta, Jo chaho woh possible hai", "Dekho beta, Mindset hi sab kuch hai",
+            "Dekho beta, Self doubt hatao", "Dekho beta, Success slow hoti hai, par aati zaroor hai",
+            "Dekho beta, Strong bano mentally", "Dekho beta, Khud se compete karo",
+            "Dekho beta, Time sabse valuable hai", "Dekho beta, Comfort zone se bahar niklo",
+            "Dekho beta, Risk lena seekho", "Dekho beta, Kaam bolta hai",
+            "Dekho beta, Har din better bano", "Dekho beta, Negative logon se door raho",
+            "Dekho beta, Effort kabhi bekaar nahi hota", "Dekho beta, Apni story khud likho",
+            "Dekho beta, Jeetne wale rukte nahi", "Dekho beta, Learn karo har situation se",
+            "Dekho beta, Fail ho, par try mat chhodo", "Dekho beta, Patience rakho",
+            "Dekho beta, Growth time leti hai", "Dekho beta, Passion follow karo",
+            "Dekho beta, Energy waste mat karo", "Dekho beta, Khud pe kaam karo",
+            "Dekho beta, Smart work bhi zaroori hai", "Dekho beta, Har problem ka solution hota hai",
+            "Dekho beta, Soch positive rakho", "Dekho beta, Life ek chance hai",
+            "Dekho beta, Apna attitude strong rakho", "Dekho beta, Kal se nahi, aaj se start karo",
+            "Dekho beta, Fear ko face karo", "Dekho beta, Har din ek opportunity hai",
+            "Dekho beta, Jeet tumhari hogi", "Dekho beta, Apni value samjho",
+            "Dekho beta, Plan banao aur follow karo", "Dekho beta, Lazy mat bano",
+            "Dekho beta, Dreams ko serious lo", "Dekho beta, Khud ko prove karo",
+            "Dekho beta, Time ke saath grow karo", "Dekho beta, Excuses weak banate hain",
+            "Dekho beta, Success ka shortcut nahi hota", "Dekho beta, Action hi result deta hai",
+            "Dekho beta, Apna target fix rakho", "Dekho beta, मेहनत = result",
+            "Dekho beta, Risk lo warna regret hoga", "Dekho beta, हर दिन सीखो",
+            "Dekho beta, Khud ko push karo", "Dekho beta, Failures se strong bano",
+            "Dekho beta, Focus hata toh loss pakka", "Dekho beta, मेहनत ka फल milega",
+            "Dekho beta, Mind control karo", "Dekho beta, Khud ko underestimate mat karo",
+            "Dekho beta, Bada socho", "Dekho beta, Aage badhte raho",
+            "Dekho beta, Compare mat karo", "Dekho beta, Believe hi power hai",
+            "Dekho beta, Har din ek chance hai", "Dekho beta, Apni journey enjoy karo",
+            "Dekho beta, मेहनत ka koi alternative nahi", "Dekho beta, Strong log kabhi rukte nahi",
+            "Dekho beta, Time ko value do", "Dekho beta, Hard days = strong you",
+            "Dekho beta, Apna best version bano", "Dekho beta, Learn, apply, repeat",
+            "Dekho beta, Kal better hoga", "Dekho beta, Consistency jeet dilati hai",
+            "Dekho beta, खुद को upgrade karo", "Dekho beta, जीत mindset se hoti hai",
+            "Dekho beta, Sab possible hai", "Dekho beta, कोशिश karte raho",
+            "Dekho beta, खुद pe भरोसा रखो", "Dekho beta, मेहनत se डरना नहीं",
+            "Dekho beta, Success deserve karo", "Dekho beta, Har din grow karo",
+            "Dekho beta, Action lena start karo", "Dekho beta, खुद ko strong banao",
+            "Dekho beta, सपनों ke liye लड़ो", "Dekho beta, Tum unstoppable ho"
+        ];
+
+        window.openAIChat = async function() {
+            document.getElementById('ai-modal').classList.remove('hidden');
+            const container = document.getElementById('ai-response-area');
+            const data = JSON.parse(localStorage.getItem('activeTest'));
+            
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full space-y-4">
+                    <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p class="text-[10px] font-black tracking-[0.2em] text-indigo-400">GENERATING DEEP ANALYSIS...</p>
+                </div>
+            `;
+
+            setTimeout(() => {
+                const accuracy = Math.round((data.stats.correct / data.questions.length) * 100);
+                const randomMotive = motivations[Math.floor(Math.random() * motivations.length)];
+                
+                let studyMethod = "";
+                let summary = "";
+
+                if(accuracy >= 85) {
+                    summary = "Your performance indicates **Mastery Level** understanding. You aren't just answering; you're recognizing patterns.";
+                    studyMethod = "Focus on the **Feynman Technique**: Try explaining these concepts to a 5-year-old. If you can't, that's your only weak spot. Start practicing time-pressure mocks to shave off seconds.";
+                } else if (accuracy >= 60) {
+                    summary = "You have a **Solid Foundation**, but inconsistencies in specific sub-topics are holding you back from excellence.";
+                    studyMethod = "Use **Active Recall**: Don't just re-read the chapter. Close the book and write down everything you remember about ${data.chapter}. Match it with your wrong answers to find the 'Logic Gap'.";
+                } else {
+                    summary = "Your results suggest **Foundational Gaps**. You are likely struggling with the application of formulas or core definitions.";
+                    studyMethod = "Adopt **Spaced Repetition**: Review the incorrect questions today, then again in 3 days, and once more in 7 days. Use 'Flashcards' for the key terms you missed. Focus on 'Why' the correct answer is right, not just 'What' it is.";
+                }
+
+                container.innerHTML = `
+                    <div class="animate-in slide-in-from-bottom-4 duration-700 space-y-6">
+                        <section>
+                            <h4 class="text-emerald-400 font-black text-[10px] uppercase tracking-widest mb-2">Cognitive Summary</h4>
+                            <p class="text-lg font-bold text-white leading-tight">${summary}</p>
+                        </section>
+
+                        <div class="h-px bg-white/10"></div>
+
+                        <section>
+                            <h4 class="text-indigo-400 font-black text-[10px] uppercase tracking-widest mb-2">Recommended Study Strategy</h4>
+                            <div class="bg-indigo-500/5 border border-indigo-500/20 p-4 rounded-2xl">
+                                <p class="text-slate-300 italic text-sm underline decoration-indigo-500/50 underline-offset-4 mb-2">Precision Method:</p>
+                                <p>${studyMethod}</p>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h4 class="text-amber-400 font-black text-[10px] uppercase tracking-widest mb-2">Question Pattern Analysis</h4>
+                            <p>You attempted ${data.questions.length} questions in **${data.subject}**. Your primary friction point was in **${data.stats.wrong > 0 ? 'Accuracy Retention' : 'None - Perfect Execution'}**. Keep a 'Mistake Journal' specifically for this chapter.</p>
+                        </section>
+
+                        <div class="pt-6">
+                            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-[1px] rounded-xl">
+                                <div class="bg-[#020617] rounded-xl p-4 text-center">
+                                    <p class="text-indigo-400 font-serif italic text-lg">"${randomMotive}"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }, 2000);
+        }
+
+        window.closeAIChat = function() {
+            document.getElementById('ai-modal').classList.add('hidden');
+        }
 
         async function initResults() {
             try {
@@ -83,7 +239,6 @@
 
                 const { data: profile } = await supabase.from('users').select('*').eq('id', user.id).single();
 
-                // UI Updates
                 document.getElementById('user-display-name').innerText = `${profile?.full_name || 'STUDENT'} | CLASS ${profile?.class || 'N/A'}`;
                 document.getElementById('student-school').innerText = `School: ${profile?.school_name || 'NOT SET'}`;
                 document.getElementById('res-subject-info').innerText = `${data.subject} | ${data.chapter}`;
@@ -95,8 +250,31 @@
                 const accuracy = data.questions.length > 0 ? Math.round((data.stats.correct / data.questions.length) * 100) : 0;
                 document.getElementById('res-accuracy').innerText = accuracy + '%';
 
-                // We don't save to DB here because it was already done in livetest.html
-                // This prevents duplicate entries.
+                const feedbackEl = document.getElementById('performance-feedback');
+                if (accuracy === 100) feedbackEl.innerText = "OUTSTANDING";
+                else if (accuracy > 90) feedbackEl.innerText = "EXCELLENT";
+                else if (accuracy > 80) feedbackEl.innerText = "VERY VERY GOOD";
+                else if (accuracy >= 65) feedbackEl.innerText = "GOOD";
+                else if (accuracy >= 50) feedbackEl.innerText = "YOU CAN DO BETTER";
+                else if (accuracy >= 35) feedbackEl.innerText = "DO MORE PRACTICE";
+                else if (accuracy >= 15) feedbackEl.innerText = "GO AND STUDY";
+                else if (accuracy >= 5) feedbackEl.innerText = "BETTER LUCK NEXT TIME";
+
+                if (accuracy >= 70) {
+                    new Audio('victory.mp3').play().catch(e => console.log("Audio play blocked"));
+                } else if (accuracy < 30) {
+                    new Audio('lose.mp3').play().catch(e => console.log("Audio play blocked"));
+                }
+
+                if (accuracy === 100) {
+                    triggerBalloons(10); 
+                    triggerConfetti();
+                    triggerCrackers();
+                } else if (accuracy > 75) {
+                    triggerBalloons(3);
+                } else if (accuracy < 5) {
+                    triggerCrying();
+                }
 
                 renderReview(data);
                 document.getElementById('sync-loader').classList.add('hidden');
@@ -107,6 +285,53 @@
                 document.getElementById('sync-loader').classList.add('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
             }
+        }
+
+        function triggerBalloons(count) {
+            const layer = document.getElementById('animation-layer');
+            const colors = ['bg-red-500', 'bg-blue-500', 'bg-yellow-500', 'bg-emerald-500', 'bg-purple-500'];
+            for(let i = 0; i < count; i++) {
+                const b = document.createElement('div');
+                b.className = `balloon ${colors[Math.floor(Math.random() * colors.length)]}`;
+                b.style.left = (Math.random() * 80 + 10) + '%';
+                b.style.animationDelay = (i * 0.3) + 's';
+                layer.appendChild(b);
+                setTimeout(() => b.remove(), 4000);
+            }
+        }
+
+        function triggerCrying() {
+            const layer = document.getElementById('animation-layer');
+            for(let i = 0; i < 10; i++) {
+                const e = document.createElement('div');
+                e.innerText = '😭';
+                e.className = 'crying-emoji';
+                e.style.left = (Math.random() * 90) + '%';
+                e.style.animationDelay = (Math.random() * 2) + 's';
+                layer.appendChild(e);
+                setTimeout(() => e.remove(), 4000);
+            }
+        }
+
+        function triggerConfetti() {
+            const layer = document.getElementById('animation-layer');
+            const colors = ['bg-red-500', 'bg-blue-500', 'bg-yellow-500', 'bg-emerald-500', 'bg-purple-500', 'bg-pink-500'];
+            for(let i = 0; i < 60; i++) {
+                const c = document.createElement('div');
+                c.className = `confetti ${colors[Math.floor(Math.random() * colors.length)]}`;
+                c.style.left = (Math.random() * 100) + '%';
+                c.style.animationDelay = (Math.random() * 2) + 's';
+                layer.appendChild(c);
+                setTimeout(() => c.remove(), 3000);
+            }
+        }
+
+        function triggerCrackers() {
+            const layer = document.getElementById('animation-layer');
+            const flash = document.createElement('div');
+            flash.className = 'cracker-flash';
+            layer.appendChild(flash);
+            setTimeout(() => flash.remove(), 1000);
         }
 
         function renderReview(data) {
