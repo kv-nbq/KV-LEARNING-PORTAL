@@ -13,7 +13,6 @@
             color: white; 
             min-height: 100vh; 
             overflow-x: hidden;
-            /* Updated to Emerald, Deep Blue, and Cyan gradient */
             background: linear-gradient(-45deg, #020617, #064e3b, #083344, #064e3b, #020617);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -25,11 +24,30 @@
             100% { background-position: 0% 50%; }
         }
         
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        /* Card Gradients Updated to Emerald and Neon Blue */
-        .card-grad { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(2, 6, 23, 0) 100%); }
-        .ai-card-grad { background: linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); }
-        .leader-grad { background: linear-gradient(135deg, rgba(52, 211, 153, 0.1) 0%, rgba(2, 6, 23, 0) 100%); }
+        /* Updated Liquid Glass Effect */
+        .glass { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12); 
+            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Liquid edge highlight */
+        .glass::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.05) 100%);
+        }
+
+        .card-grad { background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(2, 6, 23, 0) 100%); }
+        .ai-card-grad { background: linear-gradient(135deg, rgba(34, 211, 238, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%); }
+        .leader-grad { background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(2, 6, 23, 0) 100%); }
 
         .info-btn { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: help; color: #94a3b8; transition: all 0.2s; }
         .info-btn:hover { background: #10b981; color: black; border-color: #10b981; }
@@ -45,11 +63,11 @@
         .bar:hover::after { content: attr(data-value); position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 800; color: #34d399; white-space: nowrap; }
 
         .results-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-        .results-row { background: rgba(255,255,255,0.03); transition: all 0.2s; }
-        .results-row:hover { background: rgba(16, 185, 129, 0.05); transform: translateY(-2px); border-left: 2px solid #10b981; }
-        .results-row td { padding: 1.25rem 1rem; font-size: 0.75rem; }
-        .results-row td:first-child { border-radius: 16px 0 0 16px; }
-        .results-row td:last-child { border-radius: 0 16px 16px 0; }
+        .results-row { background: rgba(255,255,255,0.03); transition: all 0.2s; position: relative; }
+        .results-row:hover { background: rgba(16, 185, 129, 0.08); transform: translateY(-2px); }
+        .results-row td { padding: 1.25rem 1rem; font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .results-row td:first-child { border-radius: 16px 0 0 16px; border-left: 1px solid rgba(255,255,255,0.05); }
+        .results-row td:last-child { border-radius: 0 16px 16px 0; border-right: 1px solid rgba(255,255,255,0.05); }
         .badge-score { padding: 6px 12px; border-radius: 8px; font-weight: 800; border-width: 1px; }
     </style>
 </head>
