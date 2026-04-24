@@ -1,512 +1,983 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     
+
     <title>KV LEARNING PORTAL</title>
+
     <meta name="description" content="Official PM SHRI KV New Bongaigaon practice portal. Comprehensive NCERT MCQs for Class 6 to 12. Boost your CBSE exam preparation with AI-driven tracking and analytics.">
+
     
+
     <meta name="keywords" content="Kendriya, Vidyalaya, KVS, NCERT, CBSE, MCQ, Practice, Learning, Portal, Students, Education, Exam, Preparation, Class, 6, 7, 8, 9, 10, 11, 12, Science, Commerce, Arts, Quiz, Study, Material, Online, Testing, PM-SHRI">
+
     <meta name="author" content="Mohit Mandal | PM SHRI KV NBQ">
+
     <meta name="robots" content="index, follow">
+
+
 
     <link rel="icon" type="image/png" href="a.png">
 
+
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
+
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
         
+
         :root {
+
             --primary: #6366f1;
+
             --secondary: #a855f7;
+
             --bg-ultra-dark: #010409; 
+
             --card-dark: #0d1117;
+
         }
+
+
 
         body { 
+
             background-color: var(--bg-ultra-dark); 
+
             color: #e6edf3; 
+
             font-family: 'Plus Jakarta Sans', sans-serif;
+
             scroll-behavior: smooth;
+
         }
 
-        #welcome-screen, #transition-screen {
+
+
+        #welcome-screen {
+
             position: fixed;
+
             inset: 0;
+
             z-index: 9999;
+
             background: #010409;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             transition: opacity 1s ease-in-out;
+
         }
 
-        #transition-screen { display: none; }
 
-        #welcome-video, #transition-video {
+
+        #welcome-video {
+
             width: 100vw;
+
             height: 100vh;
+
             object-fit: cover;
+
         }
+
+
 
         .glass-nav {
+
             background: rgba(1, 4, 9, 0.85);
+
             backdrop-filter: blur(16px);
+
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+
         }
+
+
 
         .mobile-bottom-nav {
+
             position: fixed;
+
             bottom: 20px;
+
             left: 50%;
+
             transform: translateX(-50%);
+
             width: 95%;
+
             max-width: 450px;
+
             background: rgba(13, 17, 23, 0.6);
+
             backdrop-filter: blur(25px) saturate(180%);
+
             -webkit-backdrop-filter: blur(25px) saturate(180%);
+
             border-radius: 24px;
+
             z-index: 1000;
+
             padding: 12px 10px;
+
             display: flex;
+
             justify-content: space-around;
+
             align-items: center;
+
             border: 2px solid transparent;
+
             background-image: linear-gradient(rgba(1, 4, 9, 0.8), rgba(1, 4, 9, 0.8)), 
+
                               linear-gradient(270deg, #00f2ff, #00ff88, #f0ff00, #ff00c8, #6366f1);
+
             background-origin: border-box;
+
             background-clip: padding-box, border-box;
+
             background-size: 100% 100%, 400% 400%;
+
             animation: liquidGradient 8s ease infinite;
+
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(99, 102, 241, 0.2);
+
         }
+
+
 
         @keyframes liquidGradient {
+
             0% { background-position: 0% 50%, 0% 50%; }
+
             50% { background-position: 0% 50%, 100% 50%; }
+
             100% { background-position: 0% 50%, 0% 50%; }
+
         }
+
+
 
         .hero-gradient {
+
             background: 
+
                 radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+
                 radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 40%),
+
                 linear-gradient(to bottom, #010409, #020617);
+
         }
+
+
 
         .btn-shiny {
+
             background: linear-gradient(135deg, var(--primary), var(--secondary));
+
             position: relative;
+
             overflow: hidden;
+
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+
             color: white;
+
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+
         }
+
+
 
         .btn-shiny::after {
+
             content: '';
+
             position: absolute;
+
             top: -50%; left: -50%; width: 200%; height: 200%;
+
             background: rgba(255,255,255,0.15);
+
             transform: rotate(45deg);
+
             transition: 0.5s;
+
         }
+
+
 
         .btn-shiny:hover::after { left: 120%; }
+
         .btn-shiny:hover { 
+
             transform: translateY(-2px); 
+
             box-shadow: 0 0 30px rgba(99, 102, 241, 0.5); 
+
         }
+
+
 
         .glowing-btn {
+
             box-shadow: 0 0 15px #6366f1, 0 0 30px #a855f7;
+
             animation: pulse-glow 2s infinite;
+
         }
+
         @keyframes pulse-glow {
+
             0%, 100% { box-shadow: 0 0 15px #6366f1, 0 0 30px #a855f7; }
+
             50% { box-shadow: 0 0 25px #6366f1, 0 0 50px #a855f7; }
+
         }
+
+
 
         .ebsb-tag {
+
             display: inline-flex;
+
             align-items: center;
+
             justify-content: center;
+
             padding: 0.5rem 1.5rem;
+
             border-radius: 9999px;
+
             font-weight: 800;
+
             margin-bottom: 2rem;
+
             background: rgba(255, 255, 255, 0.05);
+
             border: 1px solid rgba(255, 255, 255, 0.1);
+
             box-shadow: 0 0 15px rgba(255, 153, 51, 0.1);
+
             min-width: 220px;
+
             height: 45px;
+
             animation: continuous-pop 4s ease-in-out infinite;
+
         }
+
+
 
         #ebsb-text {
+
             background: linear-gradient(to right, #FF9933, #FFFFFF, #128807);
+
             -webkit-background-clip: text;
+
             background-clip: text;
+
             color: transparent;
+
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+
             white-space: nowrap;
+
         }
+
+
 
         .fade-out { opacity: 0; transform: translateY(5px); }
+
         .fade-in { opacity: 1; transform: translateY(0); }
 
+
+
         @keyframes continuous-pop {
+
             0%, 100% { transform: scale(1); }
+
             50% { transform: scale(1.05); }
+
         }
+
+
 
         .ai-floating-ball {
+
             position: fixed;
+
             bottom: 110px; 
+
             right: 20px;
+
             width: 55px;
+
             height: 55px;
+
             background: linear-gradient(135deg, #6366f1, #a855f7);
+
             border-radius: 50%;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             z-index: 1000;
+
             cursor: pointer;
+
             box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
             border: 2px solid rgba(255, 255, 255, 0.2);
+
         }
+
+
 
         @media (min-width: 768px) {
+
             .ai-floating-ball { bottom: 30px; right: 30px; width: 60px; height: 60px; }
+
         }
+
+
 
         .ai-ping {
+
             position: absolute;
+
             width: 100%;
+
             height: 100%;
+
             background: inherit;
+
             border-radius: 50%;
+
             opacity: 0.6;
+
             animation: ai-pulse 2s infinite;
+
             z-index: -1;
+
         }
+
+
 
         @keyframes ai-pulse {
+
             0% { transform: scale(1); opacity: 0.6; }
+
             100% { transform: scale(1.6); opacity: 0; }
+
         }
+
+
 
         .feature-card {
+
             background: rgba(255, 255, 255, 0.02);
+
             border: 1px solid rgba(255, 255, 255, 0.05);
+
             backdrop-filter: blur(8px);
+
             transition: all 0.4s ease;
+
             width: 320px;
+
             margin: 0 15px;
+
             flex-shrink: 0;
+
             padding: 2.5rem;
+
             border-radius: 2.5rem;
+
         }
+
+
 
         .feature-card:hover {
+
             background: rgba(255, 255, 255, 0.05);
+
             border-color: var(--primary);
+
             transform: translateY(-8px) scale(1.02);
+
         }
+
+
 
         .video-wrapper {
+
             width: 100%;
+
             border-radius: 2rem;
+
             overflow: hidden;
+
             box-shadow: 0 0 50px rgba(99, 102, 241, 0.2);
+
             border: 1px solid rgba(255, 255, 255, 0.1);
+
         }
+
+
 
         .glow-text {
+
             text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+
         }
+
+
 
         .features-overflow-container {
+
             width: 100%;
+
             overflow: hidden;
+
             position: relative;
+
             padding: 20px 0;
+
         }
+
+
 
         .features-track {
+
             display: flex;
+
             width: max-content;
+
             animation: scrollFeatures 35s linear infinite;
+
         }
+
+
 
         .features-track:hover {
+
             animation-play-state: paused;
+
         }
+
+
 
         @keyframes scrollFeatures {
+
             0% { transform: translateX(0); }
+
             100% { transform: translateX(-50%); }
+
         }
+
     </style>
+
 </head>
+
 <body class="hero-gradient overflow-x-hidden pb-32 md:pb-0">
 
+
+
     <div id="welcome-screen">
+
         <video id="welcome-video" autoplay muted playsinline>
+
             <source src="a.mp4" type="video/mp4">
+
         </video>
+
     </div>
 
-    <div id="transition-screen">
-        <video id="transition-video" playsinline>
-            <source src="Y.mp4" type="video/mp4">
-        </video>
-    </div>
+
 
     <nav class="fixed top-0 w-full z-50 glass-nav py-4 md:py-6 px-4 md:px-10">
+
         <div class="max-w-7xl mx-auto flex justify-between items-center">
+
             <div class="flex items-center gap-3 md:gap-5 group cursor-pointer" onclick="location.href='index.html'">
+
                 <img src="a.png" alt="Logo" class="w-14 h-14 md:w-24 md:h-24 object-cover rounded-full border-2 border-indigo-500/20 transition-transform group-hover:scale-110">
+
                 <div class="flex flex-col">
+
                     <span class="text-white text-lg md:text-4xl font-black tracking-tighter leading-none uppercase">KV LEARNING</span>
+
                     <span class="text-indigo-500 text-sm md:text-3xl font-bold tracking-[0.15em] leading-none mt-1 md:mt-2 uppercase">PORTAL</span>
+
                 </div>
+
             </div>
+
             
+
             <div class="hidden lg:flex gap-10 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">
+
                 <a href="index.html" class="hover:text-white transition text-white">Home</a>
+
                 <a href="#features" class="hover:text-white transition">Features</a>
+
                 <a href="about.html" class="hover:text-white transition">About</a>
+
             </div>
+
+
 
             <button id="auth-btn-nav" class="btn-shiny px-6 py-2.5 md:px-10 md:py-4 rounded-full font-black text-xs md:text-base">Get Started</button>
+
         </div>
+
     </nav>
+
+
 
     <nav class="md:hidden mobile-bottom-nav">
+
         <a href="index.html" class="flex flex-col items-center gap-1 group">
+
             <svg class="w-5 h-5 text-indigo-400 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+
             <span class="text-[8px] font-black text-indigo-400 group-hover:text-white uppercase">Home</span>
+
         </a>
+
         <a href="#features" class="flex flex-col items-center gap-1 group">
+
             <svg class="w-5 h-5 text-slate-400 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+
             <span class="text-[8px] font-black text-slate-400 group-hover:text-white uppercase">Features</span>
+
         </a>
+
         
+
         <button id="mobile-auth-btn" class="flex flex-col items-center gap-1 group -mt-6 bg-indigo-600 p-3 rounded-full border-4 border-[#010409] glowing-btn">
+
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
                 <path stroke-width="2" d="M5 15l7-7 7 7"></path>
+
             </svg>
+
         </button>
+
         
+
         <a href="faq.html" class="flex flex-col items-center gap-1 group">
+
             <svg class="w-5 h-5 text-slate-400 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093v3m3 0h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+
             <span class="text-[8px] font-black text-slate-400 group-hover:text-white uppercase">FAQ</span>
+
         </a>
+
         <a href="about.html" class="flex flex-col items-center gap-1 group">
+
             <svg class="w-5 h-5 text-slate-400 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+
             <span class="text-[8px] font-black text-slate-400 group-hover:text-white uppercase">About</span>
+
         </a>
+
     </nav>
 
+
+
     <a href="https://learnmeai.vercel.app" target="_blank" class="ai-floating-ball" title="Open AI Learning Assistance">
+
         <div class="ai-ping"></div>
+
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+
         </svg>
+
     </a>
 
+
+
     <section class="min-h-screen pt-40 md:pt-64 flex flex-col md:flex-row items-center max-w-7xl mx-auto px-8 gap-12">
+
         <div class="flex-1 w-full relative md:order-2">
+
             <div class="video-wrapper">
+
                 <video class="w-full h-auto block" autoplay loop muted playsinline>
+
                     <source src="hi.mp4" type="video/mp4">
+
                 </video>
+
             </div>
+
             <div class="absolute top-10 right-0 bg-indigo-600/90 backdrop-blur-lg text-white p-5 rounded-3xl rounded-br-none text-xs font-black shadow-2xl animate-bounce border border-indigo-400/30">
+
                 Practice Now! 🎯
+
             </div>
+
         </div>
+
         <div class="flex-1 text-center md:text-left md:order-1">
+
             <div class="ebsb-tag">
+
                 <span id="ebsb-text" class="text-sm md:text-base">এক ভাৰত শ্ৰেষ্ঠ ভাৰত</span>
+
             </div>
+
             <h1 class="text-5xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-tight glow-text">
+
                 Welcome to <br> <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">Smart MCQ Portal</span>
+
             </h1>
+
             <p class="text-slate-400 text-base md:text-xl mb-10 max-w-lg leading-relaxed mx-auto md:mx-0">
+
                 Unlock comprehensive NCERT practice from Class 6 to 12. AI-driven tracking designed specifically for Kendriya Vidyalaya scholars.
+
             </p>
+
             <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+
                 <button id="auth-btn-hero" class="btn-shiny px-8 py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3">
+
                     Start Now 🚀
+
                 </button>
+
                 <a href="faq.html" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition backdrop-blur-sm">View FAQ</a>
+
             </div>
+
         </div>
+
     </section>
+
+
 
     <section class="max-w-7xl mx-auto px-4 md:px-8 my-10">
+
         <div style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(192, 192, 192, 0.3); border-radius: 2rem; padding: 10px;">
+
             <video autoplay loop muted playsinline class="w-full h-auto rounded-[1.5rem]">
+
                 <source src="X.mp4" type="video/mp4">
+
             </video>
+
         </div>
+
     </section>
+
+
 
     <section id="features" class="py-20 md:py-32">
+
         <div class="text-center mb-16">
+
             <h2 class="text-4xl md:text-5xl font-black mb-4 text-white">Advanced Learning</h2>
+
             <p class="text-indigo-500 uppercase tracking-[0.5em] text-[10px] font-black">Powered by PM SHRI KV New Bongaigaon</p>
+
         </div>
+
         <div class="features-overflow-container">
+
             <div class="features-track">
+
                 <div class="feature-card">
+
                     <div class="text-4xl mb-6">🛡️</div>
+
                     <h3 class="text-xl font-bold mb-3 text-white">Curated Content</h3>
+
                     <p class="text-slate-500 text-sm">100% verified MCQs strictly following the latest NCERT standards.</p>
+
                 </div>
+
                 <div class="feature-card">
+
                     <div class="text-4xl mb-6">🛰️</div>
+
                     <h3 class="text-xl font-bold mb-3 text-white">Cloud Sync</h3>
+
                     <p class="text-slate-500 text-sm">Real-time progress syncing across all your devices.</p>
+
                 </div>
+
                 <div class="feature-card">
+
                     <div class="text-4xl mb-6">🏆</div>
+
                     <h3 class="text-xl font-bold mb-3 text-white">Achievement System</h3>
+
                     <p class="text-slate-500 text-sm">Earn digital badges and climb the school-wide leaderboard.</p>
+
                 </div>
+
                 <div class="feature-card">
+
                     <div class="text-4xl mb-6">⚡</div>
+
                     <h3 class="text-xl font-bold mb-3 text-white">Zero Cost</h3>
+
                     <p class="text-slate-500 text-sm">Always free open-access for every KV student.</p>
+
                 </div>
+
                 <div class="feature-card">
+
                     <div class="text-4xl mb-6">🤖</div>
+
                     <h3 class="text-xl font-bold mb-3 text-white">AI Insights</h3>
+
                     <p class="text-slate-500 text-sm">Vidyut AI analyzes your performance to highlight weak areas.</p>
+
                 </div>
+
             </div>
+
         </div>
+
     </section>
+
+
 
     <section class="py-10">
+
         <div class="max-w-7xl mx-auto px-4 md:px-8">
+
             <video autoplay loop muted playsinline class="w-full h-auto">
+
                 <source src="quote.mp4" type="video/mp4">
+
             </video>
+
         </div>
+
     </section>
 
+
+
     <footer class="py-20 border-t border-white/5 px-8 text-center bg-black/40">
+
         <div class="max-w-7xl mx-auto">
+
             <p class="text-[9px] text-slate-500 uppercase tracking-[0.3em]">© 2026 PM SHRI KV NEW BONGAIGAON.</p>
+
         </div>
+
     </footer>
 
+
+
     <script type="module">
+
         import { supabase } from './js/supabase.js';
 
+
+
         const welcomeScreen = document.getElementById('welcome-screen');
+
         const welcomeVideo = document.getElementById('welcome-video');
-        const transitionScreen = document.getElementById('transition-screen');
-        const transitionVideo = document.getElementById('transition-video');
+
+
 
         welcomeVideo.play().catch(error => console.log("Autoplay prevented:", error));
 
+
+
         welcomeVideo.onended = () => {
+
             welcomeScreen.style.opacity = '0';
+
             setTimeout(() => {
+
                 welcomeScreen.style.display = 'none';
+
             }, 1000);
+
         };
 
+
+
         const languages = [
+
             "এক ভাৰত শ্ৰেষ্ঠ ভাৰত", "এক ভারত শ্রেষ্ঠ ভারত", "मोन भारत स्रेष्ठ भारत", "इक भारत श्रेष्ठ भारत", 
+
             "એક ভারত શ્રેષ્ઠ ભારત", "एक भारत श्रेष्ठ भारत", "ಒಂದು ಭಾರತ ಶ್ರೇಷ್ಠ ಭಾರತ", "اَکھ بھارت شریشٹھ بھارت", 
+
             "एक भारत श्रेष्ठ भारत", "एक भारत श्रेष्ठ भारत", "ഒരു ഭാരതം ശ്രേഷ്ഠ ഭാരതം", "ꯑꯣꯏꯅ ꯚꯥꯔꯠ ꯁ꯭ꯔꯦꯁ꯭ꯊ ꯚꯥꯔꯠ", 
+
             "एक भारत श्रेष्ठ भारत", "एक भारत श्रेष्ठ भारत", "ଏକ ଭାରତ ଶ୍ରେଷ୍ଠ ଭାରତ", "ਇੱਕ ਭਾਰਤ ਸ਼੍ਰੇਸ਼ਟ ਭਾਰਤ", 
+
             "एकं भारतं श्रेष्ठं भारतम्", "ᱮᱠ ᱵᱷᱟᱨᱚᱛ ᱥᱨᱮᱥᱴ ᱵᱷᱟᱨᱚᱛ", "هڪ ڀارت شريشٺ ڀارت", "ஒரு பாரத் சிறந்த பாரத்", 
+
             "ఒక భారత్ శ్రేష్ఠ భారత్", "ایک بھارت شریشٹھ بھارت"
+
         ];
 
+
+
         let langIndex = 0;
+
         const ebsbElement = document.getElementById('ebsb-text');
 
+
+
         function updateEBSB() {
+
             if(!ebsbElement) return;
+
             ebsbElement.classList.add('fade-out');
+
             setTimeout(() => {
+
                 langIndex = (langIndex + 1) % languages.length;
+
                 ebsbElement.innerText = languages[langIndex];
+
                 ebsbElement.style.fontSize = languages[langIndex].length > 20 ? "0.75rem" : "";
+
                 ebsbElement.classList.remove('fade-out');
+
                 ebsbElement.classList.add('fade-in');
+
             }, 500);
+
         }
+
         setInterval(updateEBSB, 3000);
 
+
+
         async function initHome() {
+
             const { data: { session } } = await supabase.auth.getSession();
+
             const navBtn = document.getElementById('auth-btn-nav');
+
             const heroBtn = document.getElementById('auth-btn-hero');
+
             const mobileAuthBtn = document.getElementById('mobile-auth-btn');
 
+
+
             const handleAuth = async () => {
+
                 const { data: { session: currentSession } } = await supabase.auth.getSession();
+
                 if(currentSession) {
+
                     window.location.href = 'dashboard.html';
+
                 } else {
+
                     const currentFolder = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+
                     const redirectUrl = window.location.origin + currentFolder + '/role.html';
+
                     await supabase.auth.signInWithOAuth({
+
                         provider: 'google',
+
                         options: { redirectTo: redirectUrl }
+
                     });
+
                 }
+
             };
 
+
+
             if (session) {
-                // If logged in, show transition if not already played
-                if (!sessionStorage.getItem('transitionPlayed')) {
-                    sessionStorage.setItem('transitionPlayed', 'true');
-                    transitionScreen.style.display = 'flex';
-                    transitionVideo.play();
-                    transitionVideo.onended = () => {
-                        window.location.href = 'dashboard.html';
-                    };
-                }
 
                 [navBtn, heroBtn, mobileAuthBtn].forEach(btn => {
+
                     if(!btn) return;
+
                     btn.innerText = "LETS अभ्यास ⚡";
+
                     btn.onclick = () => window.location.href = 'dashboard.html';
+
                 });
+
             } else {
+
                 [navBtn, heroBtn, mobileAuthBtn].forEach(btn => {
+
                     if(!btn) return;
+
                     btn.onclick = handleAuth;
+
                 });
+
             }
+
         }
+
         initHome();
+
     </script>
+
     <script>
+
         function updateOnlineStatus() {
+
             if (!navigator.onLine) {
+
                 document.body.innerHTML = `
+
                     <div style="text-align:center; padding:50px;">
+
                         <h1>⚠️ No Internet Connection</h1>
+
                         <p>Please check your connection.</p>
+
                         <img src="/offline-animation.gif" alt="No internet">
+
                     </div>
+
                 `;
+
             }
+
         }
+
         window.addEventListener('offline', updateOnlineStatus);
+
     </script>
+
 </body>
+
 </html>
