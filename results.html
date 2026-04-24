@@ -46,12 +46,12 @@
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-2">
                     <div class="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
-                    <h3 class="font-black text-indigo-400 uppercase tracking-widest text-[10px]">Neural Performance Intelligence</h3>
+                    <h3 class="font-black text-indigo-400 uppercase tracking-widest text-[10px]">Neural Intelligence Analyst</h3>
                 </div>
                 <button onclick="closeAIChat()" class="text-slate-400 hover:text-white transition-colors">✕</button>
             </div>
             <div id="ai-response-area" class="flex-1 overflow-y-auto space-y-6 text-sm text-slate-300 pr-2 leading-relaxed">
-                <p class="animate-pulse italic">Synthesizing performance metrics...</p>
+                <p class="animate-pulse italic">Connecting to neural core...</p>
             </div>
         </div>
     </div>
@@ -60,7 +60,7 @@
 
     <div id="sync-loader" class="fixed inset-0 bg-[#020617] z-50 flex flex-col items-center justify-center text-center">
         <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p class="text-indigo-400 font-black uppercase tracking-widest text-[10px]">Generating Insights...</p>
+        <p class="text-indigo-400 font-black uppercase tracking-widest text-[10px]">Processing Results...</p>
     </div>
 
     <main id="main-content" class="max-w-4xl mx-auto hidden">
@@ -100,7 +100,7 @@
 
         <div class="mt-12 flex flex-col md:flex-row gap-4 no-print pb-12">
             <button onclick="location.href='dashboard.html'" class="flex-1 bg-indigo-600 text-white font-black py-4 rounded-2xl uppercase tracking-widest hover:bg-indigo-500 transition-all shadow-lg active:scale-95">Back to Dashboard</button>
-            <button onclick="openAIChat()" class="flex-1 bg-emerald-600 text-white font-black py-4 rounded-2xl uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-lg active:scale-95">Analyze with AI</button>
+            <button onclick="openAIChat()" class="flex-1 bg-emerald-600 text-white font-black py-4 rounded-2xl uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-lg active:scale-95">Analyze with AI Intelligence</button>
             <button onclick="window.print()" class="glass flex-1 text-white font-black py-4 rounded-2xl uppercase tracking-widest hover:bg-white/10 transition-all active:scale-95">Print / Save PDF</button>
         </div>
     </main>
@@ -169,91 +169,74 @@
             container.innerHTML = `
                 <div class="flex flex-col items-center justify-center h-full space-y-4">
                     <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                    <p class="text-[10px] font-black tracking-[0.2em] text-indigo-400">READING PERFORMANCE DATA...</p>
+                    <p class="text-[10px] font-black tracking-[0.2em] text-indigo-400">ANALYZING CHAPTER: ${data.chapter.toUpperCase()}...</p>
                 </div>
             `;
 
             setTimeout(() => {
-                const totalQs = data.questions.length;
-                const correct = data.stats.correct;
-                const wrong = data.stats.wrong;
-                const accuracy = Math.round((correct / totalQs) * 100);
-                const subject = data.subject.toLowerCase();
-                
-                // Logic for Science vs Non-Science
-                const formulaSubjects = ['physics', 'chemistry', 'maths', 'mathematics', 'science', 'accountancy'];
-                const isFormulaSubject = formulaSubjects.some(s => subject.includes(s));
-                
-                // Real data calculation: Approx 4 mins per wrong question for review + 2 mins per correct for reinforcement
-                const requiredMinutes = (wrong * 5) + (correct * 2);
+                const accuracy = Math.round((data.stats.correct / data.questions.length) * 100);
                 const randomMotive = motivations[Math.floor(Math.random() * motivations.length)];
+                const isConceptual = /physics|chemistry|math|biology|science|accounts|eco/i.test(data.subject);
                 
-                let insight = "";
-                let precisionTip = "";
+                let studyMethod = "";
+                let summary = "";
+                let typeTitle = isConceptual ? "Numerical/Conceptual Analysis" : "Theoretical Retention Analysis";
 
-                if(accuracy >= 85) {
-                    insight = `Brilliant work. You correctly identified **${correct} out of ${totalQs}** concepts. Your neural retention is peak.`;
-                    precisionTip = isFormulaSubject 
-                        ? "Master your derivation speed. You know the formulas; now focus on reducing calculation time."
-                        : "Focus on nuance. In ${data.subject}, you have the facts down—now work on articulating deep 'why' arguments.";
-                } else if (accuracy >= 50) {
-                    insight = `You are halfway there. With **${wrong} mistakes**, there is a clear pattern of partial knowledge in ${data.chapter}.`;
-                    precisionTip = isFormulaSubject
-                        ? "You are likely misapplying formulas. Practice the 'Givens' vs 'Find' method for every numerical."
-                        : "Concept clarity is missing. Re-read the core definitions of ${data.chapter} and focus on keywords.";
+                // Dynamic Logic based on subject type and accuracy
+                if(isConceptual) {
+                    if(accuracy >= 80) {
+                        summary = "You have achieved **Formula Mastery**. Your derivation logic is currently sharp.";
+                        studyMethod = "Don't just solve; **Derive**. Re-derive the core formulas of this chapter without looking. Focus on speed by timing your next numerical session.";
+                    } else {
+                        summary = "You are likely facing **Logic Friction**. You know the formula but struggle with the application.";
+                        studyMethod = "Focus on **Step-Analysis**. For every wrong answer, re-write the solution steps in your notes. Highlight the specific line where you made a calculation or logical error.";
+                    }
                 } else {
-                    insight = `Foundational alert. **${wrong} incorrect responses** suggest a disconnect with the core syllabus of ${data.subject}.`;
-                    precisionTip = isFormulaSubject
-                        ? "Stop solving blindly. Go back to basics—derive every formula once by hand before attempting MCQs again."
-                        : "Textbook immersion needed. Treat ${data.chapter} as a new story. Highlight facts and re-attempt.";
+                    if(accuracy >= 80) {
+                        summary = "Your **Conceptual Clarity** is excellent. You are retaining key definitions well.";
+                        studyMethod = "Use the **Feynman Technique**. Teach this chapter to an imaginary student. If you can explain it simply, you've mastered it. Start using mind-maps for inter-topic connections.";
+                    } else {
+                        summary = "There are **Keyword Gaps** in your retention. You understand the topic but miss specific points.";
+                        studyMethod = "Adopt **Active Recall**. Close your notes and write down everything you remember about ${data.chapter}. Match it with your book and fill the gaps in red ink. This builds long-term memory.";
+                    }
                 }
 
                 container.innerHTML = `
                     <div class="animate-in slide-in-from-bottom-4 duration-700 space-y-6">
                         <section>
-                            <h4 class="text-emerald-400 font-black text-[10px] uppercase tracking-widest mb-2">Live Metric Report</h4>
-                            <p class="text-lg font-bold text-white leading-tight">${insight}</p>
-                            <div class="mt-2 grid grid-cols-2 gap-2">
-                                <div class="bg-white/5 p-2 rounded-lg text-center">
-                                    <span class="block text-[8px] text-slate-500">ACCURACY</span>
-                                    <span class="text-indigo-400 font-black">${accuracy}%</span>
-                                </div>
-                                <div class="bg-white/5 p-2 rounded-lg text-center">
-                                    <span class="block text-[8px] text-slate-500">MISTAKE COUNT</span>
-                                    <span class="text-rose-400 font-black">${wrong}</span>
-                                </div>
-                            </div>
+                            <h4 class="text-emerald-400 font-black text-[10px] uppercase tracking-widest mb-2">${typeTitle}</h4>
+                            <p class="text-lg font-bold text-white leading-tight">${summary}</p>
                         </section>
 
                         <div class="h-px bg-white/10"></div>
 
                         <section>
-                            <h4 class="text-indigo-400 font-black text-[10px] uppercase tracking-widest mb-2">AI Recovery Strategy</h4>
-                            <div class="bg-indigo-500/5 border border-indigo-500/20 p-4 rounded-2xl">
-                                <p class="text-slate-300 italic text-xs underline decoration-indigo-500/50 underline-offset-4 mb-2">Tailored for ${data.subject}:</p>
-                                <p class="text-sm font-semibold text-white mb-2">${precisionTip}</p>
-                                <div class="flex items-center gap-2 text-amber-400 mt-4">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <p class="text-[10px] font-black uppercase tracking-tighter">Est. Practice Needed: ${requiredMinutes} Minutes</p>
-                                </div>
+                            <h4 class="text-indigo-400 font-black text-[10px] uppercase tracking-widest mb-2">Note-Based Growth Strategy</h4>
+                            <div class="bg-indigo-500/10 border border-indigo-500/20 p-4 rounded-2xl">
+                                <p class="text-slate-300 italic text-sm mb-3">Priority Action Plan:</p>
+                                <p class="text-slate-200 leading-relaxed">${studyMethod} <b>Regularly review and update your personal notes for clarity.</b></p>
                             </div>
                         </section>
 
                         <section>
-                            <h4 class="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-2">Final Verdict</h4>
-                            <p class="text-xs">Based on your ${correct} correct hits, you should focus your next session on the **${wrong > 0 ? 'Logic Gap' : 'Speed Blitz'}** phase. Every wrong answer is a hidden lesson.</p>
+                            <h4 class="text-amber-400 font-black text-[10px] uppercase tracking-widest mb-2">Spaced Repetition Protocol</h4>
+                            <div class="grid grid-cols-3 gap-2 text-center text-[9px] font-black uppercase">
+                                <div class="glass p-3 rounded-xl border border-emerald-500/20">Today<br><span class="text-emerald-400">Review Errors</span></div>
+                                <div class="glass p-3 rounded-xl border border-indigo-500/20">3 Days Later<br><span class="text-indigo-400">Note Revision</span></div>
+                                <div class="glass p-3 rounded-xl border border-amber-500/20">7 Days Later<br><span class="text-amber-400">Re-Test</span></div>
+                            </div>
                         </section>
 
                         <div class="pt-6">
-                            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-[1px] rounded-xl">
-                                <div class="bg-[#020617] rounded-xl p-4 text-center">
-                                    <p class="text-indigo-400 font-serif italic text-lg">"${randomMotive}"</p>
+                            <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 p-[1px] rounded-2xl shadow-lg shadow-indigo-500/20">
+                                <div class="bg-[#020617] rounded-2xl p-5 text-center">
+                                    <p class="text-indigo-400 font-serif italic text-xl">"${randomMotive}"</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 `;
-            }, 1800);
+            }, 2000);
         }
 
         window.closeAIChat = function() {
@@ -292,9 +275,9 @@
                 else if (accuracy >= 5) feedbackEl.innerText = "BETTER LUCK NEXT TIME";
 
                 if (accuracy >= 70) {
-                    new Audio('victory.mp3').play().catch(e => console.log("Audio play blocked"));
+                    new Audio('victory.mp3').play().catch(e => console.log("Audio blocked"));
                 } else if (accuracy < 30) {
-                    new Audio('lose.mp3').play().catch(e => console.log("Audio play blocked"));
+                    new Audio('lose.mp3').play().catch(e => console.log("Audio blocked"));
                 }
 
                 if (accuracy === 100) {
