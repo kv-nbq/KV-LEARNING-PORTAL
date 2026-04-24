@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>KV LEARNING PORTAL</title>
-    <meta name="description" content="Official PM SHRI KENDRIYA VIDYALAYA practice portal. Comprehensive NCERT MCQs for Class 6 to 12. Boost your CBSE exam preparation with AI-driven tracking and analytics.">
+    <meta name="description" content="Official PM SHRI KV New Bongaigaon practice portal. Comprehensive NCERT MCQs for Class 6 to 12. Boost your CBSE exam preparation with AI-driven tracking and analytics.">
     
     <meta name="keywords" content="Kendriya, Vidyalaya, KVS, NCERT, CBSE, MCQ, Practice, Learning, Portal, Students, Education, Exam, Preparation, Class, 6, 7, 8, 9, 10, 11, 12, Science, Commerce, Arts, Quiz, Study, Material, Online, Testing, PM-SHRI">
     <meta name="author" content="Mohit Mandal | PM SHRI KV NBQ">
@@ -31,8 +31,7 @@
             scroll-behavior: smooth;
         }
 
-        /* Welcome Overlay Styles */
-        #welcome-screen {
+        #welcome-screen, #transition-screen {
             position: fixed;
             inset: 0;
             z-index: 9999;
@@ -43,7 +42,9 @@
             transition: opacity 1s ease-in-out;
         }
 
-        #welcome-video {
+        #transition-screen { display: none; }
+
+        #welcome-video, #transition-video {
             width: 100vw;
             height: 100vh;
             object-fit: cover;
@@ -55,7 +56,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
 
-        /* --- LIQUID FLOATING MOBILE NAV --- */
         .mobile-bottom-nav {
             position: fixed;
             bottom: 20px;
@@ -74,7 +74,7 @@
             align-items: center;
             border: 2px solid transparent;
             background-image: linear-gradient(rgba(1, 4, 9, 0.8), rgba(1, 4, 9, 0.8)), 
-                            linear-gradient(270deg, #00f2ff, #00ff88, #f0ff00, #ff00c8, #6366f1);
+                              linear-gradient(270deg, #00f2ff, #00ff88, #f0ff00, #ff00c8, #6366f1);
             background-origin: border-box;
             background-clip: padding-box, border-box;
             background-size: 100% 100%, 400% 400%;
@@ -260,12 +260,11 @@
         </video>
     </div>
 
-    <a href="https://learnmeai.vercel.app" target="_blank" class="ai-floating-ball" title="Open AI Learning Assistance">
-        <div class="ai-ping"></div>
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-        </svg>
-    </a>
+    <div id="transition-screen">
+        <video id="transition-video" playsinline>
+            <source src="Y.mp4" type="video/mp4">
+        </video>
+    </div>
 
     <nav class="fixed top-0 w-full z-50 glass-nav py-4 md:py-6 px-4 md:px-10">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -313,8 +312,14 @@
         </a>
     </nav>
 
+    <a href="https://learnmeai.vercel.app" target="_blank" class="ai-floating-ball" title="Open AI Learning Assistance">
+        <div class="ai-ping"></div>
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+    </a>
+
     <section class="min-h-screen pt-40 md:pt-64 flex flex-col md:flex-row items-center max-w-7xl mx-auto px-8 gap-12">
-        
         <div class="flex-1 w-full relative md:order-2">
             <div class="video-wrapper">
                 <video class="w-full h-auto block" autoplay loop muted playsinline>
@@ -325,12 +330,10 @@
                 Practice Now! 🎯
             </div>
         </div>
-
         <div class="flex-1 text-center md:text-left md:order-1">
             <div class="ebsb-tag">
                 <span id="ebsb-text" class="text-sm md:text-base">এক ভাৰত শ্ৰেষ্ঠ ভাৰত</span>
             </div>
-            
             <h1 class="text-5xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-tight glow-text">
                 Welcome to <br> <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">Smart MCQ Portal</span>
             </h1>
@@ -344,7 +347,14 @@
                 <a href="faq.html" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition backdrop-blur-sm">View FAQ</a>
             </div>
         </div>
-        
+    </section>
+
+    <section class="max-w-7xl mx-auto px-4 md:px-8 my-10">
+        <div style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(192, 192, 192, 0.3); border-radius: 2rem; padding: 10px;">
+            <video autoplay loop muted playsinline class="w-full h-auto rounded-[1.5rem]">
+                <source src="X.mp4" type="video/mp4">
+            </video>
+        </div>
     </section>
 
     <section id="features" class="py-20 md:py-32">
@@ -352,7 +362,6 @@
             <h2 class="text-4xl md:text-5xl font-black mb-4 text-white">Advanced Learning</h2>
             <p class="text-indigo-500 uppercase tracking-[0.5em] text-[10px] font-black">Powered by PM SHRI KV New Bongaigaon</p>
         </div>
-
         <div class="features-overflow-container">
             <div class="features-track">
                 <div class="feature-card">
@@ -384,6 +393,14 @@
         </div>
     </section>
 
+    <section class="py-10">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <video autoplay loop muted playsinline class="w-full h-auto">
+                <source src="quote.mp4" type="video/mp4">
+            </video>
+        </div>
+    </section>
+
     <footer class="py-20 border-t border-white/5 px-8 text-center bg-black/40">
         <div class="max-w-7xl mx-auto">
             <p class="text-[9px] text-slate-500 uppercase tracking-[0.3em]">© 2026 PM SHRI KV NEW BONGAIGAON.</p>
@@ -393,11 +410,11 @@
     <script type="module">
         import { supabase } from './js/supabase.js';
 
-        // --- WELCOME VIDEO LOGIC ---
         const welcomeScreen = document.getElementById('welcome-screen');
         const welcomeVideo = document.getElementById('welcome-video');
+        const transitionScreen = document.getElementById('transition-screen');
+        const transitionVideo = document.getElementById('transition-video');
 
-        // Play video on every refresh
         welcomeVideo.play().catch(error => console.log("Autoplay prevented:", error));
 
         welcomeVideo.onended = () => {
@@ -439,7 +456,6 @@
             const mobileAuthBtn = document.getElementById('mobile-auth-btn');
 
             const handleAuth = async () => {
-                // Double check session to be absolutely sure before triggering OAuth
                 const { data: { session: currentSession } } = await supabase.auth.getSession();
                 if(currentSession) {
                     window.location.href = 'dashboard.html';
@@ -453,8 +469,17 @@
                 }
             };
 
-            // If session exists, remove "Get Started" behavior and redirect to dashboard
             if (session) {
+                // If logged in, show transition if not already played
+                if (!sessionStorage.getItem('transitionPlayed')) {
+                    sessionStorage.setItem('transitionPlayed', 'true');
+                    transitionScreen.style.display = 'flex';
+                    transitionVideo.play();
+                    transitionVideo.onended = () => {
+                        window.location.href = 'dashboard.html';
+                    };
+                }
+
                 [navBtn, heroBtn, mobileAuthBtn].forEach(btn => {
                     if(!btn) return;
                     btn.innerText = "LETS अभ्यास ⚡";
@@ -468,6 +493,20 @@
             }
         }
         initHome();
+    </script>
+    <script>
+        function updateOnlineStatus() {
+            if (!navigator.onLine) {
+                document.body.innerHTML = `
+                    <div style="text-align:center; padding:50px;">
+                        <h1>⚠️ No Internet Connection</h1>
+                        <p>Please check your connection.</p>
+                        <img src="/offline-animation.gif" alt="No internet">
+                    </div>
+                `;
+            }
+        }
+        window.addEventListener('offline', updateOnlineStatus);
     </script>
 </body>
 </html>
