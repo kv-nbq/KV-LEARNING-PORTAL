@@ -169,48 +169,79 @@
             container.innerHTML = `
                 <div class="flex flex-col items-center justify-center h-full space-y-4">
                     <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                    <p class="text-[10px] font-black tracking-[0.2em] text-indigo-400">GENERATING DEEP ANALYSIS...</p>
+                    <p class="text-[10px] font-black tracking-[0.2em] text-indigo-400">READING PERFORMANCE DATA...</p>
                 </div>
             `;
 
             setTimeout(() => {
-                const accuracy = Math.round((data.stats.correct / data.questions.length) * 100);
+                const totalQs = data.questions.length;
+                const correct = data.stats.correct;
+                const wrong = data.stats.wrong;
+                const accuracy = Math.round((correct / totalQs) * 100);
+                const subject = data.subject.toLowerCase();
+                
+                // Logic for Science vs Non-Science
+                const formulaSubjects = ['physics', 'chemistry', 'maths', 'mathematics', 'science', 'accountancy'];
+                const isFormulaSubject = formulaSubjects.some(s => subject.includes(s));
+                
+                // Real data calculation: Approx 4 mins per wrong question for review + 2 mins per correct for reinforcement
+                const requiredMinutes = (wrong * 5) + (correct * 2);
                 const randomMotive = motivations[Math.floor(Math.random() * motivations.length)];
                 
-                let studyMethod = "";
-                let summary = "";
+                let insight = "";
+                let precisionTip = "";
 
                 if(accuracy >= 85) {
-                    summary = "Your performance indicates **Mastery Level** understanding. You aren't just answering; you're recognizing patterns.";
-                    studyMethod = "Focus on the **Feynman Technique**: Try explaining these concepts to a 5-year-old. If you can't, that's your only weak spot. Start practicing time-pressure mocks to shave off seconds.";
-                } else if (accuracy >= 60) {
-                    summary = "You have a **Solid Foundation**, but inconsistencies in specific sub-topics are holding you back from excellence.";
-                    studyMethod = "Use **Active Recall**: Don't just re-read the chapter. Close the book and write down everything you remember about ${data.chapter}. Match it with your wrong answers to find the 'Logic Gap'.";
+                    insight = `Brilliant work. You correctly identified **${correct} out of ${totalQs}** concepts. Your neural retention is peak.`;
+                    precisionTip = isFormulaSubject 
+                        ? "Master your derivation speed. You know the formulas; now focus on reducing calculation time."
+                        : "Focus on nuance. In ${data.subject}, you have the facts down—now work on articulating deep 'why' arguments.";
+                } else if (accuracy >= 50) {
+                    insight = `You are halfway there. With **${wrong} mistakes**, there is a clear pattern of partial knowledge in ${data.chapter}.`;
+                    precisionTip = isFormulaSubject
+                        ? "You are likely misapplying formulas. Practice the 'Givens' vs 'Find' method for every numerical."
+                        : "Concept clarity is missing. Re-read the core definitions of ${data.chapter} and focus on keywords.";
                 } else {
-                    summary = "Your results suggest **Foundational Gaps**. You are likely struggling with the application of formulas or core definitions.";
-                    studyMethod = "Adopt **Spaced Repetition**: Review the incorrect questions today, then again in 3 days, and once more in 7 days. Use 'Flashcards' for the key terms you missed. Focus on 'Why' the correct answer is right, not just 'What' it is.";
+                    insight = `Foundational alert. **${wrong} incorrect responses** suggest a disconnect with the core syllabus of ${data.subject}.`;
+                    precisionTip = isFormulaSubject
+                        ? "Stop solving blindly. Go back to basics—derive every formula once by hand before attempting MCQs again."
+                        : "Textbook immersion needed. Treat ${data.chapter} as a new story. Highlight facts and re-attempt.";
                 }
 
                 container.innerHTML = `
                     <div class="animate-in slide-in-from-bottom-4 duration-700 space-y-6">
                         <section>
-                            <h4 class="text-emerald-400 font-black text-[10px] uppercase tracking-widest mb-2">Cognitive Summary</h4>
-                            <p class="text-lg font-bold text-white leading-tight">${summary}</p>
+                            <h4 class="text-emerald-400 font-black text-[10px] uppercase tracking-widest mb-2">Live Metric Report</h4>
+                            <p class="text-lg font-bold text-white leading-tight">${insight}</p>
+                            <div class="mt-2 grid grid-cols-2 gap-2">
+                                <div class="bg-white/5 p-2 rounded-lg text-center">
+                                    <span class="block text-[8px] text-slate-500">ACCURACY</span>
+                                    <span class="text-indigo-400 font-black">${accuracy}%</span>
+                                </div>
+                                <div class="bg-white/5 p-2 rounded-lg text-center">
+                                    <span class="block text-[8px] text-slate-500">MISTAKE COUNT</span>
+                                    <span class="text-rose-400 font-black">${wrong}</span>
+                                </div>
+                            </div>
                         </section>
 
                         <div class="h-px bg-white/10"></div>
 
                         <section>
-                            <h4 class="text-indigo-400 font-black text-[10px] uppercase tracking-widest mb-2">Recommended Study Strategy</h4>
+                            <h4 class="text-indigo-400 font-black text-[10px] uppercase tracking-widest mb-2">AI Recovery Strategy</h4>
                             <div class="bg-indigo-500/5 border border-indigo-500/20 p-4 rounded-2xl">
-                                <p class="text-slate-300 italic text-sm underline decoration-indigo-500/50 underline-offset-4 mb-2">Precision Method:</p>
-                                <p>${studyMethod}</p>
+                                <p class="text-slate-300 italic text-xs underline decoration-indigo-500/50 underline-offset-4 mb-2">Tailored for ${data.subject}:</p>
+                                <p class="text-sm font-semibold text-white mb-2">${precisionTip}</p>
+                                <div class="flex items-center gap-2 text-amber-400 mt-4">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <p class="text-[10px] font-black uppercase tracking-tighter">Est. Practice Needed: ${requiredMinutes} Minutes</p>
+                                </div>
                             </div>
                         </section>
 
                         <section>
-                            <h4 class="text-amber-400 font-black text-[10px] uppercase tracking-widest mb-2">Question Pattern Analysis</h4>
-                            <p>You attempted ${data.questions.length} questions in **${data.subject}**. Your primary friction point was in **${data.stats.wrong > 0 ? 'Accuracy Retention' : 'None - Perfect Execution'}**. Keep a 'Mistake Journal' specifically for this chapter.</p>
+                            <h4 class="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-2">Final Verdict</h4>
+                            <p class="text-xs">Based on your ${correct} correct hits, you should focus your next session on the **${wrong > 0 ? 'Logic Gap' : 'Speed Blitz'}** phase. Every wrong answer is a hidden lesson.</p>
                         </section>
 
                         <div class="pt-6">
@@ -222,7 +253,7 @@
                         </div>
                     </div>
                 `;
-            }, 2000);
+            }, 1800);
         }
 
         window.closeAIChat = function() {
