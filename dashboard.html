@@ -24,7 +24,6 @@
             100% { background-position: 0% 50%; }
         }
         
-        /* Updated Liquid Glass Effect */
         .glass { 
             background: rgba(255, 255, 255, 0.03); 
             backdrop-filter: blur(16px); 
@@ -35,7 +34,6 @@
             overflow: hidden;
         }
 
-        /* Liquid edge highlight */
         .glass::after {
             content: '';
             position: absolute;
@@ -43,6 +41,36 @@
             pointer-events: none;
             border-radius: inherit;
             background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.05) 100%);
+        }
+
+        /* Blue Liquid Glass Buttons */
+        .btn-liquid-blue {
+            background: rgba(30, 64, 175, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.3), 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-liquid-blue:hover {
+            background: rgba(30, 64, 175, 0.4);
+            transform: translateY(-2px);
+            box-shadow: inset 0 0 15px rgba(59, 130, 246, 0.5), 0 6px 20px rgba(59, 130, 246, 0.3);
+            border-color: #60a5fa;
+        }
+
+        /* Fire Effect for Motto */
+        .fire-text {
+            background: linear-gradient(to bottom, #fff700, #ffae00, #ff4d00, #ff0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 5px rgba(255, 69, 0, 0.6));
+            animation: flicker 1.5s infinite alternate;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.9; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.02); }
         }
 
         .card-grad { background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(2, 6, 23, 0) 100%); }
@@ -114,12 +142,12 @@
         <nav class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
             <div class="cursor-pointer text-center md:text-left" onclick="location.href='index.html'">
                 <h1 class="text-2xl font-black italic tracking-tighter uppercase">MY_<span class="text-emerald-500">DASHBOARD</span></h1>
-                <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-900 mt-1">Accuracy comes from practice, not luck.</p>
+                <p id="dynamic-motto" class="text-[10px] font-extrabold uppercase tracking-widest mt-1 fire-text">Accuracy comes from practice, not luck</p>
             </div>
             
             <div class="flex items-center gap-3">
-                <button onclick="location.href='index.html'" class="bg-white/5 hover:bg-emerald-500/10 text-slate-300 px-5 py-2.5 rounded-xl border border-white/10 text-xs font-black uppercase transition-all">Home</button>
-                <button onclick="location.href='profile.html'" class="bg-emerald-500/10 text-emerald-400 px-5 py-2.5 rounded-xl border border-emerald-500/20 text-xs font-black uppercase">Profile</button>
+                <button onclick="location.href='index.html'" class="btn-liquid-blue text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase">Home</button>
+                <button onclick="location.href='profile.html'" class="btn-liquid-blue text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase">Profile</button>
                 <button id="logout-btn" class="bg-red-500/10 text-red-500 px-5 py-2.5 rounded-xl border border-red-500/20 text-xs font-black uppercase hover:bg-red-500 hover:text-white transition-all">Logout</button>
             </div>
         </nav>
@@ -211,6 +239,29 @@
 <script type="module">
     import { supabase } from './js/supabase.js';
 
+    const quotes = [
+        "Practice daily to achieve success",
+        "Focus more, worry less always",
+        "Small steps lead to success",
+        "Discipline creates strong future habits",
+        "Believe yourself and keep going",
+        "Hard work beats natural talent",
+        "Stay calm and think clearly",
+        "Learn today, lead tomorrow confidently",
+        "Consistency builds unstoppable powerful habits",
+        "Never quit until you succeed",
+        "Effort today brings success tomorrow",
+        "Keep learning, keep growing daily",
+        "Dreams demand action and effort",
+        "Think smart, act even smarter",
+        "Success comes from daily discipline",
+        "Stay focused on your goals",
+        "Growth happens outside comfort zone",
+        "Push limits, discover your strength",
+        "Keep trying, never lose hope",
+        "Work hard and stay humble"
+    ];
+
     window.openModal = (id) => document.getElementById(id).classList.add('active');
     window.closeModal = (id) => document.getElementById(id).classList.remove('active');
 
@@ -218,6 +269,11 @@
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) { window.location.replace('index.html'); return; }
         const userId = session.user.id;
+
+        // Motto rotation logic
+        const mottoEl = document.getElementById('dynamic-motto');
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        mottoEl.innerText = randomQuote;
 
         document.getElementById('logout-btn').onclick = async () => {
             await supabase.auth.signOut();
