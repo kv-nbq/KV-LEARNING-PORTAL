@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive Vault | KV MCQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; min-height: 100vh; }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid rgba(56, 189, 248, 0.1); }
+        .row-anim { animation: fadeIn 0.5s ease forwards; opacity: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-3xl font-black italic uppercase tracking-tighter">Test_<span class="text-sky-500">Archive</span></h1>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Complete performance history</p>
+            </div>
+            <button onclick="location.href='dashboard.html'" class="px-6 py-2 glass rounded-xl text-[10px] font-black uppercase hover:bg-sky-500/10 transition">Back to Dashboard</button>
+        </header>
+
+        <div class="grid grid-cols-3 gap-4 mb-8">
+            <div class="glass p-6 rounded-3xl border-l-4 border-sky-500">
+                <p class="text-[9px] text-slate-500 uppercase font-black mb-1">Total Attempted</p>
+                <h2 id="total-count" class="text-2xl font-black italic">--</h2>
+            </div>
+            <div class="glass p-6 rounded-3xl border-l-4 border-emerald-500">
+                <p class="text-[9px] text-slate-500 uppercase font-black mb-1">Avg Accuracy</p>
+                <h2 id="avg-accuracy" class="text-2xl font-black italic text-emerald-400">--</h2>
+            </div>
+            <div class="glass p-6 rounded-3xl border-l-4 border-amber-500">
+                <p class="text-[9px] text-slate-500 uppercase font-black mb-1">Total Correct</p>
+                <h2 id="total-correct" class="text-2xl font-black italic text-amber-400">--</h2>
+            </div>
+        </div>
+
+        <div class="glass rounded-[2rem] overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-white/5 text-[10px] uppercase font-black text-slate-400">
+                        <tr>
+                            <th class="p-6">SL</th>
+                            <th class="p-6">Subject / Topic</th>
+                            <th class="p-6">Date</th>
+                            <th class="p-6 text-center">Correct</th>
+                            <th class="p-6 text-center">Wrong</th>
+                            <th class="p-6 text-right">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="archive-body" class="divide-y divide-white/5">
+                        </tbody>
+                </table>
+            </div>
+            <div id="loading-state" class="p-20 text-center uppercase font-black text-sky-500 tracking-[0.5em] text-xs">
+                Accessing Records...
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase } from './js/supabase.js';
+
+        async function loadArchive() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) { window.location.replace('index.html'); return; }
+
+            const { data: logs, error } = await supabase.from("test_results")
+                .select("*")
+                .or(`user_id.eq.${session.user.id},student_id.eq.${session.user.id}`)
+                .order('created_at', { ascending: false });
+
+            if (error) { console.error(error); return; }
+
+            const body = document.getElementById('archive-body');
+            const loading = document.getElementById('loading-state');
+            loading.classList.add('hidden');
+
+            if (!logs || logs.length === 0) {
+                body.innerHTML = `<tr><td colspan="6" class="p-20 text-center text-slate-500 font-bold uppercase">No records found</td></tr>`;
+                return;
+            }
+
+            // Calc Stats
+            let totalCorrect = 0;
+            let totalQs = 0;
+            logs.forEach(t => {
+                totalCorrect += (parseInt(t.correct_answers) || 0);
+                totalQs += (parseInt(t.total_questions) || 1);
+            });
+
+            document.getElementById('total-count').innerText = logs.length;
+            document.getElementById('total-correct').innerText = totalCorrect;
+            document.getElementById('avg-accuracy').innerText = Math.round((totalCorrect/totalQs)*100) + "%";
+
+            body.innerHTML = logs.map((test, index) => {
+                const date = new Date(test.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                return `
+                    <tr class="row-anim hover:bg-white/[0.03] transition-colors" style="animation-delay: ${index * 0.03}s">
+                        <td class="p-6 font-mono text-xs text-slate-500">#${logs.length - index}</td>
+                        <td class="p-6">
+                            <div class="font-bold text-sm text-white">${test.subject || 'General'}</div>
+                            <div class="text-[9px] text-sky-500 font-black uppercase">${test.topic || 'Assessment'}</div>
+                        </td>
+                        <td class="p-6 text-xs text-slate-400 font-bold">${date}</td>
+                        <td class="p-6 text-center text-emerald-400 font-bold font-mono">${test.correct_answers}</td>
+                        <td class="p-6 text-center text-red-400 font-bold font-mono">${test.wrong_answers}</td>
+                        <td class="p-6 text-right">
+                            <span class="bg-sky-500/10 text-sky-400 px-3 py-1 rounded-lg text-xs font-black border border-sky-500/20">
+                                ${test.score} PTS
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        loadArchive();
+    </script>
+</body>
+</html>
