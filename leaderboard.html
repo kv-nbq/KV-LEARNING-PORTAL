@@ -19,12 +19,13 @@
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .glass-yellow { background: rgba(234, 179, 8, 0.08); backdrop-filter: blur(12px); border: 1px solid rgba(234, 179, 8, 0.2); }
         
-        /* Bar Gradients & Smooth Physics-based Animation */
         .bar-kv { background: linear-gradient(to top, #84cc16, #d9f99d); transition: height 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 20px rgba(132, 204, 22, 0.2); }
         .bar-nonkv { background: linear-gradient(to top, #eab308, #fef08a); transition: height 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 20px rgba(234, 179, 8, 0.2); }
         
         .my-row { border-left: 4px solid #84cc16 !important; background: rgba(132, 204, 22, 0.08); }
         .row-top { border-left: 4px solid #eab308; }
+
+        .rank-list-img { width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.2)); }
 
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -50,8 +51,7 @@
             <div class="glass-yellow p-8 rounded-[2rem] md:rounded-[2.5rem] sticky top-8">
                 <h3 class="text-[10px] font-black uppercase tracking-widest text-yellow-500 mb-10 text-center">KV vs PRIVATE PERFORMANCE</h3>
                 
-                <div class="flex items-end justify-center gap-12 h-64 md:h-80" id="comparison-bars">
-                    </div>
+                <div class="flex items-end justify-center gap-12 h-64 md:h-80" id="comparison-bars"></div>
 
                 <div class="flex justify-between mt-8 px-2 text-[10px] font-black uppercase">
                     <div class="flex flex-col items-center gap-1">
@@ -73,14 +73,13 @@
                         <thead class="bg-white/5">
                             <tr class="text-[10px] uppercase text-slate-400 font-black">
                                 <th class="p-4 md:p-6">Rank & Student</th>
+                                <th class="p-4 md:p-6">Achievement Badge</th>
                                 <th class="p-4 md:p-6 text-center">Class</th>
                                 <th class="p-4 md:p-6">School & City</th>
-                                <th class="p-4 md:p-6">Region</th>
                                 <th class="p-4 md:p-6 text-right">Total Score</th>
                             </tr>
                         </thead>
-                        <tbody id="leaderboard-body" class="divide-y divide-white/5">
-                            </tbody>
+                        <tbody id="leaderboard-body" class="divide-y divide-white/5"></tbody>
                     </table>
                 </div>
             </div>
@@ -89,6 +88,23 @@
 
     <script type="module">
         import { supabase } from './js/supabase.js';
+
+        // Updated Badge Logic including VEER TIER
+        function getBadgeInfo(score) {
+            if (score >= 200) {
+                return { name: 'VEER', img: 'v.png', color: 'text-orange-500 font-extrabold' };
+            } else if (score >= 125) {
+                return { name: 'Pro', img: 'pr.png', color: 'text-sky-300' };
+            } else if (score >= 75) {
+                return { name: 'Excellent', img: 'e.png', color: 'text-sky-400' };
+            } else if (score >= 35) {
+                return { name: 'Good', img: 'g.png', color: 'text-blue-400' };
+            } else if (score >= 10) {
+                return { name: 'Beginner', img: 'be.png', color: 'text-slate-400' };
+            } else {
+                return { name: 'Poor', img: 'p.png', color: 'text-red-500' };
+            }
+        }
 
         async function updateLeaderboard() {
             try {
@@ -119,7 +135,6 @@
                         };
                     } else if (row.student_name) {
                         studentStats[email].name = row.student_name;
-                        studentStats[email].class = row.class_name || studentStats[email].class;
                     }
                     
                     const score = row.score || 0;
@@ -135,6 +150,7 @@
 
                 sortedList.forEach((student, index) => {
                     const isMe = student.email === currentUserEmail;
+                    const badge = getBadgeInfo(student.total_score);
                     const isTopThree = index < 3;
 
                     leaderboardBody.innerHTML += `
@@ -150,6 +166,12 @@
                                     </div>
                                 </div>
                             </td>
+                            <td class="p-4 md:p-6">
+                                <div class="flex items-center gap-2">
+                                    <img src="${badge.img}" class="rank-list-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1152/1152912.png'">
+                                    <span class="text-[10px] font-black uppercase tracking-widest ${badge.color}">${badge.name}</span>
+                                </div>
+                            </td>
                             <td class="p-4 md:p-6 text-center">
                                 <span class="bg-white/5 px-3 py-1 rounded-lg text-[10px] font-black text-slate-300 border border-white/10">
                                     CLASS ${student.class}
@@ -159,7 +181,6 @@
                                 <div class="text-[10px] font-black uppercase text-slate-300 truncate max-w-[150px] md:max-w-none">${student.school}</div>
                                 <div class="text-[9px] text-slate-500 capitalize">${student.city}</div>
                             </td>
-                            <td class="p-4 md:p-6 text-[10px] font-bold text-slate-400 no-wrap">${student.region}</td>
                             <td class="p-4 md:p-6 text-right no-wrap">
                                 <div class="text-lg font-black ${isTopThree ? 'text-yellow-400' : 'text-white'} tracking-tighter">${student.total_score}</div>
                             </td>
@@ -189,8 +210,8 @@
                 `;
 
                 setTimeout(() => {
-                    document.getElementById('bar-kv').style.height = kvPct + '%';
-                    document.getElementById('bar-nonkv').style.height = nonKvPct + '%';
+                    if(document.getElementById('bar-kv')) document.getElementById('bar-kv').style.height = kvPct + '%';
+                    if(document.getElementById('bar-nonkv')) document.getElementById('bar-nonkv').style.height = nonKvPct + '%';
                 }, 150);
 
             } catch (err) {
