@@ -159,24 +159,6 @@
             50% { transform: scale(1.05); }
         }
 
-        .feature-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(8px);
-            transition: all 0.4s ease;
-            width: 320px;
-            margin: 0 15px;
-            flex-shrink: 0;
-            padding: 2.5rem;
-            border-radius: 2.5rem;
-        }
-
-        .feature-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--primary);
-            transform: translateY(-8px) scale(1.02);
-        }
-
         .video-wrapper {
             width: 100%;
             border-radius: 2rem;
@@ -187,28 +169,6 @@
 
         .glow-text {
             text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-        }
-
-        .features-overflow-container {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-            padding: 20px 0;
-        }
-
-        .features-track {
-            display: flex;
-            width: max-content;
-            animation: scrollFeatures 35s linear infinite;
-        }
-
-        .features-track:hover {
-            animation-play-state: paused;
-        }
-
-        @keyframes scrollFeatures {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
         }
     </style>
 </head>
@@ -296,56 +256,18 @@
         </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-4 md:px-8 my-10">
-        <div style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(192, 192, 192, 0.3); border-radius: 2rem; padding: 10px;">
-            <video autoplay loop muted playsinline class="w-full h-auto rounded-[1.5rem]">
-                <source src="X.mp4" type="video/mp4">
-            </video>
-        </div>
-    </section>
-
-    <section id="features" class="py-20 md:py-32">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-black mb-4 text-white">Advanced Learning</h2>
-            <p class="text-indigo-500 uppercase tracking-[0.5em] text-[10px] font-black">Powered by PM SHRI KV New Bongaigaon</p>
-        </div>
-        <div class="features-overflow-container">
-            <div class="features-track">
-                <div class="feature-card">
-                    <div class="text-4xl mb-6">🛡️</div>
-                    <h3 class="text-xl font-bold mb-3 text-white">Curated Content</h3>
-                    <p class="text-slate-500 text-sm">100% verified MCQs strictly following the latest NCERT standards.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="text-4xl mb-6">🛰️</div>
-                    <h3 class="text-xl font-bold mb-3 text-white">Cloud Sync</h3>
-                    <p class="text-slate-500 text-sm">Real-time progress syncing across all your devices.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="text-4xl mb-6">🏆</div>
-                    <h3 class="text-xl font-bold mb-3 text-white">Achievement System</h3>
-                    <p class="text-slate-500 text-sm">Earn digital badges and climb the school-wide leaderboard.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="text-4xl mb-6">⚡</div>
-                    <h3 class="text-xl font-bold mb-3 text-white">Zero Cost</h3>
-                    <p class="text-slate-500 text-sm">Always free open-access for every KV student.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="text-4xl mb-6">🤖</div>
-                    <h3 class="text-xl font-bold mb-3 text-white">AI Insights</h3>
-                    <p class="text-slate-500 text-sm">Vidyut AI analyzes your performance to highlight weak areas.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <section class="py-10">
         <div class="max-w-7xl mx-auto px-4 md:px-8">
             <video autoplay loop muted playsinline class="w-full h-auto">
                 <source src="quote.mp4" type="video/mp4">
             </video>
         </div>
+    </section>
+
+    <section id="features" class="w-full overflow-hidden">
+        <video autoplay loop muted playsinline class="w-full h-auto block">
+            <source src="phone.mp4" type="video/mp4">
+        </video>
     </section>
 
     <footer class="py-20 border-t border-white/5 px-8 text-center bg-black/40">
